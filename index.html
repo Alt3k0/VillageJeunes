@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VILL'AGE JEUNES</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+        .login-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5vh;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-align: center;
+        }
+
+        .btn-login-primary {
+            background-color: #649d50;
+            color: #F7F7F7;
+        }
+
+        .btn-login-primary:hover {
+            background-color: #89c75b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(100, 157, 80, 0.3);
+        }
+
+        .btn-login-secondary {
+            background-color: #F7F7F7;
+            border: 2px solid #f08d35;
+            color: #1e1e1d;
+        }
+
+        .btn-login-secondary:hover {
+            background-color: #f08d35;
+            color: #F7F7F7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(240, 141, 53, 0.3);
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 1.9vh;
+            margin: 1.27vh 0;
+        }
+
+        .separator-line {
+            flex: 1;
+            height: 1px;
+            background-color: #6e6f75;
+        }
+
+        .separator-text {
+            color: #6e6f75;
+            font-size: 14px;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F7F7F7;
+            padding: 10vh 3.75vw;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10vh;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Media queries pour responsive */
+        @media (min-width: 769px) {
+            /* Desktop - s'adapte depuis mobile */
+            body {
+                padding: 10vh 3.25vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Tablette */
+            body {
+                padding: 10vh 5vw;
+            }
+
+            .login-container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Mobile - base mobile-first */
+            body {
+                padding: 10vh 3.75vw;
+            }
+
+            .login-container {
+                max-width: 100%;
+            }
+
+            .btn-login {
+                font-size: 1rem;
+                padding: 1rem 1.125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo" style="display: none;">
+                <span class="logo-text">VILL'AGE<br>JEUNES</span>
+            </div>
+        </div>
+
+        <!-- Boutons de connexion/inscription -->
+        <div class="login-buttons">
+            <button class="btn-login btn-login-primary" onclick="window.location.href='connexion.html'">
+                Je me connecte
+            </button>
+
+            <div class="separator">
+                <div class="separator-line"></div>
+                <span class="separator-text">ou</span>
+                <div class="separator-line"></div>
+            </div>
+
+            <button class="btn-login btn-login-secondary" onclick="window.location.href='choix-parcours.html'">
+                Je m'inscris
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <span class="footer-separator">|</span>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </footer>
+    </div>
+</body>
+</html>

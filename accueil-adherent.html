@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil Adhérent - VILL'AGE JEUNES</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F7F7F7;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fond décoratif */
+        .background-decoration {
+            position: fixed;
+            top: -96px;
+            left: -116px;
+            width: 564px;
+            height: 1071px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .background-decoration::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(31, 101, 142, 0.1) 0%, rgba(100, 157, 80, 0.1) 50%, rgba(240, 141, 53, 0.1) 100%);
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
+        /* Header sticky */
+        body {
+            padding-top: 7.6vh;
+            padding-bottom: 7.6vh;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(217, 217, 217, 0.2);
+            backdrop-filter: blur(10px);
+            height: 101px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 41px 32px 18px;
+            z-index: 100;
+            width: 393px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .header-icon:hover {
+            opacity: 1;
+        }
+
+        /* Container principal */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px 13px 30px;
+            min-height: 100vh;
+        }
+
+        /* Body content */
+        .body-content {
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+            align-items: center;
+            padding: 48px 0;
+            width: 100%;
+            max-width: 353px;
+        }
+
+        /* Titre */
+        .activities-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e1e1d;
+            text-align: center;
+            text-transform: uppercase;
+            height: 49px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 177px;
+        }
+
+        /* Calendrier */
+        .calendar-wrapper {
+            width: 353px;
+            cursor: pointer;
+        }
+
+        .calendar {
+            background-color: #F7F7F7;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 12px;
+            width: 335px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .calendar-nav-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: none;
+            background: transparent;
+        }
+
+        .calendar-nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .calendar-nav-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .calendar-month-year {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-dropdown {
+            background-color: #F7F7F7;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 4px 0 8px;
+            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-dropdown:hover {
+            border-color: #649d50;
+        }
+
+        .calendar-dropdown-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0a0a0a;
+            line-height: 20px;
+        }
+
+        .calendar-dropdown-arrow {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Grille du calendrier */
+        .calendar-grid-wrapper {
+            aspect-ratio: 307 / 221;
+            width: 100%;
+        }
+
+        .calendar-days-header {
+            aspect-ratio: 307 / 21;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .calendar-day-header {
+            width: 32px;
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .calendar-day-header-text {
+            font-size: 12px;
+            font-weight: 400;
+            color: #737373;
+            line-height: 16px;
+        }
+
+        .calendar-dates-grid {
+            aspect-ratio: 307 / 200;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            padding-top: 8px;
+        }
+
+        .calendar-week {
+            display: flex;
+            gap: 8px;
+            align-items: start;
+            justify-content: center;
+        }
+
+        .calendar-date {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: transparent;
+            border: none;
+        }
+
+        .calendar-date:hover {
+            background-color: rgba(31, 101, 142, 0.1);
+        }
+
+        .calendar-date.selected {
+            background-color: rgba(31, 101, 142, 0.38);
+        }
+
+        .calendar-date.selected .calendar-date-text {
+            color: #fafafa;
+        }
+
+        .calendar-date.other-month {
+            opacity: 0.5;
+        }
+
+        .calendar-date-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #0a0a0a;
+            line-height: 20px;
+        }
+
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Barre de recherche */
+        .search-bar {
+            background-color: #F7F7F7;
+            border: 1px solid #d9d0e3;
+            border-radius: 27px;
+            height: 34px;
+            width: 262px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 9px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            border-color: #649d50;
+            box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.1);
+        }
+
+        .search-icon {
+            width: 16.813px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .search-select {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            color: #1e1e1d;
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 24px;
+        }
+
+        .search-select option {
+            padding: 8px;
+        }
+
+        .search-arrow {
+            position: absolute;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .search-bar:focus-within .search-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Cards d'activités */
+        .activity-cards-container {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 353px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .activity-cards-container.active {
+            display: flex;
+        }
+
+        .activity-card {
+            background-color: #F7F7F7;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .activity-card:hover {
+            border-color: #649d50;
+            box-shadow: 0 2px 8px rgba(100, 157, 80, 0.1);
+        }
+
+        .activity-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .activity-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e1e1d;
+            flex: 1;
+        }
+
+        .activity-card-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .activity-card-badge.complet {
+            background-color: #f08d35;
+            color: #F7F7F7;
+        }
+
+        .activity-card-badge.disponible {
+            background-color: #649d50;
+            color: #F7F7F7;
+        }
+
+        .activity-card-date {
+            font-size: 14px;
+            color: #6e6f75;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-card-time {
+            font-size: 14px;
+            color: #6e6f75;
+        }
+
+        .activity-card-location {
+            font-size: 14px;
+            color: #6e6f75;
+            font-style: italic;
+        }
+
+        .activity-card-color-indicator {
+            width: 4px;
+            height: 100%;
+            border-radius: 2px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 7.6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(217, 217, 217, 0.2);
+            backdrop-filter: blur(10px);
+            height: 6.96vh;
+            width: 100%;
+            max-width: 393px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2vh 3.5vw;
+            z-index: 100;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: 366px;
+            height: 20px;
+            padding-right: 18px;
+        }
+
+        .footer-link {
+            font-size: 12px;
+            color: #1e1e1d;
+            text-decoration: none;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .footer-link:first-child {
+            width: 181px;
+        }
+
+        .footer-link:last-child {
+            width: 116px;
+        }
+
+        .footer-separator {
+            width: 0;
+            height: 20px;
+            position: relative;
+        }
+
+        .footer-separator::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 1px;
+            background-color: #6e6f75;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        /* Widget d'emploi du temps */
+        .schedule-widget {
+            display: none;
+            position: relative;
+            width: 100%;
+            max-width: 353px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .schedule-widget.active {
+            display: flex;
+        }
+
+        .schedule-widget-card {
+            background-color: #F7F7F7;
+            border: 2px solid rgba(31, 101, 142, 0.5);
+            border-radius: 16px;
+            box-shadow: 0px 1px 8px 0px rgba(110, 110, 110, 0.1);
+            width: 275px;
+            height: 414px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+            animation: slideDown 0.3s ease;
+            overflow: visible;
+        }
+
+        .schedule-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #414d55;
+            line-height: 20px;
+            letter-spacing: 0.01px;
+        }
+
+        .schedule-date-navigator {
+            position: relative;
+            width: 215px;
+            height: 32px;
+            background-color: #fafbfd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .schedule-date-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #3d7b9a;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .schedule-nav-arrow {
+            position: absolute;
+            width: 7px;
+            height: 20px;
+            cursor: pointer;
+            color: #a2c0d4;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .schedule-nav-arrow.prev {
+            left: 22px;
+        }
+
+        .schedule-nav-arrow.next {
+            right: 22px;
+        }
+
+        .schedule-timeline {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            margin-top: 12px;
+            overflow: visible;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .schedule-time-marker {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .schedule-time-marker::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #d9d0e3;
+            background-image: linear-gradient(to right, transparent 0%, #d9d0e3 0.18%, #d9d0e3 calc(100% - 0.18%), transparent 100%);
+        }
+
+        .schedule-time-label {
+            position: absolute;
+            left: 23px;
+            background-color: #F7F7F7;
+            height: 20px;
+            padding: 0 4px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 500;
+            color: #696d6e;
+            text-transform: uppercase;
+            line-height: 20px;
+            z-index: 11;
+        }
+
+        .schedule-time-marker[data-hour="6"] {
+            top: 10px;
+        }
+
+        .schedule-time-marker[data-hour="8"] {
+            top: 50px;
+        }
+
+        .schedule-time-marker[data-hour="10"] {
+            top: 90px;
+        }
+
+        .schedule-time-marker[data-hour="12"] {
+            top: 130px;
+        }
+
+        .schedule-time-marker[data-hour="14"] {
+            top: 170px;
+        }
+
+        .schedule-time-marker[data-hour="16"] {
+            top: 210px;
+        }
+
+        .schedule-time-marker[data-hour="18"] {
+            top: 250px;
+        }
+
+        .schedule-time-marker[data-hour="20"] {
+            top: 290px;
+        }
+
+        .schedule-activity {
+            position: absolute;
+            left: 0;
+            right: 0;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .schedule-activity-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #1e1e1d;
+            text-align: center;
+            line-height: normal;
+            position: relative;
+            z-index: 2;
+            padding: 0 8px;
+            opacity: 1;
+        }
+
+        .schedule-current-time {
+            position: absolute;
+            left: 23px;
+            width: 41px;
+            background: linear-gradient(to top, #1f658e, #3d7b9a);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12;
+            height: 20px;
+        }
+
+        .schedule-current-time::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 60px;
+            background: linear-gradient(to top, #1f658e, #3d7b9a);
+            border-radius: 8px;
+        }
+
+        .schedule-current-time-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: #F7F7F7;
+            text-transform: uppercase;
+            line-height: 14px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .schedule-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        .schedule-close-icon {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Widget de détail d'activité (overlay) */
+        .activity-detail-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 60px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .activity-detail-overlay.active {
+            display: flex;
+        }
+
+        .activity-detail-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
+                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
+            width: 100%;
+            max-width: 400px;
+            min-height: 500px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .activity-detail-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1001;
+            transition: transform 0.2s ease;
+        }
+
+        .activity-detail-close:hover {
+            transform: scale(1.1);
+        }
+
+        .activity-detail-close svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .activity-detail-header {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            width: 100%;
+            padding-top: 8px;
+        }
+
+        .activity-detail-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #414d55;
+            text-align: center;
+            line-height: 24px;
+            margin: 0;
+            letter-spacing: 0.01px;
+        }
+
+        .activity-detail-navigator {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 40px;
+            background: rgba(250, 251, 253, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-detail-navigator-name {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #3d7b9a;
+            line-height: 20px;
+            text-align: center;
+            width: 100%;
+            padding: 0 40px;
+        }
+
+        .activity-detail-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: #a2c0d4;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.2s ease, transform 0.2s ease;
+            border-radius: 8px;
+        }
+
+        .activity-detail-nav-arrow:hover {
+            color: #3d7b9a;
+            background: rgba(61, 123, 154, 0.1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .activity-detail-nav-arrow.prev {
+            left: 8px;
+        }
+
+        .activity-detail-nav-arrow.next {
+            right: 8px;
+        }
+
+        .activity-detail-info-box {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .activity-detail-date-time {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #3d7b9a;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .activity-detail-date {
+            font-weight: 500;
+        }
+
+        .activity-detail-time-separator {
+            color: #a2c0d4;
+        }
+
+        .activity-detail-time-detail {
+            font-weight: 500;
+        }
+
+        .activity-detail-description-box {
+            background: rgba(250, 251, 253, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 320px;
+            min-height: 220px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-detail-description-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e1e1d;
+            line-height: 22px;
+            margin-bottom: 12px;
+        }
+
+        .activity-detail-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: #414d55;
+            line-height: 22px;
+            text-align: left;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .activity-detail-register-button {
+            background: rgba(31, 101, 142, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 280px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 12px 0px rgba(31, 101, 142, 0.3);
+            margin-top: 8px;
+        }
+
+        .activity-detail-register-button:hover {
+            background: rgba(31, 101, 142, 1);
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 16px 0px rgba(31, 101, 142, 0.4);
+        }
+
+        .activity-detail-register-button:active {
+            transform: translateY(0);
+        }
+
+        .activity-detail-register-button-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #F7F7F7;
+            line-height: normal;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        /* Media queries pour responsive */
+        @media (max-width: 768px) {
+            /* Tablette */
+            body {
+                padding-top: 2.5vh;
+                padding-bottom: 2.5vh;
+            }
+
+            .header {
+                width: 100%;
+                padding: 2.5vh 4vw 1.9vh;
+                height: auto;
+                min-height: 10vh;
+            }
+
+            .main-container {
+                padding: 2.5vh 2.5vw;
+                min-height: calc(100vh - 10vh - 10vh - 10vh);
+            }
+
+            .body-content {
+                max-width: 100%;
+                padding: 2.5vh 0;
+            }
+
+            .calendar-wrapper,
+            .calendar {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .activity-cards-container {
+                max-width: 100%;
+            }
+
+            .footer {
+                bottom: 2.5vh;
+                height: 6vh;
+                padding: 2vh 3.5vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Mobile */
+            body {
+                padding-top: 2.5vh;
+                padding-bottom: 2.5vh;
+            }
+
+            .header {
+                width: 100%;
+                padding: 1.9vh 3vw 1.5vh;
+                height: auto;
+                min-height: 8.9vh;
+            }
+
+            .main-container {
+                padding: 1.9vh 2vw;
+                min-height: calc(100vh - 8.9vh - 7.6vh);
+            }
+
+            .body-content {
+                max-width: 100%;
+                padding: 1.9vh 0;
+                gap: 1.5vh;
+            }
+
+            .calendar-wrapper {
+                width: 100%;
+            }
+
+            .calendar {
+                width: 100%;
+                padding: 1.27vh;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .activity-cards-container {
+                max-width: 100%;
+            }
+
+            .footer {
+                width: 100%;
+                padding: 1.9vh 3.75vw;
+                bottom: 2.5vh;
+                height: 5.7vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fond décoratif -->
+    <div class="background-decoration"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="header-logo">
+        <div class="header-icons">
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Container principal -->
+    <div class="main-container">
+        <div class="body-content">
+            <!-- Titre -->
+            <h1 class="activities-title">Activités</h1>
+
+            <!-- Calendrier -->
+            <div class="calendar-wrapper">
+                <div class="calendar" id="calendar">
+                    <!-- Header du calendrier -->
+                    <div class="calendar-header">
+                        <button class="calendar-nav-button" id="prevMonth">
+                            <svg class="calendar-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 12l-4-4 4-4"></path>
+                            </svg>
+                        </button>
+                        <div class="calendar-month-year">
+                            <div class="calendar-dropdown" id="monthDropdown">
+                                <span class="calendar-dropdown-text" id="monthText">Fév</span>
+                                <svg class="calendar-dropdown-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 4.5l3 3 3-3"></path>
+                                </svg>
+                            </div>
+                            <div class="calendar-dropdown" id="yearDropdown">
+                                <span class="calendar-dropdown-text" id="yearText">2026</span>
+                                <svg class="calendar-dropdown-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 4.5l3 3 3-3"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button class="calendar-nav-button" id="nextMonth">
+                            <svg class="calendar-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 12l4-4-4-4"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Grille du calendrier -->
+                    <div class="calendar-grid-wrapper">
+                        <!-- En-têtes des jours -->
+                        <div class="calendar-days-header">
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Di</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Lu</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Ma</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Me</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Je</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Ve</span></div>
+                            <div class="calendar-day-header"><span class="calendar-day-header-text">Sa</span></div>
+                        </div>
+
+                        <!-- Grille des dates -->
+                        <div class="calendar-dates-grid" id="calendarDates">
+                            <!-- Les dates seront générées dynamiquement par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget d'emploi du temps -->
+            <div class="schedule-widget" id="scheduleWidget">
+                <div class="schedule-widget-card">
+                    <button class="schedule-close-button" id="closeScheduleWidget">
+                        <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                            <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    
+                    <h2 class="schedule-title">Activités</h2>
+                    
+                    <div class="schedule-date-navigator">
+                        <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
+                        <span class="schedule-date-text" id="scheduleDateText">10 Fevrier 2026</span>
+                        <div class="schedule-nav-arrow next" id="nextDay">›</div>
+                    </div>
+                    
+                    <div class="schedule-timeline" id="scheduleTimeline">
+                        <!-- Marqueurs d'heure -->
+                        <div class="schedule-time-marker" data-hour="6">
+                            <span class="schedule-time-label">6h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="8">
+                            <span class="schedule-time-label">8h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="10">
+                            <span class="schedule-time-label">10h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="12">
+                            <span class="schedule-time-label">12h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="14">
+                            <span class="schedule-time-label">14h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="16">
+                            <span class="schedule-time-label">16h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="18">
+                            <span class="schedule-time-label">18h</span>
+                        </div>
+                        <div class="schedule-time-marker" data-hour="20">
+                            <span class="schedule-time-label">20h</span>
+                        </div>
+                        
+                        <!-- Indicateur de l'heure actuelle -->
+                        <div class="schedule-current-time" id="currentTimeIndicator">
+                            <span class="schedule-current-time-label" id="currentTimeText">9:48</span>
+                        </div>
+                        
+                        <!-- Les activités seront ajoutées dynamiquement ici -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barre de recherche / Menu déroulant -->
+            <div class="search-bar">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#9586a8" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <select class="search-select" id="activitySelect">
+                    <option value="">Rechercher une activité</option>
+                    <optgroup label="Catégories">
+                        <option value="category:sortie">Sortie</option>
+                        <option value="category:aide">Aide/Assistance</option>
+                        <option value="category:formation">Formation/Atelier</option>
+                    </optgroup>
+                    <optgroup label="Activités" id="activitiesList">
+                        <!-- Les activités seront ajoutées dynamiquement -->
+                    </optgroup>
+                </select>
+                <svg class="search-arrow" viewBox="0 0 12 12" fill="none" stroke="#9586a8" stroke-width="2">
+                    <path d="M3 4.5l3 3 3-3"></path>
+                </svg>
+            </div>
+
+            <!-- Container pour les cards d'activités -->
+            <div class="activity-cards-container" id="activityCardsContainer">
+                <!-- Les cards seront ajoutées dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget de détail d'activité (overlay) -->
+    <div class="activity-detail-overlay" id="activityDetailOverlay">
+        <div class="activity-detail-card">
+            <button class="activity-detail-close" id="closeActivityDetail">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="activity-detail-header">
+                <h2 class="activity-detail-title">Activités</h2>
+                <div class="activity-detail-navigator">
+                    <button class="activity-detail-nav-arrow prev" id="prevActivity">‹</button>
+                    <div class="activity-detail-navigator-name" id="activityDetailName">Activité 1</div>
+                    <button class="activity-detail-nav-arrow next" id="nextActivity">›</button>
+                </div>
+            </div>
+            <div class="activity-detail-info-box">
+                <div class="activity-detail-date-time" id="activityDetailDateTime">
+                    <span class="activity-detail-date" id="activityDetailDate">10 Février 2026</span>
+                    <span class="activity-detail-time-separator">•</span>
+                    <span class="activity-detail-time-detail" id="activityDetailTimeDetail">14h00 - 15h30</span>
+                </div>
+            </div>
+            <div class="activity-detail-description-box">
+                <div class="activity-detail-description-label">Description :</div>
+                <div class="activity-detail-description" id="activityDetailDescription">Pendant 1h nous allons faire une activité, décrire l'activiter et possiblement ajouter si il y a des contre-indications médicales ou autres.</div>
+            </div>
+            <button class="activity-detail-register-button" id="registerActivityButton">
+                <span class="activity-detail-register-button-text">Je m'inscris</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <div class="footer-separator"></div>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </div>
+    </div>
+
+
+    <script src="accueil-adherent.js"></script>
+</body>
+</html>

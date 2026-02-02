@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation - VILL'AGE JEUNES</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F7F7F7;
+            padding: 7.6vh 3.25vw;
+            margin: 0;
+        }
+
+        .confirmation-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0;
+            flex: 1;
+        }
+
+        .confirmation-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .confirmation-box {
+            width: 100%;
+            background-color: #F7F7F7;
+            border: 2px solid #649d50;
+            border-radius: 20px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .confirmation-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e1e1d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .confirmation-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1e1e1d;
+            text-align: left;
+        }
+
+        .confirmation-text strong {
+            font-weight: 700;
+        }
+
+        .emoji {
+            font-size: 24px;
+        }
+
+        .countdown {
+            font-size: 14px;
+            color: #6e6f75;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Media queries pour responsive */
+        @media (max-width: 768px) {
+            /* Tablette */
+            body {
+                padding: 2.5vh 5vw;
+            }
+
+            .confirmation-container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Mobile */
+            body {
+                padding: 2.5vh 3.75vw;
+            }
+
+            .confirmation-container {
+                max-width: 100%;
+            }
+
+            .confirmation-box {
+                padding: 30px 20px;
+            }
+
+            .confirmation-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <!-- Logo -->
+        <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo" style="display: none;">
+                <span class="logo-text">VILL'AGE<br>JEUNES</span>
+            </div>
+        </div>
+
+        <!-- Boîte de confirmation -->
+        <div class="confirmation-box">
+            <h1 class="confirmation-title">
+                MERCI POUR TON INSCRIPTION!
+                <span class="emoji">🎉</span>
+            </h1>
+
+            <div class="confirmation-text">
+                <p>Ton aventure commence maintenant. Pour finaliser ton inscription, passe à l'accueil de Vill'Age Jeune et règle le montant de <strong>1000 FCFP</strong>.</p>
+                <p style="margin-top: 15px;">On t'attend avec le sourire et la bonne vibe <span class="emoji">👋</span> Hâte de te voir parmi nous !</p>
+            </div>
+
+            <div class="countdown" id="countdown">
+                Retour à l'accueil dans <span id="timer">5</span> secondes...
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <span class="footer-separator">|</span>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </footer>
+    </div>
+
+    <script>
+        let timeLeft = 5;
+        const timerElement = document.getElementById('timer');
+        const countdownElement = document.getElementById('countdown');
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                window.location.href = 'index.html';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

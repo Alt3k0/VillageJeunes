@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Adhérent·e - VILL'AGE JEUNES</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo" style="display: none;">
+                <span class="logo-text">VILL'AGE<br>JEUNES</span>
+            </div>
+        </div>
+
+        <!-- Formulaire principal -->
+        <div class="form-container">
+            <h1 class="form-title">INSCRIPTION ADHÉRENT·E</h1>
+
+            <!-- Étape 1: Informations personnelles de base -->
+            <div class="form-step active" id="step1">
+                <div class="form-group">
+                    <label class="form-label">Genre:</label>
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="genre" value="F">
+                            <span>F</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="genre" value="M">
+                            <span>M</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="genre" value="X">
+                            <span>X</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">NOM:</label>
+                    <input type="text" class="form-input" name="nom" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Prénom:</label>
+                    <input type="text" class="form-input" name="prenom" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Surnom:</label>
+                    <input type="text" class="form-input" name="surnom" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Je préfère qu'on utilise:</label>
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="preferenceNom" value="prenom">
+                            <span>mon Prénom</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="preferenceNom" value="surnom">
+                            <span>mon Surnom</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date de naissance:</label>
+                    <div class="date-selector">
+                        <select class="form-input form-select date-select" name="jourNaissance" id="jourNaissance">
+                            <option value="">Jour</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="moisNaissance" id="moisNaissance">
+                            <option value="">Mois</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="anneeNaissance" id="anneeNaissance">
+                            <option value="">Année</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="dateNaissance" id="dateNaissance">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 2: Coordonnées -->
+            <div class="form-step" id="step2">
+                <div class="form-group">
+                    <label class="form-label">Ville:</label>
+                    <select class="form-input form-select" name="ville" required>
+                        <option value="">Sélectionnez une ville</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Quartier:</label>
+                    <div id="quartier-container">
+                        <input type="text" class="form-input" name="quartier" id="quartier-input" placeholder="Indiquez votre quartier" style="display: block;">
+                        <select class="form-input form-select" name="quartier-select" id="quartier-select" style="display: none;">
+                            <option value="">Sélectionnez d'abord une ville</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-input" name="email" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Téléphone:</label>
+                    <input type="tel" class="form-input" name="telephone" placeholder="________________">
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="whatsapp">
+                        <span>J'utilise what's app</span>
+                    </label>
+                </div>
+
+                <div class="info-box">
+                    <strong>Pourquoi on demande ?</strong><br>
+                    Pour t'ajouter à notre commu What's app: c'est là qu'on prévient des exclusivités / activités / besoins.<br>
+                    <strong>Ajoute notre numéro what's app: 94.32.90</strong>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 3: Comment j'ai connu le Vill'Âge -->
+            <div class="form-step" id="step3">
+                <div class="form-group">
+                    <label class="form-label">J'ai connu le Vill'Âge par:</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="bouche-oreille">
+                            <span>Bouche à oreille</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="telephone">
+                            <span>Téléphone</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="email">
+                            <span>Email</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="tiktok">
+                            <span>Tiktok</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="insta">
+                            <span>Insta</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="facebook">
+                            <span>Facebook</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="whatsapp">
+                            <span>What's App</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="affichage">
+                            <span>Affichage</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="tv">
+                            <span>TV</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="radio">
+                            <span>Radio</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="decouverte" value="site-web">
+                            <span>Site web</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 4: Ce que je fais dans la vie -->
+            <div class="form-step" id="step4">
+                <h2 class="section-title">Ce que je fais dans la vie</h2>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="activite" value="ecole" id="ecole-check">
+                        <span>École / Collège / Lycée / Univ / Autre lieu scolaire :</span>
+                    </label>
+                </div>
+                <div class="form-group conditional-field" id="ecole-fields" style="display: none;">
+                    <input type="text" class="form-input" name="nomEtablissement" placeholder="Nom de l'établissement :">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="clicMouv">
+                            <span>Pour les moins de 17 ans et scolarisé·es en P.Sud : Clic&Mouv ?</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="activite" value="recherche-emploi" id="emploi-check">
+                        <span>En recherche d'emploi / au chômage</span>
+                    </label>
+                </div>
+                <div class="form-group conditional-field" id="emploi-fields" style="display: none;">
+                    <input type="text" class="form-input" name="secteurRecherche" placeholder="Je recherche principalement dans :">
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="activite" value="activite-payee" id="payee-check">
+                        <span>Activité payée :</span>
+                    </label>
+                </div>
+                <div class="conditional-field" id="payee-fields" style="display: none;">
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="typeActivitePayee" value="salarie">
+                            <span>salarié·e</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="typeActivitePayee" value="employe">
+                            <span>employé·e</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="typeActivitePayee" value="independant">
+                            <span>indépendant·e</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="typeActivitePayee" value="service-civique">
+                            <span>service civique</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" name="secteurActivite" placeholder="Dans quel secteur ?:">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="activite" value="asso" id="asso-check">
+                        <span>Engagé·e dans asso / collectif, ...</span>
+                    </label>
+                </div>
+                <div class="conditional-field" id="asso-fields" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" class="form-input" name="nomAsso" placeholder="Nom :">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" name="sujetAsso" placeholder="Pour quel sujet ?:">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="activite" value="autre" id="autre-check">
+                        <span>autre :</span>
+                    </label>
+                </div>
+                <div class="form-group conditional-field" id="autre-fields" style="display: none;">
+                    <input type="text" class="form-input" name="autreActivite" placeholder="________________">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 5: Mobilité et Permis -->
+            <div class="form-step" id="step5">
+                <div class="form-group">
+                    <label class="form-label">Mobilité:</label>
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="mobilite" value="pieton">
+                            <span>Piéton</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="mobilite" value="bus">
+                            <span>Bus</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="mobilite" value="velo">
+                            <span>Vélo</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="mobilite" value="scooter">
+                            <span>Scooter</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="mobilite" value="voiture">
+                            <span>Voiture</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Permis :</label>
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="permis" value="sans">
+                            <span>Sans</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="permis" value="voiture">
+                            <span>Voiture</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="permis" value="moto">
+                            <span>Moto</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="permis" value="pl">
+                            <span>PL</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="permis" value="trp">
+                            <span>TRP</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 6: Ce que je viens faire -->
+            <div class="form-step" id="step6">
+                <div class="form-group">
+                    <label class="form-label">Ce que je viens faire:</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="objectif" value="travailler">
+                            <span>travailler</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="objectif" value="demarches">
+                            <span>faire mes démarches</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="objectif" value="ressourcer">
+                            <span>me ressourcer</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="objectif" value="engager">
+                            <span>m'engager</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="objectif" value="autre" id="objectif-autre-check">
+                            <span>autre :</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group conditional-field" id="objectif-autre-fields" style="display: none;">
+                    <input type="text" class="form-input" name="objectifAutre" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ce que j'aimerais amener: (plusieurs options possibles)</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="bonne-humeur">
+                            <span>bonne humeur & bienveillance</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="soutien">
+                            <span>soutien technique/moral/matériel à des projets existants/futurs</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="projet-personnel">
+                            <span>un projet personnel en phase avec le Vill'Âge Jeunes</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="aide-espace" id="aide-espace-check">
+                            <span>de l'aide particulière sur un/des espace(s) :</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="reseau" id="reseau-check">
+                            <span>un réseau particulier :</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="amener" value="autre-idee" id="autre-idee-check">
+                            <span>autre idée :</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group conditional-field" id="aide-espace-fields" style="display: none;">
+                    <input type="text" class="form-input" name="aideEspace" placeholder="________________">
+                </div>
+                <div class="form-group conditional-field" id="reseau-fields" style="display: none;">
+                    <input type="text" class="form-input" name="reseauParticulier" placeholder="________________">
+                </div>
+                <div class="form-group conditional-field" id="autre-idee-fields" style="display: none;">
+                    <input type="text" class="form-input" name="autreIdee" placeholder="________________">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 7: Types de projets et bénévolat -->
+            <div class="form-step" id="step7">
+                <div class="form-group">
+                    <label class="form-label">Si tu souhaites t'investir, quel(s) type(s) de projets t'intéresse(nt) le plus :</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="artistique">
+                            <span>artistique</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="culturel">
+                            <span>culturel</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="solidaire">
+                            <span>solidaire</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="numerique">
+                            <span>numérique</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="accompagnement-pro">
+                            <span>accompagnement pro</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="bien-etre">
+                            <span>bien-être (Sport-Santé)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="typeProjet" value="autre" id="projet-autre-check">
+                            <span>autre :</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group conditional-field" id="projet-autre-fields" style="display: none;">
+                    <input type="text" class="form-input" name="typeProjetAutre" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Bénévolat ici ?</label>
+                    <div class="checkbox-inline-group">
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="benevolat" value="volontaire">
+                            <span>Je suis Volontaire</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="benevolat" value="motive">
+                            <span>Motivé·e</span>
+                        </label>
+                        <label class="checkbox-label-inline">
+                            <input type="checkbox" class="checkbox-input" name="benevolat" value="disponible">
+                            <span>Disponible</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 8: Ce que je sais / aimerais -->
+            <div class="form-step" id="step8">
+                <h2 class="section-title">Ce que je sais / aimerais</h2>
+
+                <div class="skills-grid">
+                    <div class="form-group">
+                        <label class="form-label">je sais faire :</label>
+                        <textarea class="form-textarea-large" name="saisFaire" placeholder=""></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">j'aimerais faire :</label>
+                        <textarea class="form-textarea-large" name="aimeraisFaire" placeholder=""></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">je peux transmettre :</label>
+                        <textarea class="form-textarea-large" name="peuxTransmettre" placeholder=""></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">j'aimerais apprendre :</label>
+                        <textarea class="form-textarea-large" name="aimeraisApprendre" placeholder=""></textarea>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 9: Mon droit à l'image -->
+            <div class="form-step" id="step9">
+                <h2 class="section-title">Mon droit à l'image</h2>
+
+                <div class="info-box">
+                    Le Vill'Âge Jeunes peut prendre des photos/vidéos lors des activités (seul·e ou en groupe) pour les publier sur les réseaux sociaux (commu What's app des bénéficiaires, bénévoles, équipe) ou pour des fins promotionnelles avec des partenaires.<br><br>
+                    Le RGPD te permet de te désinscrire, d'accéder, modifier ou demander la suppression de tes données. Pour exercer tes droits, contacte-nous : <strong>contact.villagejeunes@ddec.nc</strong>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Je choisis une option :</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="droitImage" value="oui" required>
+                            <span>OUI : j'autorise le Vill'Âge à me prendre en photo ou en vidéo et je suis d'accord avec l'utilisation expliquée ci-dessus</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="droitImage" value="non" required>
+                            <span>NON : je n'autorise pas le Vill'Âge Jeunes à me prendre en photo/vidéo.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="info-box-small">
+                    <strong>A noter :</strong> Si une personne (ou plus) hors de l'équipe du Vill'Âge Jeunes publie ou partage des photos/vidéos sur internet, dans la presse,..., ce n'est pas une communication officielle du Vill'Âge Jeunes : l'équipe ne pourra pas être tenue responsable de ces publications. Il faut voir directement avec la personne qui a publié.
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 10: Le fonctionnement d'Ici -->
+            <div class="form-step" id="step10">
+                <h2 class="section-title">Le fonctionnement d'Ici</h2>
+
+                <div class="form-group">
+                    <label class="form-label">Ce que je dois savoir et accepter :</label>
+                    <div class="info-list">
+                        <div>• les activités et l'accueil se terminent le 20 décembre 2026.</div>
+                        <div>• les infos seront partagées sur Facebook / Instagram / What's app pour vous tenir au courant des événements du Vill'Âge Jeunes.</div>
+                        <div>• L'équipe peut changer, déplacer ou annuler une activité si il n'y a pas assez d'inscrites ou un problème important (exemple : sous-effectif, mauvais temps, ...).</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Je m'inscris donc je déclare que :</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="reglement" required>
+                            <span>J'ai lu et compris le règlement intérieur + suis d'accord avec ce qui est écrit et m'engage à le (faire) respecter.</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="donneesPersonnelles" required>
+                            <span>J'accepte que l'équipe du Vill'Âge Jeunes utilise mes informations personnelles pour m'envoyer des messages (email, SMS, What's app...) en lien avec le Vill'Âge Jeunes.</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="medecin" required>
+                            <span>Je m'engage à demander l'avis d'un médecin avant de participer aux activités qui aurait un impact sur ma santé.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Si j'ai un problème de santé à signaler (allergie, asthme, épilepsie...), je le note ici :</label>
+                    <textarea class="form-textarea" name="problemeSante" placeholder=""></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="autorisationUrgence" required>
+                        <span>En cas d'accident/urgences, j'autorise l'équipe à agir rapidement pour me soigner et/ou contacter les professionnel-les de santé.</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date:</label>
+                    <div class="date-selector">
+                        <select class="form-input form-select date-select" name="jourSignature" id="jourSignature">
+                            <option value="">Jour</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="moisSignature" id="moisSignature">
+                            <option value="">Mois</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="anneeSignature" id="anneeSignature">
+                            <option value="">Année</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="dateSignature" id="dateSignature">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Signature:</label>
+                    <input type="text" class="form-input" name="signature" placeholder="________________">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-next" id="btn-step10-next" onclick="nextStep()">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Étape 11: Moins de 18 ans -->
+            <div class="form-step" id="step11">
+                <h2 class="section-title">J'ai moins de 18 ans ?</h2>
+
+                <div class="info-box">
+                    Si oui, cadre à remplir obligatoirement par mon parent ou responsable légal :
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="parentReglement">
+                        <span>J'ai lu et compris le règlement intérieur + suis d'accord avec ce qui est écrit et m'engage à le (faire) respecter.</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="parentInfosExactes">
+                        <span>Je confirme que les informations écrites sur cette fiche sont exactes. Si quelque chose change, je m'engage à prévenir l'équipe.</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" name="parentAutorisationSante">
+                        <span>J'autorise l'équipe du Vill'Âge Jeunes à agir rapidement en prenant les mesures nécessaires si mon enfant a un problème de santé pendant une activité (par exemple : appeler un médecin, emmener aux urgences...).</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">NOM et Prénom de la personne responsable :</label>
+                    <input type="text" class="form-input" name="parentNom" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Téléphone :</label>
+                    <input type="tel" class="form-input" name="parentTelephone" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email :</label>
+                    <input type="email" class="form-input" name="parentEmail" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Adresse :</label>
+                    <input type="text" class="form-input" name="parentAdresse" placeholder="________________">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date :</label>
+                    <div class="date-selector">
+                        <select class="form-input form-select date-select" name="jourParent" id="jourParent">
+                            <option value="">Jour</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="moisParent" id="moisParent">
+                            <option value="">Mois</option>
+                        </select>
+                        <select class="form-input form-select date-select" name="anneeParent" id="anneeParent">
+                            <option value="">Année</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="parentDate" id="parentDate">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Signature :</label>
+                    <input type="text" class="form-input" name="parentSignature" placeholder="________________">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-previous" onclick="previousStep()">Précédent</button>
+                    <button class="btn-submit" onclick="submitForm()">Je valide mes informations</button>
+                </div>
+            </div>
+
+
+            <!-- Indicateur de progression -->
+            <div class="pagination">
+                <span class="pagination-dot" id="dot1"></span>
+                <span class="pagination-dot" id="dot2"></span>
+                <span class="pagination-dot" id="dot3"></span>
+                <span class="pagination-dot" id="dot4"></span>
+                <span class="pagination-dot" id="dot5"></span>
+                <span class="pagination-dot" id="dot6"></span>
+                <span class="pagination-dot" id="dot7"></span>
+                <span class="pagination-dot" id="dot8"></span>
+                <span class="pagination-dot" id="dot9"></span>
+                <span class="pagination-dot" id="dot10"></span>
+                <span class="pagination-dot" id="dot11"></span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <span class="footer-separator">|</span>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </footer>
+    </div>
+
+    <script src="quartiers.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

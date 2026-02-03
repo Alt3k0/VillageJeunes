@@ -1332,6 +1332,324 @@
             stroke: currentColor;
         }
 
+        /* Widget de messagerie */
+        .message-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(10px, 2vh, 5vh) clamp(10px, 2vw, 5vw);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message-overlay.active {
+            display: flex;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: clamp(18px, 2.2vw, 36px);
+            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
+                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
+            width: 100%;
+            max-width: 95vw;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .message-close {
+            position: absolute;
+            top: clamp(12px, 1.5vw, 25px);
+            right: clamp(12px, 1.5vw, 25px);
+            width: clamp(28px, 3.4vw, 55px);
+            height: clamp(28px, 3.4vw, 55px);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1001;
+            transition: transform 0.2s ease;
+        }
+
+        .message-close:hover {
+            transform: scale(1.1);
+        }
+
+        .message-close svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .message-separator {
+            width: 100%;
+            height: 1px;
+            background-color: #1e1e1d;
+            margin-top: clamp(60px, 7.5vw, 120px);
+        }
+
+        .message-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(16px, 2vw, 32px);
+            font-weight: 700;
+            color: #0a0a0a;
+            margin: clamp(16px, 2vw, 32px) auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        .message-profiles-grid {
+            width: 100%;
+            padding: 0 clamp(20px, 2.5vw, 40px) clamp(25px, 3vw, 50px);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(24px, 3vw, 48px);
+            justify-items: center;
+        }
+
+        .message-profile-card {
+            width: 100%;
+            max-width: clamp(90px, 11vw, 200px);
+            background-color: #ffffff;
+            border-radius: clamp(8px, 1vw, 16px);
+            padding: clamp(12px, 1.5vw, 24px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(8px, 1vw, 16px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-profile-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .message-profile-card.selected {
+            border: 2px solid #649d50;
+            box-shadow: 0px 4px 12px rgba(100, 157, 80, 0.3);
+        }
+
+        .message-profile-photo {
+            width: clamp(60px, 7.5vw, 120px);
+            height: clamp(60px, 7.5vw, 120px);
+            border-radius: 50%;
+            background-color: #f08d35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-profile-photo-text {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(10px, 1.2vw, 20px);
+            font-weight: 400;
+            color: #1e1e1d;
+        }
+
+        .message-profile-name {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 600;
+            color: #0a0a0a;
+            text-align: center;
+            width: 100%;
+        }
+
+        .message-profile-role {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(10px, 1.2vw, 20px);
+            font-weight: 400;
+            color: #737373;
+            text-align: center;
+            width: 100%;
+        }
+
+        .message-compose-section {
+            width: 100%;
+            padding: clamp(20px, 2.5vw, 40px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(20px, 2.5vw, 40px);
+            border-top: 1px solid #e5e5e5;
+            margin-top: clamp(16px, 2vw, 32px);
+        }
+
+        .message-compose-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(18px, 2.2vw, 36px);
+            font-weight: 600;
+            color: #0a0a0a;
+            text-align: center;
+            margin: 0;
+        }
+
+        .message-compose-separator {
+            width: 100%;
+            height: 1px;
+            background-color: #1e1e1d;
+            margin: 0 auto;
+        }
+
+        .message-profile-details {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: clamp(24px, 3vw, 48px);
+            width: 100%;
+        }
+
+        .message-profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 1.5vw, 24px);
+            flex: 0 1 auto;
+            align-items: flex-start;
+            order: 1;
+        }
+
+        .message-profile-info-item {
+            display: flex;
+            align-items: baseline;
+            gap: clamp(8px, 1vw, 16px);
+        }
+
+        .message-profile-info-label {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            font-weight: 400;
+            color: #0a0a0a;
+        }
+
+        .message-profile-info-value {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            font-weight: 700;
+            color: #0a0a0a;
+        }
+
+        .message-profile-photo-square {
+            width: clamp(120px, 15vw, 240px);
+            height: clamp(120px, 15vw, 240px);
+            min-width: clamp(120px, 15vw, 240px);
+            min-height: clamp(120px, 15vw, 240px);
+            border: 2px solid #1f658e;
+            border-radius: clamp(8px, 1vw, 16px);
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            flex-shrink: 0;
+            order: 2;
+            margin-left: auto;
+        }
+
+        .message-profile-photo-square-text {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            font-weight: 400;
+            color: #1f658e;
+        }
+
+        .message-compose-subtitle {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(16px, 2vw, 32px);
+            font-weight: 700;
+            color: #0a0a0a;
+            text-align: center;
+            margin: 0;
+        }
+
+        .message-text-section {
+            width: 100%;
+        }
+
+        .message-text-section {
+            width: 100%;
+        }
+
+        .message-textarea {
+            width: 100%;
+            min-height: clamp(120px, 15vw, 240px);
+            padding: clamp(12px, 1.5vw, 24px) clamp(16px, 2vw, 32px);
+            background-color: #E0E0E0;
+            border: none;
+            border-radius: clamp(8px, 1vw, 16px);
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            color: #1e1e1d;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+            line-height: 1.5;
+        }
+
+        .message-textarea:focus {
+            background-color: #E8E8E8;
+            box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.2);
+        }
+
+        .message-textarea::placeholder {
+            color: #737373;
+        }
+
+        .message-send-button {
+            width: 100%;
+            padding: clamp(12px, 1.5vw, 24px);
+            background: #649d50;
+            border: none;
+            border-radius: clamp(8px, 1vw, 16px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: center;
+            max-width: fit-content;
+            padding-left: clamp(32px, 4vw, 64px);
+            padding-right: clamp(32px, 4vw, 64px);
+        }
+
+        .message-send-button:hover {
+            background: #5a8d46;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(100, 157, 80, 0.3);
+        }
+
+        .message-send-button:active {
+            transform: translateY(0);
+        }
+
+        .message-send-button-text {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
         /* Media queries pour responsive */
         @media (min-width: 1080px) and (max-width: 1920px) {
             /* Tablette 1080x1920 - Adaptation homothétique depuis 414x896px (ratio 2.61) */
@@ -1838,6 +2156,115 @@
                 width: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
                 height: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
             }
+            
+            /* Widget de messagerie - Adaptation tablette 1080x1920 (ratio 2.61) */
+            .message-card {
+                max-width: 95vw;
+                padding: 0;
+            }
+            
+            .message-close {
+                top: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
+                right: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
+                width: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
+                height: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
+            }
+            
+            .message-separator {
+                margin-top: clamp(9.8rem, 12vw, 15.6rem); /* 60px × 2.61 / 16 = 9.8rem */
+            }
+            
+            .message-title {
+                font-size: clamp(2.6rem, 3.2vw, 3.5rem); /* 16px × 2.61 / 16 = 2.61rem, ajusté */
+                margin: clamp(2.6rem, 3.2vw, 3.5rem) auto; /* Doublé */
+            }
+            
+            .message-profiles-grid {
+                padding: 0 clamp(3.3rem, 4vw, 5.2rem) clamp(4.1rem, 5vw, 6.5rem); /* Doublé */
+                gap: clamp(3.9rem, 4.8vw, 6rem); /* Augmenté de 50% pour plus d'espace */
+            }
+            
+            .message-profile-card {
+                max-width: clamp(14.7rem, 18vw, 19.5rem); /* 90px × 2.61 / 16 = 14.7rem */
+                padding: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                gap: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+            }
+            
+            .message-profile-photo {
+                width: clamp(9.8rem, 12vw, 15.6rem); /* 60px × 2.61 / 16 = 9.8rem */
+                height: clamp(9.8rem, 12vw, 15.6rem);
+            }
+            
+            .message-profile-photo-text {
+                font-size: clamp(1.6rem, 2vw, 2.6rem); /* 10px × 2.61 / 16 = 1.6rem */
+            }
+            
+            .message-profile-name {
+                font-size: clamp(2rem, 2.4vw, 3rem); /* 12px × 2.61 / 16 = 1.96rem, ajusté */
+            }
+            
+            .message-profile-role {
+                font-size: clamp(1.6rem, 2vw, 2.6rem); /* 10px × 2.61 / 16 = 1.6rem */
+            }
+            
+            .message-compose-section {
+                padding: clamp(3.3rem, 4vw, 5.2rem); /* Doublé */
+                gap: clamp(3.3rem, 4vw, 5.2rem); /* Doublé */
+            }
+            
+            .message-compose-title {
+                font-size: clamp(2.9rem, 3.6vw, 4.7rem); /* 18px × 2.61 / 16 = 2.9rem */
+            }
+            
+            .message-profile-details {
+                gap: clamp(3.9rem, 4.8vw, 6rem); /* Doublé */
+            }
+            
+            .message-profile-info {
+                gap: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+            }
+            
+            .message-profile-info-item {
+                gap: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+            }
+            
+            .message-profile-info-label,
+            .message-profile-info-value {
+                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
+            }
+            
+            .message-profile-photo-square {
+                width: clamp(19.6rem, 24vw, 31.2rem); /* 120px × 2.61 / 16 = 19.6rem */
+                height: clamp(19.6rem, 24vw, 31.2rem);
+                min-width: clamp(19.6rem, 24vw, 31.2rem);
+                min-height: clamp(19.6rem, 24vw, 31.2rem);
+                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+            }
+            
+            .message-profile-photo-square-text {
+                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
+            }
+            
+            .message-compose-subtitle {
+                font-size: clamp(2.6rem, 3.2vw, 4.1rem); /* 16px × 2.61 / 16 = 2.6rem */
+            }
+            
+            .message-textarea {
+                min-height: clamp(19.6rem, 24vw, 31.2rem); /* 120px × 2.61 / 16 = 19.6rem */
+                padding: clamp(1.6rem, 2vw, 2.6rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                font-size: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+            }
+            
+            .message-send-button {
+                padding: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
+            }
+            
+            .message-send-button-text {
+                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
+            }
         }
 
         @media (min-width: 769px) and (max-width: 1079px) {
@@ -1873,6 +2300,39 @@
             body {
                 padding-top: 0vh;
                 padding-bottom: 0vh;
+            }
+            
+            /* Widget de messagerie - Mobile */
+            .message-overlay {
+                padding: clamp(5px, 1vh, 2vh) clamp(5px, 1vw, 2vw);
+            }
+            
+            .message-profiles-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: clamp(12px, 1.5vw, 20px);
+                padding: 0 clamp(15px, 2vw, 25px) clamp(20px, 2.5vw, 35px);
+            }
+            
+            .message-profile-card {
+                max-width: 100%;
+            }
+            
+            .message-profile-details {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: clamp(16px, 2vw, 24px);
+            }
+            
+            .message-profile-info {
+                width: 100%;
+                align-items: flex-start;
+            }
+            
+            .message-profile-photo-square {
+                width: clamp(100px, 12vw, 150px);
+                height: clamp(100px, 12vw, 150px);
+                min-width: clamp(100px, 12vw, 150px);
+                min-height: clamp(100px, 12vw, 150px);
             }
 
             .header {
@@ -1980,6 +2440,29 @@
             body {
                 padding-top: 0vh;
                 padding-bottom: 0vh;
+            }
+            
+            /* Widget de messagerie - Mobile petit */
+            .message-overlay {
+                padding: clamp(5px, 0.8vh, 1.5vh) clamp(5px, 0.8vw, 1.5vw);
+            }
+            
+            .message-profiles-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: clamp(10px, 1.2vw, 16px);
+            }
+            
+            .message-profile-details {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: clamp(12px, 1.5vw, 20px);
+            }
+            
+            .message-profile-photo-square {
+                width: clamp(80px, 10vw, 120px);
+                height: clamp(80px, 10vw, 120px);
+                min-width: clamp(80px, 10vw, 120px);
+                min-height: clamp(80px, 10vw, 120px);
             }
 
             .header {
@@ -2363,6 +2846,74 @@
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget de messagerie -->
+    <div class="message-overlay" id="messageOverlay">
+        <div class="message-card">
+            <button class="message-close" id="closeMessage">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            
+            <!-- Ligne de séparation -->
+            <div class="message-separator"></div>
+            
+            <!-- Titre -->
+            <h2 class="message-title">L'équipe Vill'Âge Jeunes</h2>
+            
+            <!-- Grille de profils -->
+            <div class="message-profiles-grid" id="messageProfilesGrid">
+                <!-- Les profils seront générés dynamiquement par JavaScript -->
+            </div>
+            
+            <!-- Section message (affichée après sélection d'un profil) -->
+            <div class="message-compose-section" id="messageComposeSection" style="display: none;">
+                <!-- Titre "Écrire au Staff" -->
+                <h3 class="message-compose-title">Écrire au Staff</h3>
+                <div class="message-compose-separator"></div>
+                
+                <!-- Informations du profil sélectionné -->
+                <div class="message-profile-details" id="messageSelectedProfile">
+                    <!-- Informations à gauche -->
+                    <div class="message-profile-info">
+                        <div class="message-profile-info-item">
+                            <span class="message-profile-info-label">Nom :</span>
+                            <span class="message-profile-info-value" id="messageProfileName">Nom</span>
+                        </div>
+                        <div class="message-profile-info-item">
+                            <span class="message-profile-info-label">Prénom :</span>
+                            <span class="message-profile-info-value" id="messageProfileFirstName">Prénom</span>
+                        </div>
+                        <div class="message-profile-info-item">
+                            <span class="message-profile-info-label">Surnom :</span>
+                            <span class="message-profile-info-value" id="messageProfileNickname">Surnom</span>
+                        </div>
+                        <div class="message-profile-info-item">
+                            <span class="message-profile-info-label">Rôle :</span>
+                            <span class="message-profile-info-value" id="messageProfileRole">Rôle</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Photo à droite -->
+                    <div class="message-profile-photo-square">
+                        <span class="message-profile-photo-square-text">Photo</span>
+                    </div>
+                </div>
+                
+                <!-- Section message -->
+                <h4 class="message-compose-subtitle">Ton message</h4>
+                <div class="message-text-section">
+                    <textarea class="message-textarea" id="messageText" placeholder="En quoi peut-on t'aider ?" rows="6"></textarea>
+                </div>
+                
+                <button class="message-send-button" id="sendMessage">
+                    <span class="message-send-button-text">Envoyer</span>
+                </button>
             </div>
         </div>
     </div>

@@ -1124,4 +1124,201 @@ document.addEventListener('DOMContentLoaded', function() {
             validateMedicalInfo();
         });
     }
+    
+    // Gestion du widget de messagerie
+    const messageOverlay = document.getElementById('messageOverlay');
+    const closeMessageButton = document.getElementById('closeMessage');
+    const messageIcon = document.getElementById('messageIcon');
+    const sendMessageButton = document.getElementById('sendMessage');
+    const messageTextarea = document.getElementById('messageText');
+    const messageProfilesGrid = document.getElementById('messageProfilesGrid');
+    const messageComposeSection = document.getElementById('messageComposeSection');
+    const messageSelectedProfile = document.getElementById('messageSelectedProfile');
+    
+    // Données factices de l'équipe (seront remplacées par des données de la base)
+    const teamMembers = [
+        { id: 1, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 2, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 3, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 4, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 5, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 6, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 7, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 8, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 9, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 10, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' },
+        { id: 11, name: 'Nom Prénom', firstName: 'Prénom', nickname: 'Surnom', role: 'Rôle' }
+    ];
+    
+    let selectedRecipient = null;
+    
+    // Générer la grille de profils
+    function renderProfilesGrid() {
+        if (!messageProfilesGrid) return;
+        
+        messageProfilesGrid.innerHTML = '';
+        
+        teamMembers.forEach(member => {
+            const card = document.createElement('div');
+            card.className = 'message-profile-card';
+            card.dataset.memberId = member.id;
+            
+            const photo = document.createElement('div');
+            photo.className = 'message-profile-photo';
+            const photoText = document.createElement('span');
+            photoText.className = 'message-profile-photo-text';
+            photoText.textContent = 'Photo';
+            photo.appendChild(photoText);
+            
+            const name = document.createElement('div');
+            name.className = 'message-profile-name';
+            name.textContent = member.name;
+            
+            const role = document.createElement('div');
+            role.className = 'message-profile-role';
+            role.textContent = member.role;
+            
+            card.appendChild(photo);
+            card.appendChild(name);
+            card.appendChild(role);
+            
+            card.addEventListener('click', function() {
+                selectRecipient(member);
+            });
+            
+            messageProfilesGrid.appendChild(card);
+        });
+    }
+    
+    // Sélectionner un destinataire
+    function selectRecipient(member) {
+        selectedRecipient = member;
+        
+        // Mettre à jour l'affichage des cartes
+        const cards = document.querySelectorAll('.message-profile-card');
+        cards.forEach(card => {
+            if (card.dataset.memberId == member.id) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+        
+        // Afficher la section de composition
+        if (messageComposeSection) {
+            messageComposeSection.style.display = 'flex';
+        }
+        
+        // Remplir les informations du profil sélectionné
+        const profileName = document.getElementById('messageProfileName');
+        const profileFirstName = document.getElementById('messageProfileFirstName');
+        const profileNickname = document.getElementById('messageProfileNickname');
+        const profileRole = document.getElementById('messageProfileRole');
+        
+        if (profileName) profileName.textContent = member.name || 'Nom';
+        if (profileFirstName) profileFirstName.textContent = member.firstName || 'Prénom';
+        if (profileNickname) profileNickname.textContent = member.nickname || 'Surnom';
+        if (profileRole) profileRole.textContent = member.role || 'Rôle';
+        
+        // Scroll vers la section de composition
+        if (messageComposeSection) {
+            setTimeout(() => {
+                messageComposeSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+    }
+    
+    function showMessage() {
+        if (!messageOverlay) return;
+        messageOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        renderProfilesGrid();
+        // Réinitialiser la sélection
+        selectedRecipient = null;
+        if (messageComposeSection) {
+            messageComposeSection.style.display = 'none';
+        }
+    }
+    
+    function closeMessage() {
+        if (!messageOverlay) return;
+        messageOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        // Réinitialiser le formulaire
+        selectedRecipient = null;
+        if (messageTextarea) messageTextarea.value = '';
+        if (messageComposeSection) {
+            messageComposeSection.style.display = 'none';
+        }
+        // Réinitialiser les cartes sélectionnées
+        const cards = document.querySelectorAll('.message-profile-card');
+        cards.forEach(card => {
+            card.classList.remove('selected');
+        });
+    }
+    
+    function sendMessage() {
+        if (!selectedRecipient) {
+            alert('Veuillez sélectionner un destinataire');
+            return;
+        }
+        
+        const message = messageTextarea ? messageTextarea.value.trim() : '';
+        
+        if (!message) {
+            alert('Veuillez écrire un message');
+            return;
+        }
+        
+        // Ici, vous pouvez ajouter l'appel API pour envoyer le message
+        console.log('Envoi du message:', {
+            recipient: selectedRecipient,
+            message: message
+        });
+        
+        // Pour l'instant, on affiche une confirmation
+        alert(`Message envoyé à ${selectedRecipient.name} avec succès !`);
+        
+        // Fermer le widget après l'envoi
+        closeMessage();
+    }
+    
+    // Ouvrir le widget au clic sur l'icône de messagerie
+    if (messageIcon) {
+        messageIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            showMessage();
+        });
+    }
+    
+    // Fermer le widget
+    if (closeMessageButton) {
+        closeMessageButton.addEventListener('click', closeMessage);
+    }
+    
+    // Fermer en cliquant sur l'overlay
+    if (messageOverlay) {
+        messageOverlay.addEventListener('click', function(e) {
+            if (e.target === messageOverlay) {
+                closeMessage();
+            }
+        });
+    }
+    
+    // Envoyer le message
+    if (sendMessageButton) {
+        sendMessageButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sendMessage();
+        });
+    }
+    
+    // Fermer avec Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (messageOverlay && messageOverlay.classList.contains('active')) {
+                closeMessage();
+            }
+        }
+    });
 });

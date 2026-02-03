@@ -963,6 +963,165 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeActivityDetail();
+            closeProfile();
         }
     });
+
+    // Gestion du widget de profil
+    const profileOverlay = document.getElementById('profileOverlay');
+    const closeProfileButton = document.getElementById('closeProfile');
+    const profileIcon = document.getElementById('profileIcon');
+    
+    // Données factices du profil (seront remplacées par des données de la base)
+    const profileData = {
+        name: 'Martin',
+        firstName: 'Jean',
+        nickname: 'Jéjé',
+        memberNumber: 'VJ-2026-001',
+        email: 'jean.martin@email.com',
+        medicalInfo: ''
+    };
+
+    function updateMedicalTextarea() {
+        const medicalTextarea = document.getElementById('profileMedicalInfo');
+        const validateBtn = document.getElementById('validateMedicalInfo');
+        if (!medicalTextarea) return;
+        
+        if (profileData.medicalInfo && profileData.medicalInfo.trim() !== '') {
+            medicalTextarea.value = profileData.medicalInfo;
+            medicalTextarea.classList.remove('empty');
+            medicalTextarea.style.color = '#0a0a0a';
+            medicalTextarea.style.fontStyle = 'normal';
+            if (validateBtn) validateBtn.style.display = 'block';
+        } else {
+            medicalTextarea.value = '';
+            medicalTextarea.classList.remove('empty');
+            medicalTextarea.style.color = '#0a0a0a';
+            medicalTextarea.style.fontStyle = 'normal';
+            medicalTextarea.setAttribute('placeholder', 'Avez-vous un problème de santé ?');
+            if (validateBtn) validateBtn.style.display = 'none';
+        }
+        
+        // Ajuster la hauteur automatiquement
+        medicalTextarea.style.height = 'auto';
+        medicalTextarea.style.height = Math.max(100, medicalTextarea.scrollHeight) + 'px';
+    }
+
+    function toggleValidateButton() {
+        const medicalTextarea = document.getElementById('profileMedicalInfo');
+        const validateBtn = document.getElementById('validateMedicalInfo');
+        if (!medicalTextarea || !validateBtn) return;
+        
+        const hasText = medicalTextarea.value.trim() !== '';
+        validateBtn.style.display = hasText ? 'block' : 'none';
+        
+        // Ajuster la hauteur automatiquement
+        autoResizeTextarea(medicalTextarea);
+    }
+
+    function validateMedicalInfo() {
+        const medicalTextarea = document.getElementById('profileMedicalInfo');
+        if (!medicalTextarea) return;
+        
+        const medicalInfo = medicalTextarea.value.trim();
+        profileData.medicalInfo = medicalInfo;
+        
+        // Ici vous pouvez ajouter l'appel à l'API pour sauvegarder les données
+        // Par exemple : saveMedicalInfoToDatabase(medicalInfo);
+        
+        // Mettre à jour l'affichage
+        updateMedicalTextarea();
+        
+        // Masquer le bouton après validation
+        const validateBtn = document.getElementById('validateMedicalInfo');
+        if (validateBtn) validateBtn.style.display = 'none';
+        
+        // Optionnel : afficher un message de confirmation
+        console.log('Informations médicales enregistrées:', medicalInfo);
+    }
+    
+    // Ajuster la hauteur du textarea lors du chargement et si le contenu change
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.max(100, textarea.scrollHeight) + 'px';
+    }
+
+    function showProfile() {
+        if (!profileOverlay) return;
+        
+        // Mettre à jour les informations du profil
+        document.getElementById('profileName').textContent = profileData.name;
+        document.getElementById('profileFirstName').textContent = profileData.firstName;
+        document.getElementById('profileNickname').textContent = profileData.nickname || '';
+        document.getElementById('profileMemberNumber').textContent = profileData.memberNumber || '';
+        document.getElementById('profileEmail').textContent = profileData.email;
+        
+        // Gérer les informations médicales
+        updateMedicalTextarea();
+        
+        profileOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Ajuster la taille du textarea après l'affichage
+        setTimeout(() => {
+            const medicalTextarea = document.getElementById('profileMedicalInfo');
+            if (medicalTextarea) {
+                autoResizeTextarea(medicalTextarea);
+            }
+        }, 100);
+    }
+
+    function closeProfile() {
+        if (!profileOverlay) return;
+        profileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Ouvrir le profil au clic sur l'icône
+    if (profileIcon) {
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            showProfile();
+        });
+    }
+
+    // Fermer le profil
+    if (closeProfileButton) {
+        closeProfileButton.addEventListener('click', closeProfile);
+    }
+
+    // Fermer en cliquant sur l'overlay
+    if (profileOverlay) {
+        profileOverlay.addEventListener('click', function(e) {
+            if (e.target === profileOverlay) {
+                closeProfile();
+            }
+        });
+    }
+    
+    // Gérer le champ médical éditable
+    const medicalTextarea = document.getElementById('profileMedicalInfo');
+    const validateBtn = document.getElementById('validateMedicalInfo');
+    
+    if (medicalTextarea) {
+        // Ajuster au chargement
+        setTimeout(() => {
+            autoResizeTextarea(medicalTextarea);
+            toggleValidateButton();
+        }, 100);
+        
+        // Ajuster si le contenu change et afficher/masquer le bouton
+        medicalTextarea.addEventListener('input', function() {
+            autoResizeTextarea(this);
+            toggleValidateButton();
+        });
+    }
+    
+    // Gérer le clic sur le bouton Valider
+    if (validateBtn) {
+        validateBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            validateMedicalInfo();
+        });
+    }
 });

@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -123,7 +126,6 @@
             min-height: 110px;
             width: 100%;
             max-width: 270px;
-            padding-left: 3.25vw;
             position: relative;
         }
 
@@ -221,7 +223,7 @@
             align-items: center;
             justify-content: center;
             gap: 2.25vw;
-            width: 91.5vw;
+            width: 100vw;
             max-width: 366px;
             height: 2.5vh;
             min-height: 20px;
@@ -276,6 +278,26 @@
             /* Desktop - s'adapte depuis mobile */
             body {
                 padding: 10vh 6.5vw;
+            }
+
+            .connexion-main {
+                width: 80vw;
+                max-width: 400px;
+            }
+
+            .connexion-form {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .form-field-group {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .password-field-group {
+                width: 100%;
+                max-width: 400px;
             }
         }
 
@@ -344,7 +366,7 @@
     <div class="connexion-container">
         <!-- Logo -->
         <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
-            <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.src='logo et charte graphique/LogoRond.png';">
             <div class="logo" style="display: none;">
                 <span class="logo-text">VILL'AGE<br>JEUNES</span>
             </div>

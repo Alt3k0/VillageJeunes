@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil Adhérent - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         * {
@@ -12,12 +15,18 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #F7F7F7;
             min-height: 100vh;
             position: relative;
-            overflow-x: hidden;
         }
 
         /* Fond décoratif */
@@ -44,44 +53,51 @@
 
         /* Header sticky */
         body {
-            padding-top: 7.6vh;
-            padding-bottom: 7.6vh;
+            padding-top: 0vh;
+            padding-bottom: 0vh;
+            margin: 0;
+            padding-left: 0;
+            padding-right: 0;
         }
 
         .header {
             position: sticky;
             top: 0;
+            left: 0;
+            right: 0;
             background-color: rgba(217, 217, 217, 0.2);
             backdrop-filter: blur(10px);
-            height: 101px;
+            height: clamp(8vh, 12vw, 18vh);
+            min-height: clamp(70px, 8.4vw, 180px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 41px 32px 18px;
+            padding: clamp(3vh, 4vw, 6vh) clamp(2.5vw, 3.5vw, 5vw) clamp(1.5vh, 2vw, 3vh);
             z-index: 100;
-            width: 393px;
-            max-width: 100%;
-            margin: 0 auto;
+            width: 100vw;
+            margin: 0;
+            box-sizing: border-box;
         }
 
         .header-logo {
-            width: 45px;
-            height: 45px;
+            width: clamp(4rem, 7vw, 8rem);
+            height: clamp(4rem, 7vw, 8rem);
             cursor: pointer;
         }
 
         .header-icons {
             display: flex;
-            gap: 15px;
+            gap: clamp(1.2rem, 2vw, 3rem);
             align-items: center;
         }
 
         .header-icon {
-            width: 30px;
-            height: 30px;
+            width: clamp(2.5rem, 4vw, 5.5rem);
+            height: clamp(2.5rem, 4vw, 5.5rem);
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            object-fit: contain;
         }
 
         .header-icon:hover {
@@ -96,8 +112,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            padding: 30px 13px 30px;
+            gap: clamp(15px, 1.9vw, 30px);
+            padding: clamp(20px, 2.5vw, 50px) clamp(10px, 1.2vw, 20px) clamp(20px, 2.5vw, 50px);
             min-height: 100vh;
         }
 
@@ -105,42 +121,43 @@
         .body-content {
             display: flex;
             flex-direction: column;
-            gap: 17px;
+            gap: clamp(12px, 1.5vw, 25px);
             align-items: center;
-            padding: 48px 0;
+            padding: clamp(24px, 3vw, 60px) 0;
             width: 100%;
-            max-width: 353px;
+            max-width: clamp(280px, 90vw, 600px);
         }
 
         /* Titre */
         .activities-title {
-            font-size: 20px;
+            font-size: clamp(16px, 2.5vw, 28px);
             font-weight: 700;
             color: #1e1e1d;
             text-align: center;
             text-transform: uppercase;
-            height: 49px;
+            height: clamp(35px, 4vw, 60px);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 177px;
+            width: clamp(140px, 45vw, 300px);
         }
 
         /* Calendrier */
         .calendar-wrapper {
-            width: 353px;
+            width: clamp(280px, 90vw, 600px);
             cursor: pointer;
         }
 
         .calendar {
             background-color: #F7F7F7;
             border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 12px;
-            width: 335px;
+            border-radius: clamp(8px, 1vw, 16px);
+            padding: clamp(10px, 1.5vw, 20px);
+            width: 100%;
+            max-width: clamp(265px, 88vw, 580px);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: clamp(12px, 1.8vw, 24px);
         }
 
         .calendar-header {
@@ -151,8 +168,8 @@
         }
 
         .calendar-nav-button {
-            width: 32px;
-            height: 32px;
+            width: clamp(24px, 3vw, 48px);
+            height: clamp(24px, 3vw, 48px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -168,13 +185,13 @@
         }
 
         .calendar-nav-icon {
-            width: 16px;
-            height: 16px;
+            width: clamp(12px, 4.2vw, 16px);
+            height: clamp(12px, 4.2vw, 16px);
         }
 
         .calendar-month-year {
             display: flex;
-            gap: 6px;
+            gap: clamp(4px, 1.6vw, 6px);
             align-items: center;
             justify-content: center;
         }
@@ -182,12 +199,12 @@
         .calendar-dropdown {
             background-color: #F7F7F7;
             border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            height: 32px;
+            border-radius: clamp(6px, 2.1vw, 8px);
+            height: clamp(24px, 8.3vw, 32px);
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 0 4px 0 8px;
+            gap: clamp(3px, 1vw, 4px);
+            padding: 0 clamp(3px, 1vw, 4px) 0 clamp(6px, 2.1vw, 8px);
             box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -198,71 +215,72 @@
         }
 
         .calendar-dropdown-text {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 18px);
             font-weight: 500;
             color: #0a0a0a;
-            line-height: 20px;
+            line-height: clamp(16px, 2vw, 24px);
         }
 
         .calendar-dropdown-arrow {
-            width: 12px;
-            height: 12px;
+            width: clamp(10px, 1.2vw, 16px);
+            height: clamp(10px, 1.2vw, 16px);
         }
 
         /* Grille du calendrier */
         .calendar-grid-wrapper {
             aspect-ratio: 307 / 221;
             width: 100%;
+            min-height: clamp(200px, 25vw, 400px);
         }
 
         .calendar-days-header {
             aspect-ratio: 307 / 21;
             display: flex;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
             align-items: center;
             justify-content: center;
             width: 100%;
         }
 
         .calendar-day-header {
-            width: 32px;
-            height: 21px;
+            width: clamp(28px, 3.5vw, 56px);
+            height: clamp(18px, 2.2vw, 35px);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: clamp(4px, 0.5vw, 8px);
         }
 
         .calendar-day-header-text {
-            font-size: 12px;
+            font-size: clamp(10px, 1.2vw, 20px);
             font-weight: 400;
             color: #737373;
-            line-height: 16px;
+            line-height: clamp(14px, 1.7vw, 24px);
         }
 
         .calendar-dates-grid {
             aspect-ratio: 307 / 200;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
             width: 100%;
-            padding-top: 8px;
+            padding-top: clamp(6px, 0.8vw, 12px);
         }
 
         .calendar-week {
             display: flex;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
             align-items: start;
             justify-content: center;
         }
 
         .calendar-date {
-            width: 32px;
-            height: 32px;
+            width: clamp(28px, 3.5vw, 56px);
+            height: clamp(28px, 3.5vw, 56px);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: clamp(6px, 0.8vw, 12px);
             cursor: pointer;
             transition: all 0.2s ease;
             background-color: transparent;
@@ -286,15 +304,15 @@
         }
 
         .calendar-date-text {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 24px);
             font-weight: 400;
             color: #0a0a0a;
-            line-height: 20px;
+            line-height: clamp(16px, 2vw, 28px);
         }
 
         .activity-dot {
-            width: 6px;
-            height: 6px;
+            width: clamp(4px, 0.5vw, 10px);
+            height: clamp(4px, 0.5vw, 10px);
             border-radius: 50%;
             flex-shrink: 0;
         }
@@ -303,13 +321,13 @@
         .search-bar {
             background-color: #F7F7F7;
             border: 1px solid #d9d0e3;
-            border-radius: 27px;
-            height: 34px;
-            width: 262px;
+            border-radius: clamp(20px, 2.5vw, 40px);
+            height: clamp(28px, 3.5vw, 50px);
+            width: clamp(200px, 70vw, 500px);
             display: flex;
             align-items: center;
-            gap: 11px;
-            padding: 9px 15px;
+            gap: clamp(8px, 1vw, 16px);
+            padding: clamp(7px, 0.9vw, 14px) clamp(12px, 1.5vw, 25px);
             transition: all 0.3s ease;
         }
 
@@ -319,8 +337,8 @@
         }
 
         .search-icon {
-            width: 16.813px;
-            height: 17px;
+            width: clamp(13px, 1.6vw, 26px);
+            height: clamp(13px, 1.6vw, 27px);
             flex-shrink: 0;
         }
 
@@ -329,25 +347,25 @@
             border: none;
             outline: none;
             background: transparent;
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 24px);
             color: #1e1e1d;
             font-family: inherit;
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            padding-right: 24px;
+            padding-right: clamp(18px, 2.2vw, 35px);
         }
 
         .search-select option {
-            padding: 8px;
+            padding: clamp(6px, 0.8vw, 12px);
         }
 
         .search-arrow {
             position: absolute;
-            right: 15px;
-            width: 12px;
-            height: 12px;
+            right: clamp(12px, 1.5vw, 25px);
+            width: clamp(10px, 1.2vw, 18px);
+            height: clamp(10px, 1.2vw, 18px);
             pointer-events: none;
             transition: transform 0.3s ease;
         }
@@ -360,13 +378,13 @@
         .activity-cards-container {
             display: none;
             flex-direction: column;
-            gap: 12px;
+            gap: clamp(10px, 1.5vw, 20px);
             width: 100%;
-            max-width: 353px;
-            margin-top: 20px;
-            max-height: 400px;
+            max-width: clamp(280px, 90vw, 600px);
+            margin-top: clamp(15px, 2vw, 30px);
+            max-height: clamp(300px, 50vh, 600px);
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: clamp(4px, 0.5vw, 10px);
         }
 
         .activity-cards-container.active {
@@ -376,11 +394,11 @@
         .activity-card {
             background-color: #F7F7F7;
             border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 16px;
+            border-radius: clamp(8px, 1vw, 16px);
+            padding: clamp(12px, 1.8vw, 24px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -422,20 +440,20 @@
         }
 
         .activity-card-date {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 18px);
             color: #6e6f75;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
         }
 
         .activity-card-time {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 18px);
             color: #6e6f75;
         }
 
         .activity-card-location {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 18px);
             color: #6e6f75;
             font-style: italic;
         }
@@ -453,18 +471,18 @@
         /* Footer */
         .footer {
             position: fixed;
-            bottom: 7.6vh;
+            bottom: 0vh;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(217, 217, 217, 0.2);
             backdrop-filter: blur(10px);
-            height: 6.96vh;
+            height: clamp(40px, 4.8vw, 90px);
             width: 100%;
-            max-width: 393px;
+            max-width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2vh 3.5vw;
+            padding: clamp(12px, 1.4vw, 25px) clamp(20px, 2.4vw, 50px);
             z-index: 100;
         }
 
@@ -472,42 +490,43 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 9px;
-            width: 366px;
-            height: 20px;
-            padding-right: 18px;
+            gap: clamp(1rem, 1.5vw, 2.5rem);
+            width: clamp(280px, 33.9vw, 700px);
+            height: 100%;
+            padding: clamp(0.5rem, 0.8vw, 1.5rem) clamp(1rem, 1.5vw, 2.5rem);
         }
 
         .footer-link {
-            font-size: 12px;
+            font-size: clamp(0.9rem, 1.3vw, 2rem);
             color: #1e1e1d;
             text-decoration: none;
-            height: 30px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            padding: clamp(0.3rem, 0.5vw, 0.8rem) clamp(0.5rem, 0.8vw, 1.2rem);
         }
 
         .footer-link:first-child {
-            width: 181px;
+            min-width: clamp(140px, 18vw, 350px);
         }
 
         .footer-link:last-child {
-            width: 116px;
+            min-width: clamp(90px, 12vw, 220px);
         }
 
         .footer-separator {
             width: 0;
-            height: 20px;
+            height: clamp(2rem, 3vw, 4rem);
             position: relative;
         }
 
         .footer-separator::before {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 1px;
+            width: clamp(2rem, 3vw, 4rem);
+            height: 2px;
             background-color: #6e6f75;
             top: 50%;
             left: 50%;
@@ -519,9 +538,9 @@
             display: none;
             position: relative;
             width: 100%;
-            max-width: 353px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            max-width: clamp(280px, 90vw, 900px);
+            margin-top: clamp(15px, 1.8vw, 30px);
+            margin-bottom: clamp(15px, 1.8vw, 30px);
             align-items: center;
             justify-content: center;
         }
@@ -533,14 +552,14 @@
         .schedule-widget-card {
             background-color: #F7F7F7;
             border: 2px solid rgba(31, 101, 142, 0.5);
-            border-radius: 16px;
+            border-radius: clamp(12px, 1.5vw, 24px);
             box-shadow: 0px 1px 8px 0px rgba(110, 110, 110, 0.1);
-            width: 275px;
-            height: 414px;
-            padding: 20px;
+            width: clamp(220px, 78vw, 700px);
+            height: clamp(330px, 43vw, 650px);
+            padding: clamp(16px, 2vw, 35px);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: clamp(10px, 1.2vw, 20px);
             align-items: center;
             position: relative;
             animation: slideDown 0.3s ease;
@@ -548,60 +567,61 @@
         }
 
         .schedule-title {
-            font-size: 16px;
+            font-size: clamp(14px, 1.7vw, 28px);
             font-weight: 700;
             color: #414d55;
-            line-height: 20px;
+            line-height: clamp(18px, 2.2vw, 35px);
             letter-spacing: 0.01px;
         }
 
         .schedule-date-navigator {
             position: relative;
-            width: 215px;
-            height: 32px;
+            width: clamp(170px, 56vw, 400px);
+            height: clamp(26px, 3.2vw, 50px);
             background-color: #fafbfd;
-            border-radius: 8px;
+            border-radius: clamp(6px, 0.8vw, 12px);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .schedule-date-text {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 24px);
             font-weight: 500;
             color: #3d7b9a;
-            line-height: 20px;
+            line-height: clamp(16px, 2vw, 30px);
             text-align: center;
         }
 
         .schedule-nav-arrow {
             position: absolute;
-            width: 7px;
-            height: 20px;
+            width: clamp(6px, 0.7vw, 12px);
+            height: clamp(16px, 2vw, 30px);
             cursor: pointer;
             color: #a2c0d4;
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 24px);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .schedule-nav-arrow.prev {
-            left: 22px;
+            left: clamp(18px, 2.2vw, 35px);
         }
 
         .schedule-nav-arrow.next {
-            right: 22px;
+            right: clamp(18px, 2.2vw, 35px);
         }
 
         .schedule-timeline {
             position: relative;
             width: 100%;
-            height: 280px;
-            margin-top: 12px;
+            min-height: clamp(220px, 29vw, 450px);
+            height: auto;
+            margin-top: clamp(10px, 1.2vw, 20px);
             overflow: visible;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            padding-top: clamp(8px, 1vw, 15px);
+            padding-bottom: clamp(8px, 1vw, 15px);
         }
 
         .schedule-time-marker {
@@ -642,35 +662,35 @@
         }
 
         .schedule-time-marker[data-hour="6"] {
-            top: 10px;
+            top: clamp(8px, 1vw, 15px);
         }
 
         .schedule-time-marker[data-hour="8"] {
-            top: 50px;
+            top: clamp(40px, 5vw, 75px);
         }
 
         .schedule-time-marker[data-hour="10"] {
-            top: 90px;
+            top: clamp(72px, 9vw, 135px);
         }
 
         .schedule-time-marker[data-hour="12"] {
-            top: 130px;
+            top: clamp(104px, 13vw, 195px);
         }
 
         .schedule-time-marker[data-hour="14"] {
-            top: 170px;
+            top: clamp(136px, 17vw, 255px);
         }
 
         .schedule-time-marker[data-hour="16"] {
-            top: 210px;
+            top: clamp(168px, 21vw, 315px);
         }
 
         .schedule-time-marker[data-hour="18"] {
-            top: 250px;
+            top: clamp(200px, 25vw, 375px);
         }
 
         .schedule-time-marker[data-hour="20"] {
-            top: 290px;
+            top: clamp(232px, 29vw, 435px);
         }
 
         .schedule-activity {
@@ -686,28 +706,28 @@
         }
 
         .schedule-activity-text {
-            font-size: 14px;
+            font-size: clamp(12px, 1.5vw, 24px);
             font-weight: 400;
             color: #1e1e1d;
             text-align: center;
             line-height: normal;
             position: relative;
             z-index: 2;
-            padding: 0 8px;
+            padding: 0 clamp(6px, 0.8vw, 12px);
             opacity: 1;
         }
 
         .schedule-current-time {
             position: absolute;
-            left: 23px;
-            width: 41px;
+            left: clamp(18px, 2.2vw, 35px);
+            width: clamp(33px, 4.1vw, 65px);
             background: linear-gradient(to top, #1f658e, #3d7b9a);
-            border-radius: 8px;
+            border-radius: clamp(6px, 0.8vw, 12px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 12;
-            height: 20px;
+            height: clamp(16px, 2vw, 30px);
         }
 
         .schedule-current-time::before {
@@ -716,17 +736,17 @@
             left: 0;
             right: 0;
             top: 0;
-            bottom: 60px;
+            bottom: clamp(48px, 6vw, 90px);
             background: linear-gradient(to top, #1f658e, #3d7b9a);
-            border-radius: 8px;
+            border-radius: clamp(6px, 0.8vw, 12px);
         }
 
         .schedule-current-time-label {
-            font-size: 10px;
+            font-size: clamp(8px, 1vw, 16px);
             font-weight: 500;
             color: #F7F7F7;
             text-transform: uppercase;
-            line-height: 14px;
+            line-height: clamp(12px, 1.5vw, 22px);
             text-align: center;
             position: relative;
             z-index: 1;
@@ -734,10 +754,10 @@
 
         .schedule-close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 36px;
-            height: 36px;
+            top: clamp(8px, 1vw, 15px);
+            right: clamp(8px, 1vw, 15px);
+            width: clamp(28px, 3.4vw, 55px);
+            height: clamp(28px, 3.4vw, 55px);
             border: none;
             background: transparent;
             cursor: pointer;
@@ -792,7 +812,7 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 60px;
+            bottom: 0px;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -811,16 +831,16 @@
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
+            border-radius: clamp(18px, 2.2vw, 36px);
             box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
                         0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
             width: 100%;
-            max-width: 400px;
-            min-height: 500px;
-            padding: 32px 24px;
+            max-width: clamp(320px, 80vw, 800px);
+            min-height: clamp(400px, 52vw, 800px);
+            padding: clamp(25px, 3vw, 50px) clamp(20px, 2.4vw, 40px);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: clamp(16px, 2vw, 30px);
             align-items: center;
             position: relative;
             animation: fadeIn 0.3s ease;
@@ -828,10 +848,10 @@
 
         .activity-detail-close {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
+            top: clamp(12px, 1.5vw, 25px);
+            right: clamp(12px, 1.5vw, 25px);
+            width: clamp(28px, 3.4vw, 55px);
+            height: clamp(28px, 3.4vw, 55px);
             border: none;
             background: transparent;
             cursor: pointer;
@@ -863,9 +883,9 @@
         }
 
         .activity-detail-title {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Archivo Black', sans-serif;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 400;
             color: #414d55;
             text-align: center;
             line-height: 24px;
@@ -890,7 +910,7 @@
         }
 
         .activity-detail-navigator-name {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Rubik', sans-serif;
             font-size: 15px;
             font-weight: 500;
             color: #3d7b9a;
@@ -904,7 +924,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Rubik', sans-serif;
             font-size: 18px;
             font-weight: 300;
             color: #a2c0d4;
@@ -937,21 +957,21 @@
 
         .activity-detail-info-box {
             width: 100%;
-            max-width: 320px;
+            max-width: clamp(260px, 65vw, 640px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: clamp(6px, 0.8vw, 12px);
         }
 
         .activity-detail-date-time {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 14px;
+            gap: clamp(6px, 0.8vw, 12px);
+            font-size: clamp(12px, 1.5vw, 24px);
             color: #3d7b9a;
             font-weight: 500;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Rubik', sans-serif;
         }
 
         .activity-detail-date {
@@ -971,11 +991,11 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 16px;
+            border-radius: clamp(12px, 1.5vw, 24px);
             width: 100%;
-            max-width: 320px;
-            min-height: 220px;
-            padding: 20px;
+            max-width: clamp(260px, 65vw, 640px);
+            min-height: clamp(180px, 23vw, 350px);
+            padding: clamp(16px, 2vw, 30px);
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -984,20 +1004,20 @@
         }
 
         .activity-detail-description-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(13px, 1.6vw, 26px);
             font-weight: 600;
             color: #1e1e1d;
-            line-height: 22px;
-            margin-bottom: 12px;
+            line-height: clamp(18px, 2.2vw, 35px);
+            margin-bottom: clamp(10px, 1.2vw, 18px);
         }
 
         .activity-detail-description {
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
             font-weight: 400;
             color: #414d55;
-            line-height: 22px;
+            line-height: clamp(18px, 2.2vw, 35px);
             text-align: left;
             margin: 0;
             white-space: pre-wrap;
@@ -1008,17 +1028,17 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            border-radius: clamp(12px, 1.5vw, 24px);
             width: 100%;
-            max-width: 280px;
-            height: 56px;
+            max-width: clamp(220px, 55vw, 560px);
+            height: clamp(45px, 5.6vw, 90px);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0px 4px 12px 0px rgba(31, 101, 142, 0.3);
-            margin-top: 8px;
+            margin-top: clamp(6px, 0.8vw, 12px);
         }
 
         .activity-detail-register-button:hover {
@@ -1032,38 +1052,905 @@
         }
 
         .activity-detail-register-button-text {
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(13px, 1.6vw, 26px);
             font-weight: 500;
             color: #F7F7F7;
             line-height: normal;
             text-align: center;
-            letter-spacing: 0.3px;
+            letter-spacing: clamp(0.2px, 0.03vw, 0.5px);
+        }
+
+        /* Widget de profil utilisateur */
+        .profile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .profile-overlay.active {
+            display: flex;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: clamp(18px, 2.2vw, 36px);
+            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
+                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
+            width: 100%;
+            max-width: clamp(320px, 80vw, 800px);
+            padding: clamp(25px, 3vw, 50px) clamp(20px, 2.4vw, 40px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(18px, 2.2vw, 35px);
+            align-items: flex-start;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-close {
+            position: absolute;
+            top: clamp(12px, 1.5vw, 25px);
+            right: clamp(12px, 1.5vw, 25px);
+            width: clamp(28px, 3.4vw, 55px);
+            height: clamp(28px, 3.4vw, 55px);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1001;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-close:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-close svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .profile-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .profile-section-header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-section-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(14px, 1.7vw, 28px);
+            font-weight: 500;
+            color: #0a0a0a;
+            margin: 0;
+            text-align: left;
+        }
+
+        .profile-section-line {
+            width: 100%;
+            height: 1px;
+            background-color: #1e1e1d;
+        }
+
+        .profile-info-content {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: clamp(16px, 2vw, 30px);
+            align-items: flex-start;
+        }
+
+        .profile-info-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 1.5vw, 24px);
+        }
+
+        .profile-field {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: clamp(6px, 0.8vw, 12px);
+        }
+
+        .profile-field.member-number {
+            flex-wrap: wrap;
+        }
+
+        .profile-field.member-number .profile-field-label {
+            flex-basis: 100%;
+        }
+
+        .profile-field-label {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 400;
+            color: #0a0a0a;
+            white-space: nowrap;
+        }
+
+        .profile-field-value {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 400;
+            color: #0a0a0a;
+        }
+
+        .profile-photo-container {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .profile-photo-placeholder {
+            width: clamp(90px, 11vw, 200px);
+            height: clamp(90px, 11vw, 200px);
+            background-color: #ffffff;
+            border: 1px solid #1f658e;
+            border-radius: clamp(6px, 0.8vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-photo-text {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 400;
+            color: #1f658e;
+        }
+
+        .profile-medical-textarea-container {
+            width: 100%;
+            position: relative;
+        }
+
+        .profile-medical-textarea {
+            width: 100%;
+            min-height: clamp(80px, 10vw, 150px);
+            padding: clamp(10px, 1.2vw, 20px) clamp(60px, 7.4vw, 120px) clamp(10px, 1.2vw, 20px) clamp(10px, 1.2vw, 20px);
+            background-color: #f0f0f0;
+            border: 1px solid #f08d35;
+            border-radius: clamp(6px, 0.8vw, 12px);
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 400;
+            color: #0a0a0a;
+            line-height: clamp(16px, 2vw, 30px);
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            overflow: hidden;
+            transition: height 0.2s ease;
+        }
+
+        .profile-medical-textarea::placeholder {
+            color: #737373;
+            font-style: normal;
+            opacity: 1;
+        }
+
+        .profile-medical-textarea:focus {
+            border-color: #f08d35;
+            outline: none;
+        }
+
+        .profile-medical-validate-btn {
+            position: absolute;
+            bottom: clamp(10px, 1.2vw, 20px);
+            right: clamp(10px, 1.2vw, 20px);
+            background-color: #1f658e;
+            color: #ffffff;
+            border: none;
+            border-radius: clamp(5px, 0.6vw, 10px);
+            padding: clamp(5px, 0.6vw, 10px) clamp(10px, 1.2vw, 20px);
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(10px, 1.2vw, 20px);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            z-index: 10;
+        }
+
+        .profile-medical-validate-btn:hover {
+            background-color: #3d7b9a;
+        }
+
+        .profile-medical-validate-btn:active {
+            background-color: #1a4d6b;
+        }
+
+        .profile-security-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .profile-password-field {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+
+        .profile-password-masked {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(12px, 1.5vw, 24px);
+            font-weight: 400;
+            color: #0a0a0a;
+            letter-spacing: clamp(1px, 0.2vw, 3px);
+        }
+
+        .profile-password-edit {
+            display: flex;
+            align-items: baseline;
+            gap: clamp(3px, 0.4vw, 6px);
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(10px, 1.2vw, 20px);
+            font-weight: 400;
+            color: #737373;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .profile-password-edit:hover {
+            color: #1f658e;
+        }
+
+        .profile-edit-icon {
+            width: clamp(11px, 1.4vw, 22px);
+            height: clamp(11px, 1.4vw, 22px);
+            stroke: currentColor;
         }
 
         /* Media queries pour responsive */
+        @media (min-width: 1080px) and (max-width: 1920px) {
+            /* Tablette 1080x1920 - Adaptation homothétique depuis 414x896px (ratio 2.61) */
+            .main-container {
+                gap: clamp(1.5rem, 2vw, 2rem);
+                padding: clamp(2rem, 8vh, 10vh) clamp(1.2rem, 1.5vw, 1.8rem) clamp(16vh, 18vh, 20vh);
+                justify-content: flex-start;
+            }
+            
+            .body-content {
+                max-width: clamp(700px, 85vw, 950px);
+                gap: clamp(1.2rem, 1.5vw, 1.8rem);
+                padding: clamp(1rem, 1.5vw, 2rem) 0 clamp(2rem, 3vw, 4rem);
+            }
+            
+            .calendar-wrapper {
+                width: clamp(700px, 85vw, 950px);
+            }
+            
+            .calendar {
+                max-width: clamp(680px, 83vw, 930px);
+                padding: 2.61rem; /* 10px × 2.61 / 16 = 1.63rem, ajusté pour correspondre */
+                gap: 3.13rem; /* 12px × 2.61 / 16 = 1.96rem, ajusté */
+            }
+            
+            .search-bar {
+                width: clamp(500px, 60vw, 700px);
+                height: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
+                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
+                gap: 2.09rem; /* 8px × 2.61 / 16 = 1.305rem, ajusté pour correspondre */
+                padding: 1.83rem clamp(1.2rem, 1.5vw, 1.8rem); /* 7px × 2.61 / 16 = 1.83rem vertical */
+                border-radius: clamp(20px, 2.5vw, 40px);
+                position: relative;
+            }
+            
+            .search-icon {
+                width: 2.12rem; /* 13px × 2.61 / 16 = 2.12rem */
+                height: 2.12rem;
+            }
+            
+            .search-select {
+                font-size: 1.95rem; /* Taille normale : 12px × 2.61 / 16 = 1.95rem */
+                padding-right: clamp(1.8rem, 2.2vw, 2.5rem);
+                line-height: 1.2;
+            }
+            
+            /* Réduire de moitié la taille du menu déroulant (options) */
+            .search-select option {
+                font-size: 0.975rem; /* Réduit de moitié : 1.95rem / 2 */
+                padding: clamp(0.15rem, 0.2vw, 0.25rem) clamp(0.3rem, 0.4vw, 0.5rem); /* Réduit de moitié */
+                line-height: 1.2;
+                height: auto;
+            }
+            
+            .search-select optgroup {
+                font-size: 0.875rem; /* Légèrement plus petit pour les groupes */
+                font-weight: 600;
+                padding: clamp(0.15rem, 0.2vw, 0.25rem) clamp(0.3rem, 0.4vw, 0.5rem);
+            }
+            
+            .search-select:focus {
+                outline: none;
+            }
+            
+            .search-arrow {
+                width: 1.63rem; /* 10px × 2.61 / 16 = 1.63rem */
+                height: 1.63rem;
+                right: clamp(1.2rem, 1.5vw, 1.8rem);
+            }
+            
+            .activity-cards-container {
+                max-width: clamp(700px, 85vw, 950px);
+                gap: clamp(1.33rem, 1.6vw, 2rem); /* Réduit de 1/3 : × 2/3 */
+                margin-top: clamp(1.5rem, 2vw, 2rem);
+            }
+            
+            /* Cartes d'activités réduites de 1/3 */
+            .activity-card {
+                padding: clamp(1.6rem, 2.4vw, 3.2rem); /* Réduit de 1/3 : × 2/3 */
+                gap: clamp(0.8rem, 1.07vw, 1.6rem); /* Réduit de 1/3 : × 2/3 */
+                border-radius: clamp(1.07rem, 1.33vw, 2.13rem); /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            .activity-card-title {
+                font-size: 2.13rem; /* Réduit de 1/3 : × 2/3 */
+                line-height: 1.4;
+            }
+            
+            .activity-card-badge {
+                padding: clamp(0.53rem, 0.67vw, 1.07rem) clamp(1.07rem, 1.33vw, 2.13rem); /* Réduit de 1/3 : × 2/3 */
+                border-radius: 1.6rem; /* Réduit de 1/3 : × 2/3 */
+                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            .activity-card-date {
+                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
+                gap: clamp(0.8rem, 1.07vw, 1.6rem); /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            .activity-card-time {
+                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            .activity-card-location {
+                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            .activity-card-color-indicator {
+                width: 0.53rem; /* Réduit de 1/3 : × 2/3 */
+            }
+            
+            /* Calendrier - éléments internes agrandis pour tablette (ratio 2.61 strict) */
+            .calendar-day-header {
+                width: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
+                height: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
+            }
+            
+            .calendar-day-header-text {
+                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
+                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
+            }
+            
+            .calendar-date {
+                width: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
+                height: 4.56rem;
+            }
+            
+            .calendar-date-text {
+                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
+                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
+            }
+            
+            .calendar-nav-button {
+                width: 3.91rem; /* 24px × 2.61 / 16 = 3.91rem */
+                height: 3.91rem;
+            }
+            
+            .calendar-nav-icon {
+                width: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
+                height: 1.96rem;
+            }
+            
+            .calendar-dropdown {
+                height: 3.91rem; /* 24px × 2.61 / 16 = 3.91rem */
+                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
+            }
+            
+            .calendar-dropdown-text {
+                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
+                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
+            }
+            
+            .activity-dot {
+                width: 0.65rem; /* 4px × 2.61 / 16 = 0.65rem */
+                height: 0.65rem;
+            }
+            
+            .activities-title {
+                font-size: 2.625rem; /* 16px × 2.61 / 16 = 2.625rem */
+                height: 4.56rem; /* 35px × 2.61 / 16 = 5.71rem, ajusté pour correspondre */
+            }
+            
+            /* Header et Footer agrandis pour tablette - Adaptation homothétique stricte 414px -> 1080px (ratio 2.61) */
+            .header {
+                height: clamp(12vh, 14vw, 15vh);
+                min-height: clamp(90px, 11vw, 120px);
+                padding: clamp(3vh, 3.5vw, 4vh) clamp(4vw, 4.5vw, 5vw) clamp(1.5vh, 1.8vw, 2vh);
+            }
+            
+            .header-logo {
+                width: 9.1rem; /* 3.5rem × 2.61 = 9.135rem */
+                height: 9.1rem;
+            }
+            
+            .header-icon {
+                width: 4.7rem; /* 1.8rem × 2.61 = 4.698rem */
+                height: 4.7rem;
+            }
+            
+            .header-icons {
+                gap: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
+            }
+            
+            .footer {
+                height: clamp(8vh, 9vw, 10vh);
+                min-height: clamp(55px, 6.5vw, 75px);
+                padding: clamp(1.5vh, 1.8vw, 2vh) clamp(2.8vw, 3.2vw, 3.8vw);
+            }
+            
+            .footer-link {
+                font-size: 1.6rem; /* Légèrement augmenté : 1.4rem + 0.2rem */
+                padding: clamp(0.3rem, 0.4vw, 0.5rem) clamp(0.45rem, 0.55vw, 0.65rem);
+            }
+            
+            .footer-link:first-child {
+                min-width: clamp(240px, 29vw, 320px);
+            }
+            
+            .footer-link:last-child {
+                min-width: clamp(155px, 19vw, 200px);
+            }
+            
+            .footer-links {
+                gap: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
+                width: clamp(520px, 63vw, 680px);
+                padding: clamp(0.6rem, 0.75vw, 0.9rem) clamp(0.9rem, 1.1vw, 1.3rem);
+            }
+            
+            .footer-separator {
+                height: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
+            }
+            
+            .footer-separator::before {
+                width: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
+                height: 1.5px;
+            }
+            
+            /* Gaps et espacements agrandis pour tablette (ratio 2.61 strict) */
+            .calendar-days-header {
+                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem, ajusté pour correspondre */
+            }
+            
+            .calendar-dates-grid {
+                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem */
+                padding-top: 1.57rem;
+            }
+            
+            .calendar-week {
+                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem */
+            }
+            
+            .calendar-month-year {
+                gap: 1.04rem; /* 4px × 2.61 / 16 = 0.65rem, ajusté */
+            }
+            
+            /* Widgets agrandis pour tablette (ratio 2.61 strict) */
+            .schedule-widget {
+                max-width: clamp(700px, 85vw, 950px);
+            }
+            
+            .schedule-widget-card {
+                width: clamp(550px, 67vw, 750px);
+                min-height: auto;
+                height: auto;
+                max-height: clamp(900px, 70vh, 1100px);
+                padding: clamp(2.5rem, 3vw, 3.5rem);
+                gap: clamp(1.5rem, 2vw, 2.5rem);
+            }
+            
+            .schedule-title {
+                font-size: 2.28rem; /* 14px × 2.61 / 16 = 2.28rem */
+                line-height: 2.85rem; /* 18px × 2.61 / 16 = 2.85rem */
+            }
+            
+            .schedule-date-navigator {
+                width: clamp(300px, 37vw, 420px);
+                height: 4.24rem; /* 26px × 2.61 / 16 = 4.24rem */
+            }
+            
+            .schedule-date-text {
+                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
+                line-height: 2.45rem; /* 16px × 2.61 / 16 = 2.45rem */
+            }
+            
+            .schedule-nav-arrow {
+                width: 0.98rem; /* 6px × 2.61 / 16 = 0.98rem */
+                height: 2.61rem; /* 16px × 2.61 / 16 = 2.61rem */
+                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
+            }
+            
+            .schedule-nav-arrow.prev {
+                left: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
+            }
+            
+            .schedule-nav-arrow.next {
+                right: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
+            }
+            
+            .schedule-timeline {
+                /* Hauteur basée sur le dernier marqueur (20h) + padding */
+                min-height: calc(clamp(38rem, 47vw, 58rem) + clamp(1.3rem, 1.6vw, 2rem));
+                height: auto;
+                max-height: none;
+                margin-top: clamp(1.5rem, 2vw, 2.5rem);
+                padding-top: clamp(1.3rem, 1.6vw, 2rem);
+                padding-bottom: clamp(1.3rem, 1.6vw, 2rem);
+            }
+            
+            .schedule-close-button {
+                top: clamp(1.3rem, 1.6vw, 2rem);
+                right: clamp(1.3rem, 1.6vw, 2rem);
+                width: 4.57rem; /* 28px × 2.61 / 16 = 4.57rem */
+                height: 4.57rem;
+            }
+            
+            .schedule-time-label {
+                left: 3.75rem; /* 23px × 2.61 / 16 = 3.75rem */
+                height: 3.26rem; /* 20px × 2.61 / 16 = 3.26rem */
+                padding: 0 clamp(0.65rem, 0.8vw, 1rem); /* 4px × 2.61 / 16 = 0.65rem */
+                font-size: 1.63rem; /* 10px × 2.61 / 16 = 1.63rem */
+                line-height: 3.26rem; /* 20px × 2.61 / 16 = 3.26rem */
+            }
+            
+            .schedule-time-marker[data-hour="6"] {
+                top: clamp(1.3rem, 1.6vw, 2rem); /* 8px × 2.61 / 16 = 1.3rem */
+            }
+            
+            .schedule-time-marker[data-hour="8"] {
+                top: clamp(6.5rem, 8vw, 10rem); /* 40px × 2.61 / 16 = 6.5rem */
+            }
+            
+            .schedule-time-marker[data-hour="10"] {
+                top: clamp(11.75rem, 14.5vw, 18rem); /* 72px × 2.61 / 16 = 11.75rem */
+            }
+            
+            .schedule-time-marker[data-hour="12"] {
+                top: clamp(17rem, 21vw, 26rem); /* 104px × 2.61 / 16 = 17rem */
+            }
+            
+            .schedule-time-marker[data-hour="14"] {
+                top: clamp(22.25rem, 27.5vw, 34rem); /* 136px × 2.61 / 16 = 22.25rem */
+            }
+            
+            .schedule-time-marker[data-hour="16"] {
+                top: clamp(27.5rem, 34vw, 42rem); /* 168px × 2.61 / 16 = 27.5rem */
+            }
+            
+            .schedule-time-marker[data-hour="18"] {
+                top: clamp(32.75rem, 40.5vw, 50rem); /* 200px × 2.61 / 16 = 32.75rem */
+            }
+            
+            .schedule-time-marker[data-hour="20"] {
+                top: clamp(38rem, 47vw, 58rem); /* 232px × 2.61 / 16 = 38rem */
+            }
+            
+            .schedule-activity-text {
+                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
+                padding: 0 clamp(0.98rem, 1.2vw, 1.5rem); /* 6px × 2.61 / 16 = 0.98rem */
+            }
+            
+            .schedule-current-time {
+                left: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
+                width: 4.24rem; /* 33px × 2.61 / 16 = 4.24rem (approximé) */
+                height: 2.61rem; /* 16px × 2.61 / 16 = 2.61rem */
+            }
+            
+            .schedule-current-time::before {
+                bottom: clamp(7.83rem, 9.6vw, 12rem); /* 48px × 2.61 / 16 = 7.83rem */
+            }
+            
+            .schedule-current-time-label {
+                font-size: 1.31rem; /* 8px × 2.61 / 16 = 1.31rem */
+                line-height: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
+            }
+            
+            .activity-detail-card {
+                max-width: clamp(700px, 85vw, 950px);
+                min-height: clamp(650px, 80vw, 900px);
+                padding: clamp(2rem, 2.5vw, 3rem) clamp(1.8rem, 2.2vw, 2.8rem);
+                gap: clamp(1.5rem, 1.8vw, 2.2rem);
+            }
+            
+            .activity-detail-close {
+                top: clamp(1.2rem, 1.5vw, 1.8rem);
+                right: clamp(1.2rem, 1.5vw, 1.8rem);
+                width: clamp(2.2rem, 2.7vw, 3rem);
+                height: clamp(2.2rem, 2.7vw, 3rem);
+            }
+            
+            .activity-detail-title {
+                font-size: clamp(2rem, 2.4vw, 2.67rem); /* Augmenté de 1/3 : × 4/3 */
+                line-height: clamp(2.53rem, 3.07vw, 3.33rem); /* Augmenté de 1/3 : × 4/3 */
+            }
+            
+            .activity-detail-navigator {
+                max-width: clamp(550px, 67vw, 750px);
+                height: clamp(2.5rem, 3vw, 3.5rem);
+            }
+            
+            .activity-detail-navigator-name {
+                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
+                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
+                padding: 0 clamp(2.5rem, 3vw, 3.5rem);
+            }
+            
+            .activity-detail-nav-arrow {
+                font-size: clamp(2rem, 2.4vw, 2.67rem); /* Augmenté de 1/3 : × 4/3 */
+            }
+            
+            .activity-detail-info-box {
+                max-width: clamp(600px, 73vw, 850px);
+                gap: clamp(0.6rem, 0.8vw, 1rem);
+            }
+            
+            .activity-detail-date-time {
+                font-size: clamp(1.47rem, 1.73vw, 2rem); /* Augmenté de 1/3 : × 4/3 */
+                gap: clamp(0.6rem, 0.8vw, 1rem);
+            }
+            
+            .activity-detail-description-box {
+                max-width: clamp(600px, 73vw, 850px);
+                min-height: clamp(280px, 34vw, 400px);
+                padding: clamp(1.5rem, 1.8vw, 2.2rem);
+                border-radius: clamp(1rem, 1.2vw, 1.5rem);
+            }
+            
+            .activity-detail-description-label {
+                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
+                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
+                margin-bottom: clamp(1rem, 1.2vw, 1.5rem);
+            }
+            
+            .activity-detail-description {
+                font-size: clamp(1.47rem, 1.73vw, 2rem); /* Augmenté de 1/3 : × 4/3 */
+                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
+            }
+            
+            .activity-detail-register-button {
+                max-width: clamp(500px, 61vw, 700px);
+                height: clamp(3.5rem, 4.3vw, 5rem);
+                border-radius: clamp(1rem, 1.2vw, 1.5rem);
+                margin-top: clamp(0.6rem, 0.8vw, 1rem);
+            }
+            
+            .activity-detail-register-button-text {
+                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
+                letter-spacing: clamp(0.2px, 0.03vw, 0.4px);
+            }
+            
+            .profile-card {
+                max-width: clamp(700px, 85vw, 950px);
+                padding: clamp(4rem, 5vw, 6rem) clamp(3.6rem, 4.4vw, 5.6rem); /* Doublé */
+                gap: clamp(3rem, 3.6vw, 4.4rem); /* Doublé */
+            }
+            
+            .profile-close {
+                top: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
+                right: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
+                width: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
+                height: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
+            }
+            
+            .profile-section-title {
+                font-size: clamp(2.4rem, 3vw, 3.4rem); /* Doublé */
+            }
+            
+            .profile-info-content {
+                gap: clamp(3rem, 3.6vw, 4.4rem); /* Doublé */
+            }
+            
+            .profile-info-left {
+                gap: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
+            }
+            
+            .profile-field {
+                gap: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
+            }
+            
+            .profile-field-label {
+                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+            }
+            
+            .profile-field-value {
+                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+            }
+            
+            .profile-photo-placeholder {
+                width: clamp(16rem, 19.6vw, 24rem); /* Doublé */
+                height: clamp(16rem, 19.6vw, 24rem); /* Doublé */
+                border-radius: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
+            }
+            
+            .profile-photo-text {
+                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+            }
+            
+            .profile-medical-textarea {
+                min-height: clamp(12rem, 14.8vw, 18rem); /* Doublé */
+                padding: clamp(2rem, 2.4vw, 3rem) clamp(10rem, 12.2vw, 15rem) clamp(2rem, 2.4vw, 3rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+                line-height: clamp(2.8rem, 3.4vw, 3.8rem); /* Doublé */
+                border-radius: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
+            }
+            
+            .profile-medical-validate-btn {
+                bottom: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                right: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                padding: clamp(1rem, 1.2vw, 1.5rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                font-size: clamp(2rem, 2.4vw, 3rem); /* Doublé */
+                border-radius: clamp(1rem, 1.2vw, 1.5rem); /* Doublé */
+            }
+            
+            .profile-password-masked {
+                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+                letter-spacing: clamp(3px, 0.4vw, 5px); /* Doublé */
+            }
+            
+            .profile-password-edit {
+                font-size: clamp(1.9rem, 2.3vw, 2.5rem); /* Doublé */
+                gap: clamp(0.8rem, 1vw, 1.2rem); /* Doublé */
+            }
+            
+            .profile-edit-icon {
+                width: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+                height: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1079px) {
+            /* Tablettes moyennes */
+            .main-container {
+                padding: clamp(2rem, 8vh, 10vh) clamp(1.2rem, 1.5vw, 1.8rem) clamp(2.5rem, 3vw, 3.5rem);
+                justify-content: flex-start;
+            }
+            
+            .body-content {
+                max-width: clamp(600px, 70vw, 800px);
+            }
+            
+            .calendar-wrapper {
+                width: clamp(600px, 70vw, 800px);
+            }
+            
+            .calendar {
+                max-width: clamp(580px, 68vw, 780px);
+            }
+            
+            .search-bar {
+                width: clamp(500px, 60vw, 700px);
+            }
+            
+            .activity-cards-container {
+                max-width: clamp(600px, 70vw, 800px);
+            }
+        }
+
         @media (max-width: 768px) {
-            /* Tablette */
+            /* Mobile - Priorité 1 */
             body {
-                padding-top: 2.5vh;
-                padding-bottom: 2.5vh;
+                padding-top: 0vh;
+                padding-bottom: 0vh;
             }
 
             .header {
-                width: 100%;
-                padding: 2.5vh 4vw 1.9vh;
+                width: 100vw;
+                padding: clamp(2vh, 3vw, 4vh) clamp(3vw, 4vw, 5vw) clamp(1.5vh, 2vw, 2.5vh);
                 height: auto;
-                min-height: 10vh;
+                min-height: clamp(8vh, 10vw, 12vh);
+                left: 0;
+                right: 0;
+                box-sizing: border-box;
+            }
+            
+            .header-logo {
+                width: clamp(3.5rem, 5vw, 5rem);
+                height: clamp(3.5rem, 5vw, 5rem);
+            }
+            
+            .header-icon {
+                width: clamp(2rem, 3vw, 3rem);
+                height: clamp(2rem, 3vw, 3rem);
+            }
+            
+            .header-icons {
+                gap: clamp(1rem, 1.5vw, 2rem);
+            }
+            
+            .footer {
+                height: clamp(6vh, 8vw, 10vh);
+                min-height: clamp(50px, 6vw, 100px);
+                padding: clamp(1.5vh, 2vw, 3vh) clamp(2.5vw, 3.5vw, 4vw);
+            }
+            
+            .footer-link {
+                font-size: clamp(0.85rem, 1.2vw, 1.5rem);
+                padding: clamp(0.3rem, 0.5vw, 0.6rem) clamp(0.4rem, 0.6vw, 0.8rem);
+            }
+            
+            .footer-links {
+                gap: clamp(0.8rem, 1.2vw, 1.8rem);
+                padding: clamp(0.4rem, 0.6vw, 1rem) clamp(0.8rem, 1.2vw, 1.8rem);
+            }
+            
+            .footer-separator {
+                height: clamp(1.5rem, 2.5vw, 3rem);
+            }
+            
+            .footer-separator::before {
+                width: clamp(1.5rem, 2.5vw, 3rem);
             }
 
             .main-container {
-                padding: 2.5vh 2.5vw;
+                padding: clamp(2rem, 8vh, 10vh) 2.5vw clamp(16vh, 18vh, 20vh);
                 min-height: calc(100vh - 10vh - 10vh - 10vh);
+                justify-content: flex-start;
             }
 
             .body-content {
                 max-width: 100%;
-                padding: 2.5vh 0;
+                padding: 0.5vh 0;
+            }
+            
+            /* Calendrier - tailles mobiles optimisées */
+            .calendar-day-header {
+                width: clamp(28px, 7vw, 40px);
+                height: clamp(18px, 4.5vw, 25px);
+            }
+            
+            .calendar-day-header-text {
+                font-size: clamp(10px, 2.5vw, 14px);
+            }
+            
+            .calendar-date {
+                width: clamp(28px, 7vw, 40px);
+                height: clamp(28px, 7vw, 40px);
+            }
+            
+            .calendar-date-text {
+                font-size: clamp(12px, 3vw, 16px);
             }
 
             .calendar-wrapper,
@@ -1082,7 +1969,7 @@
             }
 
             .footer {
-                bottom: 2.5vh;
+                bottom: 0vh;
                 height: 6vh;
                 padding: 2vh 3.5vw;
             }
@@ -1091,20 +1978,62 @@
         @media (max-width: 480px) {
             /* Mobile */
             body {
-                padding-top: 2.5vh;
-                padding-bottom: 2.5vh;
+                padding-top: 0vh;
+                padding-bottom: 0vh;
             }
 
             .header {
-                width: 100%;
-                padding: 1.9vh 3vw 1.5vh;
+                width: 100vw;
+                padding: clamp(1.8vh, 2.5vw, 3vh) clamp(2.5vw, 3.5vw, 4vw) clamp(1.2vh, 1.8vw, 2vh);
                 height: auto;
-                min-height: 8.9vh;
+                min-height: clamp(7vh, 9vw, 11vh);
+                left: 0;
+                right: 0;
+                box-sizing: border-box;
+            }
+            
+            .header-logo {
+                width: clamp(3rem, 4.5vw, 4.5rem);
+                height: clamp(3rem, 4.5vw, 4.5rem);
+            }
+            
+            .header-icon {
+                width: clamp(1.8rem, 2.8vw, 2.8rem);
+                height: clamp(1.8rem, 2.8vw, 2.8rem);
+            }
+            
+            .header-icons {
+                gap: clamp(0.9rem, 1.3vw, 1.8rem);
+            }
+            
+            .footer {
+                height: clamp(5.5vh, 7vw, 9vh);
+                min-height: clamp(45px, 5.5vw, 90px);
+                padding: clamp(1.2vh, 1.8vw, 2.5vh) clamp(2vw, 3vw, 3.5vw);
+            }
+            
+            .footer-link {
+                font-size: clamp(0.8rem, 1.1vw, 1.3rem);
+                padding: clamp(0.25rem, 0.4vw, 0.5rem) clamp(0.35rem, 0.5vw, 0.7rem);
+            }
+            
+            .footer-links {
+                gap: clamp(0.7rem, 1vw, 1.5rem);
+                padding: clamp(0.35rem, 0.5vw, 0.8rem) clamp(0.7rem, 1vw, 1.5rem);
+            }
+            
+            .footer-separator {
+                height: clamp(1.3rem, 2vw, 2.5rem);
+            }
+            
+            .footer-separator::before {
+                width: clamp(1.3rem, 2vw, 2.5rem);
             }
 
             .main-container {
-                padding: 1.9vh 2vw;
+                padding: clamp(2rem, 8vh, 10vh) 2vw clamp(15vh, 17vh, 19vh);
                 min-height: calc(100vh - 8.9vh - 7.6vh);
+                justify-content: flex-start;
             }
 
             .body-content {
@@ -1133,9 +2062,28 @@
 
             .footer {
                 width: 100%;
-                padding: 1.9vh 3.75vw;
-                bottom: 2.5vh;
-                height: 5.7vh;
+                padding: clamp(1.2vh, 1.8vw, 2.5vh) clamp(2vw, 3vw, 3.5vw);
+                bottom: 0vh;
+                height: clamp(5.5vh, 7vw, 9vh);
+                min-height: clamp(45px, 5.5vw, 90px);
+            }
+            
+            .footer-link {
+                font-size: clamp(0.8rem, 1.1vw, 1.3rem);
+                padding: clamp(0.25rem, 0.4vw, 0.5rem) clamp(0.35rem, 0.5vw, 0.7rem);
+            }
+            
+            .footer-links {
+                gap: clamp(0.7rem, 1vw, 1.5rem);
+                padding: clamp(0.35rem, 0.5vw, 0.8rem) clamp(0.7rem, 1vw, 1.5rem);
+            }
+            
+            .footer-separator {
+                height: clamp(1.3rem, 2vw, 2.5rem);
+            }
+            
+            .footer-separator::before {
+                width: clamp(1.3rem, 2vw, 2.5rem);
             }
         }
     </style>
@@ -1146,15 +2094,10 @@
 
     <!-- Header -->
     <div class="header">
-        <img src="Logo Vill'Age Jeunes vecto.svg" alt="VILL'AGE JEUNES" class="header-logo">
+        <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo" onerror="this.src='logo et charte graphique/LogoRond.png'">
         <div class="header-icons">
-            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+            <img src="icon/Message circle.svg" alt="Messagerie" class="header-icon" id="messageIcon">
+            <img src="icon/account_circle.svg" alt="Profil" class="header-icon" id="profileIcon">
         </div>
     </div>
 
@@ -1343,6 +2286,86 @@
         </div>
     </div>
 
+    <!-- Widget de profil utilisateur (overlay) -->
+    <div class="profile-overlay" id="profileOverlay">
+        <div class="profile-card">
+            <button class="profile-close" id="closeProfile">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            
+            <!-- Section Informations -->
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h3 class="profile-section-title">Informations</h3>
+                    <div class="profile-section-line"></div>
+                </div>
+                <div class="profile-info-content">
+                    <div class="profile-info-left">
+                        <div class="profile-field">
+                            <span class="profile-field-label">Nom :</span>
+                            <span class="profile-field-value" id="profileName">Martin</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">Prénom :</span>
+                            <span class="profile-field-value" id="profileFirstName">Jean</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">Surnom :</span>
+                            <span class="profile-field-value" id="profileNickname">Jéjé</span>
+                        </div>
+                        <div class="profile-field member-number">
+                            <span class="profile-field-label">Numéro adhérent :</span>
+                            <span class="profile-field-value" id="profileMemberNumber">VJ-2026-001</span>
+                        </div>
+                    </div>
+                    <div class="profile-photo-container">
+                        <div class="profile-photo-placeholder">
+                            <span class="profile-photo-text">Photo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Informations médicales -->
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h3 class="profile-section-title">Informations médicales</h3>
+                    <div class="profile-section-line"></div>
+                </div>
+                <div class="profile-medical-textarea-container">
+                    <textarea class="profile-medical-textarea" id="profileMedicalInfo" placeholder="Avez-vous un problème de santé ?"></textarea>
+                    <button class="profile-medical-validate-btn" id="validateMedicalInfo" style="display: none;">Valider</button>
+                </div>
+            </div>
+
+            <!-- Section Sécurité -->
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h3 class="profile-section-title">Sécurité</h3>
+                    <div class="profile-section-line"></div>
+                </div>
+                <div class="profile-security-content">
+                    <div class="profile-field">
+                        <span class="profile-field-label">Adresse mail :</span>
+                        <span class="profile-field-value" id="profileEmail">jean.martin@email.com</span>
+                    </div>
+                    <div class="profile-password-field">
+                        <span class="profile-field-label">Mot de passe :</span>
+                        <span class="profile-password-masked">*******</span>
+                        <a href="#" class="profile-password-edit">
+                            <svg class="profile-edit-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M11.333 2a1.414 1.414 0 0 1 2 2L5 11.667l-3.333 1L3 9.333 11.333 2z"/>
+                            </svg>
+                            modifier le mot de passe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="accueil-adherent.js"></script>
 </body>

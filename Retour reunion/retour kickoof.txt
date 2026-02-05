@@ -1,0 +1,50 @@
+﻿Bonjour à tous,
+J’espère que vous allez bien.
+Je reviens vers vous aujourd’hui afin de vous faire un petit retour concernant la réunion d’hier et de conserver une trace écrite.
+Concernant le parcours utilisateur – côté adhérents :
+Sur la page d’accueil, il y aura trois onglets : « Inscription », « Connexion » et « Pointage ».
+Lors de la première venue d’un jeune, il pourra s’inscrire via l’onglets « Inscription » soit via la borne, soit grâce à un QR code dédier. Il devra alors renseigner les informations suivantes :
+1. Informations personnelles :
+• Genre (H/F/X) - (case à cocher)
+• Date de naissance 
+• Nom 
+• Prénom
+• Surnom
+• Préférence d’utilisation (prénom ou surnom) - (case à cocher)
+• Commune (choix entre les 33 commune de Nouvelle-Calédonie) - (case à cocher)
+o Si commune de la Province Sud : sélection du quartier (menue déroulant)
+o Si commune de la Province Nord : sélection du village (menue déroulant)
+o Si commune de la Province des Îles Loyauté : sélection du district coutumier (menue déroulant)
+• Adresse e-mail
+• Numéro de téléphone
+• Mode de connaissance du Vill’Âge Jeunes (choix multiple- (case à cocher))
+
+2. Ce que je fais dans la vie
+• Je suis étudiant : choix du niveau d’études : « Collège », « Lycée » ou « Études supérieures » - (case à cocher)
+o Si collèges : sélection de l’établissement (menue déroulant)
+o Si lycées : sélection de l’établissement (menue déroulant)
+• Je suis sans activité : choix entre en recherche d’emploie et au chômage - (case à cocher)
+o Je recherche principalement dans : (à écrire)
+• Je travail : choix multiple - (case à cocher)
+o Dans quel secteur ? : (à écrire)
+• Je suis dans une association / un collectif ou autre : Nom de la structure (à écrire)
+• Mobilité : choix multiple - (case à cocher)
+• Permis : choix multiple - (case à cocher)
+
+
+3. Village jeunes et moi
+• Ce que je viens faire : choix multiple – (case à cocher)
+• Ce que j’aimerais amener : choix multiple – (case à cocher)
+
+4. Mon droit à l’image
+• Autorisation au droit à l’image – (case à cocher)
+
+5. Le fonctionnement d’Ici
+• Validation du règlement intérieure : « consulter le règlement », « voir la vidéo »
+o Si lecture du règlement, validation en bas de pages pour s’assurer qu’il a pris en compte le consulter les documents.
+o Vidéo, validation a la fin de la vidéo.
+
+6. Fin de la pré inscription : 
+Un message de validation de ça pré inscription apparer. Il beneficie donc d’une journée gratuite pour la decouverte. S’il souhaite finalisée sont inscription et devenir adhérents il est invitée a ce rendre a l’acceuil. 
+
+

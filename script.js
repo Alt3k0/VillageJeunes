@@ -74,39 +74,11 @@ function initializeDateSelector() {
         }
     });
     
-    // Date de signature
-    const jourSignature = document.getElementById('jourSignature');
-    const moisSignature = document.getElementById('moisSignature');
-    const anneeSignature = document.getElementById('anneeSignature');
+    // Date de signature - affichage automatique
+    displayCurrentDate('dateSignatureDisplay', 'dateSignature');
     
-    fillDays(jourSignature);
-    fillMonths(moisSignature);
-    fillYears(anneeSignature, 10); // Seulement 10 ans en arrière pour la signature
-    
-    [jourSignature, moisSignature, anneeSignature].forEach(select => {
-        if (select) {
-            select.addEventListener('change', function() {
-                updateDateSignature();
-            });
-        }
-    });
-    
-    // Date parent
-    const jourParent = document.getElementById('jourParent');
-    const moisParent = document.getElementById('moisParent');
-    const anneeParent = document.getElementById('anneeParent');
-    
-    fillDays(jourParent);
-    fillMonths(moisParent);
-    fillYears(anneeParent, 10); // Seulement 10 ans en arrière pour la date parent
-    
-    [jourParent, moisParent, anneeParent].forEach(select => {
-        if (select) {
-            select.addEventListener('change', function() {
-                updateParentDate();
-            });
-        }
-    });
+    // Date parent - affichage automatique
+    displayCurrentDate('parentDateDisplay', 'parentDate');
 }
 
 // Fonction pour mettre à jour le champ dateNaissance caché
@@ -126,37 +98,36 @@ function updateDateNaissance() {
     }
 }
 
-// Fonction pour mettre à jour le champ dateSignature caché
-function updateDateSignature() {
-    const jour = document.getElementById('jourSignature')?.value;
-    const mois = document.getElementById('moisSignature')?.value;
-    const annee = document.getElementById('anneeSignature')?.value;
+// Fonction pour formater la date en français
+function formatDateFrench(date) {
+    const jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    const mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     
-    const dateSignatureInput = document.getElementById('dateSignature');
+    const jourSemaine = jours[date.getDay()];
+    const jour = date.getDate();
+    const moisNom = mois[date.getMonth()];
+    const annee = date.getFullYear();
     
-    if (jour && mois && annee && dateSignatureInput) {
-        // Format: YYYY-MM-DD
-        const dateComplete = `${annee}-${mois}-${jour}`;
-        dateSignatureInput.value = dateComplete;
-    } else if (dateSignatureInput) {
-        dateSignatureInput.value = '';
-    }
+    return `${jourSemaine} ${jour} ${moisNom} ${annee}`;
 }
 
-// Fonction pour mettre à jour le champ parentDate caché
-function updateParentDate() {
-    const jour = document.getElementById('jourParent')?.value;
-    const mois = document.getElementById('moisParent')?.value;
-    const annee = document.getElementById('anneeParent')?.value;
+// Fonction pour afficher la date actuelle et mettre à jour le champ caché
+function displayCurrentDate(displayElementId, hiddenInputId) {
+    const today = new Date();
+    const displayElement = document.getElementById(displayElementId);
+    const hiddenInput = document.getElementById(hiddenInputId);
     
-    const parentDateInput = document.getElementById('parentDate');
+    if (displayElement) {
+        // Afficher la date formatée en français
+        displayElement.textContent = formatDateFrench(today);
+    }
     
-    if (jour && mois && annee && parentDateInput) {
-        // Format: YYYY-MM-DD
-        const dateComplete = `${annee}-${mois}-${jour}`;
-        parentDateInput.value = dateComplete;
-    } else if (parentDateInput) {
-        parentDateInput.value = '';
+    if (hiddenInput) {
+        // Format: YYYY-MM-DD pour le champ caché
+        const jour = today.getDate().toString().padStart(2, '0');
+        const mois = (today.getMonth() + 1).toString().padStart(2, '0');
+        const annee = today.getFullYear().toString();
+        hiddenInput.value = `${annee}-${mois}-${jour}`;
     }
 }
 
@@ -235,20 +206,20 @@ function showStep(step) {
         }
     }
 
-    // Masquer l'étape 11 si l'utilisateur a 18 ans ou plus
-    const step11Element = document.getElementById('step11');
-    if (step11Element) {
-        if (!isUnder18()) {
-            step11Element.style.display = 'none';
-        } else {
-            step11Element.style.display = 'flex';
-        }
-    }
-
     // Afficher l'étape actuelle
     const currentStepElement = document.getElementById(`step${step}`);
     if (currentStepElement) {
         currentStepElement.classList.add('active');
+    }
+
+    // Gérer l'affichage de l'étape 11 : elle ne doit être visible que si elle est active ET si l'utilisateur a moins de 18 ans
+    const step11Element = document.getElementById('step11');
+    if (step11Element) {
+        if (step === 11 && isUnder18()) {
+            step11Element.style.display = 'flex';
+        } else {
+            step11Element.style.display = 'none';
+        }
     }
 
     // Mettre à jour le bouton de l'étape 10 selon l'âge

@@ -418,8 +418,13 @@
                 return;
             }
 
-            // Redirection vers la page d'accueil adhérent
-            // Pour l'instant, accepte n'importe quel identifiant/mot de passe
+            // Vérifier si c'est un admin
+            if (identifiant.toLowerCase() === 'admin' && motdepasse.toLowerCase() === 'admin') {
+                window.location.href = 'accueil-staff.html';
+                return;
+            }
+
+            // Redirection vers la page d'accueil adhérent pour les autres utilisateurs
             window.location.href = 'accueil-adherent.html';
         }
 

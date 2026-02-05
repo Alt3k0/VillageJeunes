@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="button-group">
-                    <button class="btn-next" onclick="nextStep()">Suivant</button>
+                    <button class="btn-next" id="btn-step1-next" onclick="nextStep()">Suivant</button>
                 </div>
             </div>
 
@@ -603,17 +603,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Date:</label>
-                    <div class="date-selector">
-                        <select class="form-input form-select date-select" name="jourSignature" id="jourSignature">
-                            <option value="">Jour</option>
-                        </select>
-                        <select class="form-input form-select date-select" name="moisSignature" id="moisSignature">
-                            <option value="">Mois</option>
-                        </select>
-                        <select class="form-input form-select date-select" name="anneeSignature" id="anneeSignature">
-                            <option value="">Année</option>
-                        </select>
-                    </div>
+                    <div class="date-display" id="dateSignatureDisplay"></div>
                     <input type="hidden" name="dateSignature" id="dateSignature">
                 </div>
 
@@ -673,17 +663,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Date :</label>
-                    <div class="date-selector">
-                        <select class="form-input form-select date-select" name="jourParent" id="jourParent">
-                            <option value="">Jour</option>
-                        </select>
-                        <select class="form-input form-select date-select" name="moisParent" id="moisParent">
-                            <option value="">Mois</option>
-                        </select>
-                        <select class="form-input form-select date-select" name="anneeParent" id="anneeParent">
-                            <option value="">Année</option>
-                        </select>
-                    </div>
+                    <div class="date-display" id="parentDateDisplay"></div>
                     <input type="hidden" name="parentDate" id="parentDate">
                 </div>
 

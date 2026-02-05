@@ -1,0 +1,64 @@
+﻿Compte Rendu de Réunion : Développement de la Plateforme Village Jeunes
+Objectif : Définir les fonctionnalités, le parcours utilisateur et les besoins administratifs de la nouvelle application de gestion du Village Jeunes.
+
+1. Parcours d'Inscription et Utilisateurs
+Deux parcours distincts ont été définis pour simplifier l'accueil :
+Le Parcours Simplifié ("Prospect") : Pour ceux qui viennent ponctuellement (ex: imprimer un CV). Le premier jour est gratuit.
+Données collectées : Nom, prénom, quartier, téléphone, situation actuelle, mobilité, comment ils ont connu le centre.
+Le Parcours Adhérent : Pour les membres réguliers.
+Validation : L'inscription génère un numéro d'adhérent et un accès Wi-Fi après validation par le staff.
+Obligations Légales et Consentements
+Quatre cases à cocher obligatoires ont été validées :
+Acceptation du règlement intérieur.
+Droit à l'image (Oui/Non).
+Utilisation des données personnelles (RGPD).
+Engagement de santé (avis médical pour les activités physiques).
+Note : L'autorisation d'intervention d'urgence est obligatoire .
+
+2. Validation et Sécurité des Mineurs
+Lecture du règlement : Pour s'assurer que le règlement est lu, une détection de "scroll" (défilement jusqu'en bas) sera mise en place. Une option d'audiodescription et une vidéo pédagogique (style consignes de sécurité aérienne) avec langue des signes sont envisagées.
+Mineurs (-18 ans) : L'inscription via la borne est une "pré-inscription". Le mineur doit impérativement rapporter une autorisation parentale papier signée pour que le staff valide son compte. L'option par email a été écartée pour éviter les fraudes.
+
+3. Gestion du "Pointage" (Suivi de Fréquentation)
+L'objectif est de savoir exactement qui est dans quel espace et pour quelle raison.
+Fonctionnement : L'adhérent fait son pointage sur la borne en arrivant.
+Signature : La signature se fera numériquement sur la tablette à l'accueil lors de la validation finale du compte.
+Anti-abus : Le système doit bloquer les personnes tentant de bénéficier plusieurs fois de la "journée gratuite" sans payer l'adhésion (1000 FCFP).
+
+4. Statistiques et Besoins Administratifs (KPI)
+Le système doit générer des rapports automatiques pour les financeurs (DDEC, provinces, etc.) :
+Répartition : Âge, genre, zone géographique (commune/quartier), situation professionnelle.
+Fréquentation : Par jour, par heure et par salle/pôle.
+Activités : Suivi du nombre de participants par atelier.
+Export : Possibilité d'extraire des fichiers CSV (Excel) mensuels et annuels.
+
+5. Gestion des Activités et Rôles
+Quatre pôles d'activités ont été identifiés : Numérique, Solidaire, Artistique/Culturel, et Emploi/Formation (Co-working).
+Rôles :
+Admins : Accès total. (Gèrent les rdvs, les salles, les activités et le pointage des Bénévoles)
+Animateurs/Bénévoles : Accès restreint pour faire l'appel et valider la présence des inscrits à leur atelier (à l’écrit, ce sont les admins qui ont la liste démat.)
+Flexibilité : Le staff peut transférer un adhérent d'une activité à une autre (ex: inscrit en anglais mais retrouvé en salle gaming) pour garder des stats exactes.
+
+6. Espace Partenaires et Réservations de Salles
+Les partenaires (entreprises, associations externes) ne sont pas des adhérents classiques.
+Inscription Partenaire : Formulaire plus court et spécifique (nom de la structure, numéro RIDET, projet).
+Réservation : Les partenaires peuvent voir le calendrier des salles en ligne mais ne peuvent pas réserver directement. Ils envoient une demande via l'app, que le staff valide ou refuse (modération) pour éviter les conflits d'usage.
+
+7. Aspects Techniques et Design
+Hébergement : Choix d'un serveur en Australie (plus performant et moins cher : ~20 000 FCFP/an contre ~20 000 FCFP/mois localement).
+Nom de Domaine : Utilisation d'un sous-domaine de la DDEC (ex: villagejeunes.ddec.nc).
+Interface (UI/UX) :
+Privilégier un fond blanc (le mode sombre fatigue les yeux en usage prolongé en journée).
+Mise en place de QR codes vers les réseaux sociaux (WhatsApp, Insta, FB) sur l'écran d'accueil.
+Évolutivité : L'application sera d'abord une Web-App (accessible via navigateur). Le passage en application téléchargeable (PWA) se fera dans un second temps.
+
+8. Calendrier de déploiement
+Mars : Livraison de la maquette fonctionnelle et tests internes par l'équipe.
+Avril (prévisionnel) : Ouverture au public.
+Méthode : "UX first" (fonctionnalités d'abord), puis polissage esthétique.
+
+Actions à faire :
+Envoi par le Village Jeunes de la liste des quartiers et des catégories d'activités.
+Contact avec le service informatique de la DDEC pour le sous-domaine.
+Préparation des formulaires d'autorisation parentale papier.
+

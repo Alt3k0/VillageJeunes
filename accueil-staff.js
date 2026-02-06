@@ -1524,6 +1524,7 @@ function createActivityBlock(activity) {
     block.dataset.activityDescription = activity.description || '';
     block.dataset.activityCategory = activity.categoryName || '';
     block.dataset.activityColor = activity.categoryColor || '#649d50';
+    block.dataset.activityId = activity.id || `${activity.title}-${activity.time}-${activity.dateKey || formatDateKey(selectedDate)}`;
     
     // Vérifier que l'activité a une propriété time
     if (!activity.time) {
@@ -1607,6 +1608,46 @@ function createActivityBlock(activity) {
                 }
                 
                 block.appendChild(textContainer);
+                
+                // Ajouter l'icône de suppression en haut à droite
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'activity-delete-btn';
+                deleteButton.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="12" fill="#8B0000" fill-opacity="0.5"/>
+                        <rect x="3" y="11" width="18" height="2" rx="1" fill="#F7F7F7"/>
+                    </svg>
+                `;
+                deleteButton.style.position = 'absolute';
+                deleteButton.style.top = '4px';
+                deleteButton.style.right = '4px';
+                deleteButton.style.width = '20px';
+                deleteButton.style.height = '20px';
+                deleteButton.style.border = 'none';
+                deleteButton.style.background = 'transparent';
+                deleteButton.style.cursor = 'pointer';
+                deleteButton.style.padding = '0';
+                deleteButton.style.display = 'flex';
+                deleteButton.style.alignItems = 'center';
+                deleteButton.style.justifyContent = 'center';
+                deleteButton.style.zIndex = '10';
+                deleteButton.style.opacity = '0.8';
+                deleteButton.style.transition = 'opacity 0.2s';
+                
+                deleteButton.addEventListener('mouseenter', () => {
+                    deleteButton.style.opacity = '1';
+                });
+                deleteButton.addEventListener('mouseleave', () => {
+                    deleteButton.style.opacity = '0.8';
+                });
+                
+                deleteButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    deleteActivity(activity, selectedDate);
+                });
+                
+                block.appendChild(deleteButton);
             } else {
                 console.log('Activity block rejected:', { 
                     topPosition, 
@@ -1642,6 +1683,48 @@ function createActivityBlock(activity) {
     });
     
     return block;
+}
+
+// Fonction pour supprimer une activité
+function deleteActivity(activity, date) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'activité "${activity.title}" ?`)) {
+        return;
+    }
+    
+    const dateKey = formatDateKey(date);
+    
+    if (!activitiesData[dateKey]) {
+        console.warn('Aucune activité trouvée pour cette date');
+        return;
+    }
+    
+    // Si c'est un tableau, filtrer l'activité à supprimer
+    if (Array.isArray(activitiesData[dateKey])) {
+        activitiesData[dateKey] = activitiesData[dateKey].filter(act => {
+            // Comparer les propriétés pour identifier l'activité
+            return !(act.title === activity.title && 
+                     act.time === activity.time &&
+                     act.location === activity.location);
+        });
+        
+        // Si le tableau est vide, supprimer la clé
+        if (activitiesData[dateKey].length === 0) {
+            delete activitiesData[dateKey];
+        }
+    } else {
+        // Si c'est un objet unique, le supprimer
+        delete activitiesData[dateKey];
+    }
+    
+    // Rafraîchir l'affichage
+    if (currentView === 'activites') {
+        showActivityPopup(date);
+    } else if (currentView === 'salles') {
+        showSallesPopup(date);
+    }
+    
+    // Rafraîchir le calendrier
+    updateCalendar();
 }
 
 // Mettre à jour l'indicateur de l'heure actuelle

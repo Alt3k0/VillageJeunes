@@ -1271,7 +1271,7 @@
             overflow-x: hidden;
             padding-top: clamp(8px, 1vw, 15px);
             padding-bottom: clamp(15px, 2vw, 25px);
-            padding-left: clamp(50px, 6vw, 80px);
+            padding-left: clamp(40px, 5vw, 60px);
         }
 
         /* Scrollbar personnalisée pour le timeline */
@@ -1306,7 +1306,7 @@
         .schedule-time-marker::before {
             content: '';
             position: absolute;
-            left: clamp(50px, 6vw, 80px);
+            left: clamp(40px, 5vw, 60px);
             right: 0;
             height: 1px;
             background-color: #d9d0e3;
@@ -1363,9 +1363,36 @@
             top: clamp(232px, 29vw, 435px);
         }
 
+        .activity-delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        .activity-delete-btn:hover {
+            opacity: 1;
+        }
+        
+        .activity-delete-btn svg {
+            width: 100%;
+            height: 100%;
+        }
+        
         .schedule-activity {
             position: absolute;
-            left: clamp(50px, 6vw, 80px);
+            left: clamp(40px, 5vw, 60px);
             right: clamp(8px, 1vw, 12px);
             border-radius: clamp(4px, 0.5vw, 8px);
             display: flex;
@@ -2120,11 +2147,25 @@
             }
 
             .schedule-time-marker::before {
-                left: clamp(55px, 7vw, 85px);
+                left: clamp(45px, 6vw, 70px);
             }
 
+            .activity-delete-btn {
+                width: 18px;
+                height: 18px;
+                top: 3px;
+                right: 3px;
+            }
+            
+            .activity-delete-btn {
+                width: 18px;
+                height: 18px;
+                top: 3px;
+                right: 3px;
+            }
+            
             .schedule-activity {
-                left: clamp(55px, 7vw, 85px);
+                left: clamp(45px, 6vw, 70px);
                 right: clamp(10px, 1.5vw, 16px);
                 min-height: clamp(32px, 4vw, 48px);
             }

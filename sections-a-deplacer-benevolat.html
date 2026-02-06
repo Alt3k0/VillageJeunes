@@ -1,0 +1,130 @@
+<!-- Sections bénévolat - À déplacer vers accueil-adherent.html (menu Devenir Bénévole) -->
+
+<!-- Section "Ce que j'aimerais amender" (de step6) -->
+<div class="form-group">
+    <label class="form-label">Ce que j'aimerais amender: (plusieurs options possibles)</label>
+    <div class="checkbox-grid">
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="bonne-humeur">
+            <span>bonne humeur & bienveillance</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="soutien">
+            <span>soutien technique/moral/matériel à des projets existants/futurs</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="projet-personnel">
+            <span>un projet personnel en phase avec le Vill'Âge Jeunes</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="aide-espace" id="aide-espace-check">
+            <span>de l'aide particulière sur un/des espace(s) :</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="reseau" id="reseau-check">
+            <span>un réseau particulier :</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input" name="amener" value="autre-idee" id="autre-idee-check">
+            <span>autre idée :</span>
+        </label>
+    </div>
+</div>
+<div class="form-group conditional-field" id="aide-espace-fields" style="display: none;">
+    <input type="text" class="form-input" name="aideEspace" placeholder="________________">
+</div>
+<div class="form-group conditional-field" id="reseau-fields" style="display: none;">
+    <input type="text" class="form-input" name="reseauParticulier" placeholder="________________">
+</div>
+<div class="form-group conditional-field" id="autre-idee-fields" style="display: none;">
+    <input type="text" class="form-input" name="autreIdee" placeholder="________________">
+</div>
+
+<!-- Étape 7: Types de projets et bénévolat -->
+<div class="form-step" id="step7">
+    <div class="form-group">
+        <label class="form-label">Si tu souhaites t'investir, quel(s) type(s) de projets t'intéresse(nt) le plus :</label>
+        <div class="checkbox-grid">
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="artistique">
+                <span>artistique</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="culturel">
+                <span>culturel</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="solidaire">
+                <span>solidaire</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="numerique">
+                <span>numérique</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="accompagnement-pro">
+                <span>accompagnement pro</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="bien-etre">
+                <span>bien-être (Sport-Santé)</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" name="typeProjet" value="autre" id="projet-autre-check">
+                <span>autre :</span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group conditional-field" id="projet-autre-fields" style="display: none;">
+        <input type="text" class="form-input" name="typeProjetAutre" placeholder="________________">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Bénévolat ici ?</label>
+        <div class="checkbox-inline-group">
+            <label class="checkbox-label-inline">
+                <input type="checkbox" class="checkbox-input" name="benevolat" value="volontaire">
+                <span>Je suis Volontaire</span>
+            </label>
+            <label class="checkbox-label-inline">
+                <input type="checkbox" class="checkbox-input" name="benevolat" value="motive">
+                <span>Motivé·e</span>
+            </label>
+            <label class="checkbox-label-inline">
+                <input type="checkbox" class="checkbox-input" name="benevolat" value="disponible">
+                <span>Disponible</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.
+    </div>
+</div>
+
+<!-- Étape 8: Ce que je sais / aimerais -->
+<div class="form-step" id="step8">
+    <h2 class="section-title">Ce que je sais / aimerais</h2>
+
+    <div class="skills-grid">
+        <div class="form-group">
+            <label class="form-label">je sais faire :</label>
+            <textarea class="form-textarea-large" name="saisFaire" placeholder=""></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">j'aimerais faire :</label>
+            <textarea class="form-textarea-large" name="aimeraisFaire" placeholder=""></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">je peux transmettre :</label>
+            <textarea class="form-textarea-large" name="peuxTransmettre" placeholder=""></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">j'aimerais apprendre :</label>
+            <textarea class="form-textarea-large" name="aimeraisApprendre" placeholder=""></textarea>
+        </div>
+    </div>
+</div>

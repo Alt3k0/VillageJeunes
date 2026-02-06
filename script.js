@@ -1,5 +1,5 @@
 let currentStep = 1;
-const totalSteps = 11;
+const totalSteps = 8;
 
 // Fonction pour remplir un sélecteur de jours
 function fillDays(selectElement) {
@@ -69,7 +69,7 @@ function initializeDateSelector() {
         if (select) {
             select.addEventListener('change', function() {
                 updateDateNaissance();
-                checkAgeAndUpdateStep11();
+                checkAgeAndUpdateStep8();
             });
         }
     });
@@ -212,28 +212,28 @@ function showStep(step) {
         currentStepElement.classList.add('active');
     }
 
-    // Gérer l'affichage de l'étape 11 : elle ne doit être visible que si elle est active ET si l'utilisateur a moins de 18 ans
-    const step11Element = document.getElementById('step11');
-    if (step11Element) {
-        if (step === 11 && isUnder18()) {
-            step11Element.style.display = 'flex';
+    // Gérer l'affichage de l'étape 8 : elle ne doit être visible que si elle est active ET si l'utilisateur a moins de 18 ans
+    const step8Element = document.getElementById('step8');
+    if (step8Element) {
+        if (step === 8 && isUnder18()) {
+            step8Element.style.display = 'flex';
         } else {
-            step11Element.style.display = 'none';
+            step8Element.style.display = 'none';
         }
     }
 
-    // Mettre à jour le bouton de l'étape 10 selon l'âge
-    if (step === 10) {
-        const btnStep10Next = document.getElementById('btn-step10-next');
-        if (btnStep10Next) {
+    // Mettre à jour le bouton de l'étape 7 selon l'âge
+    if (step === 7) {
+        const btnStep7Next = document.getElementById('btn-step7-next');
+        if (btnStep7Next) {
             if (!isUnder18()) {
-                btnStep10Next.textContent = 'Je valide mes informations';
-                btnStep10Next.className = 'btn-submit';
-                btnStep10Next.onclick = function() { submitForm(); };
+                btnStep7Next.textContent = 'Je valide mes informations';
+                btnStep7Next.className = 'btn-submit';
+                btnStep7Next.onclick = function() { submitForm(); };
             } else {
-                btnStep10Next.textContent = 'Suivant';
-                btnStep10Next.className = 'btn-next';
-                btnStep10Next.onclick = function() { nextStep(); };
+                btnStep7Next.textContent = 'Suivant';
+                btnStep7Next.className = 'btn-next';
+                btnStep7Next.onclick = function() { nextStep(); };
             }
         }
     }
@@ -242,8 +242,8 @@ function showStep(step) {
     for (let i = 1; i <= totalSteps; i++) {
         const dot = document.getElementById(`dot${i}`);
         if (dot) {
-            // Masquer le point de l'étape 11 si l'utilisateur a 18 ans ou plus
-            if (i === 11 && !isUnder18()) {
+            // Masquer le point de l'étape 8 si l'utilisateur a 18 ans ou plus
+            if (i === 8 && !isUnder18()) {
                 dot.style.display = 'none';
             } else {
                 dot.style.display = 'inline-block';
@@ -290,14 +290,19 @@ function previousStep() {
 
 function submitForm() {
     // Validation des champs obligatoires
-    const reglement = document.querySelector('[name="reglement"]');
+    const reglementAccepte = document.getElementById('reglement-accepte');
     const donneesPersonnelles = document.querySelector('[name="donneesPersonnelles"]');
     const medecin = document.querySelector('[name="medecin"]');
     const autorisationUrgence = document.querySelector('[name="autorisationUrgence"]');
     const droitImage = document.querySelector('[name="droitImage"]:checked');
 
-    if (!reglement || !reglement.checked) {
-        alert('Veuillez accepter le règlement intérieur pour continuer.');
+    if (!reglementAccepte || reglementAccepte.value !== 'true') {
+        alert('Veuillez lire et approuver le règlement intérieur avant de valider votre inscription.');
+        // Ouvrir le widget du règlement si le bouton existe
+        const btnReglement = document.getElementById('btn-reglement-interieur');
+        if (btnReglement) {
+            btnReglement.click();
+        }
         return;
     }
 
@@ -381,8 +386,8 @@ function submitForm() {
         // Étape 9
         droitImage: droitImage?.value || '',
         
-        // Étape 10
-        reglement: reglement?.checked || false,
+        // Étape 7
+        reglementAccepte: document.getElementById('reglement-accepte')?.value === 'true' || false,
         donneesPersonnelles: donneesPersonnelles?.checked || false,
         medecin: medecin?.checked || false,
         problemeSante: document.querySelector('[name="problemeSante"]')?.value || '',
@@ -416,11 +421,21 @@ function submitForm() {
 // Gérer les champs conditionnels
 function setupConditionalFields() {
     // École
-    const ecoleCheck = document.getElementById('ecole-check');
-    const ecoleFields = document.getElementById('ecole-fields');
-    if (ecoleCheck && ecoleFields) {
-        ecoleCheck.addEventListener('change', function() {
-            ecoleFields.style.display = this.checked ? 'block' : 'none';
+    const etudiantCheck = document.getElementById('etudiant-check');
+    const etudiantFields = document.getElementById('etudiant-fields');
+    if (etudiantCheck && etudiantFields) {
+        etudiantCheck.addEventListener('change', function() {
+            etudiantFields.style.display = this.checked ? 'block' : 'none';
+            if (!this.checked) {
+                // Réinitialiser les champs si la case est décochée
+                const typeSelect = document.getElementById('type-etablissement-select');
+                const etablissementSelect = document.getElementById('etablissement-select');
+                if (typeSelect) typeSelect.value = '';
+                if (etablissementSelect) {
+                    etablissementSelect.value = '';
+                    etablissementSelect.disabled = true;
+                }
+            }
         });
     }
 
@@ -442,6 +457,19 @@ function setupConditionalFields() {
         });
     }
 
+    // Problème de santé
+    const problemeSanteCheck = document.getElementById('probleme-sante-check');
+    const problemeSanteFields = document.getElementById('probleme-sante-fields');
+    if (problemeSanteCheck && problemeSanteFields) {
+        problemeSanteCheck.addEventListener('change', function() {
+            problemeSanteFields.style.display = this.checked ? 'block' : 'none';
+            if (!this.checked) {
+                const textarea = problemeSanteFields.querySelector('textarea[name="problemeSante"]');
+                if (textarea) textarea.value = '';
+            }
+        });
+    }
+
     // Asso
     const assoCheck = document.getElementById('asso-check');
     const assoFields = document.getElementById('asso-fields');
@@ -459,6 +487,7 @@ function setupConditionalFields() {
             autreFields.style.display = this.checked ? 'block' : 'none';
         });
     }
+
 
     // Objectif autre
     const objectifAutreCheck = document.getElementById('objectif-autre-check');
@@ -507,38 +536,38 @@ function setupConditionalFields() {
 }
 
 // Fonction pour vérifier l'âge et mettre à jour l'affichage de l'étape 11
-function checkAgeAndUpdateStep11() {
-    const step11Element = document.getElementById('step11');
-    const dot11 = document.getElementById('dot11');
-    const btnStep10Next = document.getElementById('btn-step10-next');
+function checkAgeAndUpdateStep8() {
+    const step8Element = document.getElementById('step8');
+    const dot8 = document.getElementById('dot8');
+    const btnStep7Next = document.getElementById('btn-step7-next');
     
-    if (step11Element) {
+    if (step8Element) {
         if (!isUnder18()) {
-            step11Element.style.display = 'none';
-            // Si on est actuellement sur l'étape 11 et qu'on a 18 ans ou plus, revenir à l'étape 10
-            if (currentStep === 11) {
-                currentStep = 10;
-                showStep(10);
+            step8Element.style.display = 'none';
+            // Si on est actuellement sur l'étape 8 et qu'on a 18 ans ou plus, revenir à l'étape 7
+            if (currentStep === 8) {
+                currentStep = 7;
+                showStep(7);
             }
         } else {
-            step11Element.style.display = 'flex';
+            step8Element.style.display = 'flex';
         }
     }
     
-    if (dot11) {
-        dot11.style.display = isUnder18() ? 'inline-block' : 'none';
+    if (dot8) {
+        dot8.style.display = isUnder18() ? 'inline-block' : 'none';
     }
     
-    // Mettre à jour le texte du bouton de l'étape 10
-    if (btnStep10Next) {
+    // Mettre à jour le texte du bouton de l'étape 7
+    if (btnStep7Next) {
         if (!isUnder18()) {
-            btnStep10Next.textContent = 'Je valide mes informations';
-            btnStep10Next.className = 'btn-submit';
-            btnStep10Next.onclick = function() { submitForm(); };
+            btnStep7Next.textContent = 'Je valide mes informations';
+            btnStep7Next.className = 'btn-submit';
+            btnStep7Next.onclick = function() { submitForm(); };
         } else {
-            btnStep10Next.textContent = 'Suivant';
-            btnStep10Next.className = 'btn-next';
-            btnStep10Next.onclick = function() { nextStep(); };
+            btnStep7Next.textContent = 'Suivant';
+            btnStep7Next.className = 'btn-next';
+            btnStep7Next.onclick = function() { nextStep(); };
         }
     }
     
@@ -553,5 +582,82 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeDateSelector();
     
     // Vérifier l'âge au chargement initial
-    checkAgeAndUpdateStep11();
+    checkAgeAndUpdateStep8();
+    
+    // Configuration du widget Règlement intérieur
+    setupReglementWidget();
 });
+
+// Configuration du widget Règlement intérieur
+function setupReglementWidget() {
+    const btnReglement = document.getElementById('btn-reglement-interieur');
+    const overlay = document.getElementById('reglementOverlay');
+    const closeBtn = document.getElementById('closeReglement');
+    const validerBtn = document.getElementById('btn-reglement-valider');
+    const reglementAccepte = document.getElementById('reglement-accepte');
+    const reglementLu = document.getElementById('reglement-lu');
+    
+    if (!btnReglement || !overlay) {
+        console.warn('Éléments du widget règlement intérieur non trouvés');
+        return;
+    }
+    
+    // Stocker l'étape actuelle avant d'ouvrir le widget
+    let stepBeforeReglement = null;
+    
+    // Ouvrir le widget
+    btnReglement.addEventListener('click', () => {
+        stepBeforeReglement = currentStep; // Sauvegarder l'étape actuelle
+        overlay.classList.add('active');
+        
+        // Forcer le scroll vers le haut après un court délai pour s'assurer que le contenu est rendu
+        setTimeout(() => {
+            const content = overlay.querySelector('.reglement-content');
+            if (content) {
+                content.scrollTop = 0;
+            }
+            overlay.scrollTop = 0;
+        }, 100);
+    });
+    
+    // Fermer le widget
+    function closeWidget() {
+        overlay.classList.remove('active');
+        // Retourner à l'étape où on était avant d'ouvrir le widget
+        if (stepBeforeReglement !== null) {
+            showStep(stepBeforeReglement);
+            stepBeforeReglement = null;
+        }
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeWidget);
+    }
+    
+    // Fermer en cliquant sur l'overlay
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeWidget();
+        }
+    });
+    
+    // Fermer avec Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeWidget();
+        }
+    });
+    
+    // Valider le règlement
+    if (validerBtn) {
+        validerBtn.addEventListener('click', () => {
+            if (reglementAccepte) {
+                reglementAccepte.value = 'true';
+            }
+            if (reglementLu) {
+                reglementLu.value = 'true';
+            }
+            closeWidget();
+        });
+    }
+}

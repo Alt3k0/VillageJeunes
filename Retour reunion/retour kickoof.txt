@@ -1,50 +1,233 @@
-﻿Bonjour à tous,
-J’espère que vous allez bien.
-Je reviens vers vous aujourd’hui afin de vous faire un petit retour concernant la réunion d’hier et de conserver une trace écrite.
-Concernant le parcours utilisateur – côté adhérents :
-Sur la page d’accueil, il y aura trois onglets : « Inscription », « Connexion » et « Pointage ».
-Lors de la première venue d’un jeune, il pourra s’inscrire via l’onglets « Inscription » soit via la borne, soit grâce à un QR code dédier. Il devra alors renseigner les informations suivantes :
-1. Informations personnelles :
+﻿I. Parcours utilisateur - Côté adhérents
+Page d’accueil
+Sur la page d’accueil, trois onglets seront disponibles : « Inscription », « Connexion » et « Pointage ».
+
+1. Inscription - Première venue
+Lors de sa première venue, un jeune pourra s’inscrire via l’onglet « Inscription », soit directement sur la borne, soit grâce à un QR code dédié. Il devra alors renseigner les informations suivantes :
+
+1.1. Informations personnelles
 • Genre (H/F/X) - (case à cocher)
-• Date de naissance 
-• Nom 
-• Prénom
-• Surnom
+• Date de naissance
+• Nom - (champ libre)
+• Prénom - (champ libre)
+• Surnom - (champ libre)
 • Préférence d’utilisation (prénom ou surnom) - (case à cocher)
-• Commune (choix entre les 33 commune de Nouvelle-Calédonie) - (case à cocher)
-o Si commune de la Province Sud : sélection du quartier (menue déroulant)
-o Si commune de la Province Nord : sélection du village (menue déroulant)
-o Si commune de la Province des Îles Loyauté : sélection du district coutumier (menue déroulant)
-• Adresse e-mail
-• Numéro de téléphone
-• Mode de connaissance du Vill’Âge Jeunes (choix multiple- (case à cocher))
+• Informations médical - (champ libre)
+• Commune (choix parmi les 33 communes de Nouvelle-Calédonie) - (case à cocher)
+o Province Sud : sélection du quartier (menu déroulant)
+o Province Nord : sélection du village (menu déroulant)
+o Province Îles Loyauté : sélection du district coutumier (menu déroulant)
+• Adresse e-mail - (champ libre)
+• Numéro de téléphone - (champ libre)
+• Mode de connaissance du Vill’Âge Jeunes - (choix multiple / cases à cocher)
 
-2. Ce que je fais dans la vie
-• Je suis étudiant : choix du niveau d’études : « Collège », « Lycée » ou « Études supérieures » - (case à cocher)
-o Si collèges : sélection de l’établissement (menue déroulant)
-o Si lycées : sélection de l’établissement (menue déroulant)
-• Je suis sans activité : choix entre en recherche d’emploie et au chômage - (case à cocher)
-o Je recherche principalement dans : (à écrire)
-• Je travail : choix multiple - (case à cocher)
-o Dans quel secteur ? : (à écrire)
-• Je suis dans une association / un collectif ou autre : Nom de la structure (à écrire)
-• Mobilité : choix multiple - (case à cocher)
-• Permis : choix multiple - (case à cocher)
+1.2. Ce que je fais dans la vie
+• Je suis étudiant - (case à cocher)
+o Niveau : Collège / Lycée / Études supérieures - (case à cocher)
+o Sélection de l’établissement (menu déroulant)
+• Je suis sans activité - (case à cocher)
+o En recherche d’emploi / Au chômage - (case à cocher)
+o Domaine de recherche principal : (champ libre)
+• Je travaille - (case à cocher)
+o Secteur d’activité : (champ libre)
+• Je suis dans une association / un collectif / autre - (case à cocher)
+o Nom de la structure : (champ libre)
+• Mobilité - (choix multiple / cases à cocher)
+• Permis - (choix multiple / cases à cocher)
 
 
-3. Village jeunes et moi
-• Ce que je viens faire : choix multiple – (case à cocher)
-• Ce que j’aimerais amener : choix multiple – (case à cocher)
+1.3. Le Vill’Âge Jeunes et moi
+• Ce que je viens faire - (choix multiple / cases à cocher)
+• Ce que j’aimerais apporter - (choix multiple / cases à cocher)
 
-4. Mon droit à l’image
-• Autorisation au droit à l’image – (case à cocher)
+1.4. Droit à l’image
+• Autorisation du droit à l’image - (case à cocher)
 
-5. Le fonctionnement d’Ici
-• Validation du règlement intérieure : « consulter le règlement », « voir la vidéo »
-o Si lecture du règlement, validation en bas de pages pour s’assurer qu’il a pris en compte le consulter les documents.
-o Vidéo, validation a la fin de la vidéo.
+1.5. Fonctionnement de la structure
+• Validation du règlement intérieur : « Consulter le règlement », « Voir la vidéo » - (case à cocher)
+• Si lecture du règlement : validation en bas de page pour confirmer la prise de connaissance - (case à cocher)
+• Si vidéo : validation à la fin du visionnage - (case à cocher)
 
-6. Fin de la pré inscription : 
-Un message de validation de ça pré inscription apparer. Il beneficie donc d’une journée gratuite pour la decouverte. S’il souhaite finalisée sont inscription et devenir adhérents il est invitée a ce rendre a l’acceuil. 
+1.6. Fin de la préinscription
+Un message de validation de la préinscription s’affiche sur la borne ou sur le téléphone (en cas d’inscription via QR code).
+Le jeune bénéficie alors d’une journée gratuite de découverte.
+S’il souhaite finaliser son inscription et devenir adhérent, il est invité à se présenter à l’accueil.
+
+1.7. Validation à l’accueil
+Lors de sa venue à l’accueil, un membre de l’équipe accède à l’espace « Validation des inscriptions ».
+Il peut rechercher le préinscrit par nom ou prénom, puis valider l’inscription après :
+• Paiement de l’adhésion
+• Signature de la fiche sur la tablette d’accueil
+Une fois inscrit le membre de l’équipe lui fournit un numéro d’adhérent + mots de passe 
+
+1.8. Cas des mineurs
+Si l’adhérent est mineur, une autorisation parentale lui est remise.
+Il devra revenir avec ce document signé pour finaliser son inscription.
+Le membre de l’équipe valide alors dans la fiche adhérente : « Autorisation parentale reçue » : Oui / Non - (case à cocher)
+
+2. Connexion
+Lorsque l’adhérent choisit l’onglet « Connexion », il doit renseigner :
+• Son numéro d’adhérent
+• Son mot de passe, qui lui a été fourni lors de son inscription
+
+2.1. Activités
+• Après connexion, l’utilisateur accède à la page d’accueil et peut :
+o Consulter le calendrier des activités
+o Lire leur description
+o Indiquer son intérêt pour une activité - (case à cocher)
+• Un e-mail est automatiquement envoyé à l’équipe afin de notifier l’intérêt de l’adhérent.
+• L’inscription définitive à l’activité est ensuite validée manuellement par l’équipe (elle n’est pas automatique).
+
+2.2. Salles
+• Depuis son espace personnel, l’adhérent peut consulter le calendrier d’occupation des 4 salles du Vill’Âge Jeunes.
+• Il peut effectuer une demande de réservation en renseignant :
+o La date
+o L’heure
+o Un message expliquant le motif de la réservation
+• La demande est automatiquement envoyée par e-mail à l’équipe.
+• L’équipe valide ou refuse ensuite la réservation.
+
+2.3. Messagerie et rendez-vous
+• Depuis son espace adhérent, l’utilisateur peut choisir un membre de l’équipe ou un bénévole avec qui échanger - (case à cocher).
+• Une fois l’interlocuteur sélectionné, il peut :
+o Envoyer un message
+o Faire une demande de rendez-vous
+• Pour une demande de rendez-vous, il devra renseigner :
+o La date souhaitée
+o L’heure
+o Un message expliquant le motif
+• Les messages et demandes de rendez-vous sont envoyés sur la boîte e-mail de l’équipe.
+
+2.4. Informations du compte
+• L’adhérent peut accéder à sa fiche personnelle et :
+o Consulter les informations renseignées
+o Modifier certaines données, notamment la rubrique « Ce que je fais dans la vie », en fonction de son évolution.
+
+
+2.5. Devenir bénévole
+• Depuis son espace adhérent, l’utilisateur peut faire une demande pour devenir bénévole - Bouton “Devenir Bénévole”.
+• Un message d’information lui est alors envoyé, par exemple :
+« Pour devenir bénévole, un essai d’au moins 2 heures sur 5 jours différents (selon tes disponibilités) est demandé. Cela permet de vérifier si la dynamique du lieu, du public et de l’équipe te correspond, et si ta démarche est en phase avec notre philosophie. »
+• Il devra ensuite confirmer son accord - (Oui / Non, case à cocher).
+• Un e-mail est automatiquement envoyé à l’équipe pour signaler la demande.
+• L’adhérent devra ensuite compléter la fiche bénévole avec un membre de l’équipe depuis l’espace « Validation bénévole ».
+• Après validation de sa demande de bénévolat, il continuera d'accéder à son espace adhérent, mais la couleur de son interface sera modifiée afin de créer une distinction.
+ 
+3. Pointage 
+3.1. Pointage des adhérents
+Lorsque l’adhérent arrive au village jeunes il doit réaliser sont pointage sur la borne pour ce faire il doit choisir l’onglet « Pointage », il doit renseigner :
+• Son numéro d’adhérent
+• Son mot de passe
+• Et choisir sur un menu déroulant ce qu’il vient faire - (menue d’déroulant).
+• Un bénévole peut choisir de venir comme adhérent et ainsi ne pas effectuer de bénévolat ce jour-là.
+3.2. Pointage des bénévoles
+• Lorsqu’un adhérent ayant également le profil bénévole vient effectuer du bénévolat, il doit se présenter à l’accueil pour être pointé et non utiliser la borne. Le membre de l’équipe présent à l’accueil effectuera son pointage depuis son espace équipe sur la webapp, dans l’onglet « Gestion de l’équipe » présenté ci-après. 
+
+II. Parcours utilisateur - Côté équipe
+Page d’accueil
+Sur la page d’accueil dédiée à l’équipe, un seul onglet est disponible : « Connexion ».
+• Le membre de l’équipe renseigne son identifiant (exemple : admin1) ainsi que son mot de passe personnel.
+• Une fois connecté, il accède à son espace équipe, composé de cinq onglets :
+o Calendrier
+o Informations adhérents
+o Validation des inscriptions
+o Gestion de l’équipe
+o Statistiques
+
+1. Calendrier
+Dans l’onglet « Calendrier », le membre de l’équipe peut :
+• Ajouter, modifier, supprimer ou archiver des activités.
+• Pour créer une activité :
+o Sélection d’une date dans le calendrier
+o Ajout de l’activité
+o Remplissage d’une fiche comprenant :
+- Nom de l’activité
+- Lieu
+- Nombre maximum de participants
+- Durée
+- Catégorie
+- Description (champ libre)
+
+2. Informations adhérents
+Dans l’onglet « Informations adhérents », le membre de l’équipe peut :
+• Rechercher un adhérent par nom ou numéro
+• Consulter la fiche adhérent
+• Ajouter, modifier ou supprimer des commentaires
+• Modifier les informations
+• Supprimer un adhérent
+
+3. Validation des inscriptions
+Dans l’onglet « Validation des inscriptions », le membre de l’équipe dispose de trois sous-onglets :
+• Adhérent
+• Bénévole
+• Partenaire
+
+3.1. Validation des adhérents
+Dans l’onglet « Adhérent », le membre de l’équipe peut :
+• Visualiser les préinscriptions en attente
+• Lorsqu’un futur adhérent se présente à l’accueil pour finaliser son inscription :
+o Accéder à sa fiche
+o Valider le paiement (total ou partiel) via une case à cocher
+o Ajouter un commentaire si nécessaire
+o Renseigner manuellement le numéro d’adhérent et le mot de passe
+o Faire signer la fiche directement sur la tablette
+
+3.2. Validation des bénévoles
+Dans l’onglet « Bénévole », le membre de l’équipe peut :
+• Valider les bénévoles inscrits depuis l’onglet « Gestion de l’équipe »
+• Vérifier et valider les informations renseignées
+• Confirmer officiellement le statut de bénévole
+
+3.3. Validation des partenaires
+Dans l’onglet « Partenaire », le membre de l’équipe peut :
+• Consulter les fiches partenaires en attente
+• Vérifier les informations renseignées
+• Valider la fiche partenaire après contrôle
+
+4. Gestion de l’équipe
+Dans l’onglet « Gestion de l’équipe », le membre de l’équipe peut :
+• Ajouter ou supprimer des bénévoles
+• Effectuer le pointage des bénévoles
+
+5. Statistiques
+Dans l’onglet « Statistiques », les membres de l’équipe ont accès aux fonctionnalités suivantes :
+• Affichage de graphiques (la liste définitive des indicateurs KPI sera validée entre VisualCom et Vill’Âge Jeunes)
+• Application de filtres selon :
+o Le type de statistique
+o La période souhaitée → afin de générer des rapports mensuels
+• Téléchargement des graphiques, avec ou sans filtre
+• Si nécessaire, VisualCom pourra fournir la base de données (par exemple une fois par an au format CSV), permettant à l’équipe de réaliser des analyses complémentaires sous Excel ou Power BI.
+
+
+III. Parcours utilisateur - Côté Partenaire
+1. Inscription 
+Pour simplifier l’accueil des partenaires du village jeunes, une procédure sera instaurée : 
+• Préinscription des partenaires via un lien ou QR code qui sera envoyer par un des membres de l’équipe.
+• Sur ce lien le partenaire devra saisie des informations sur la webapp comme cela est fait pour la préinscription des adhérents. 
+
+2. Validation de la préinscription 
+Comme présenter plus haut dans la présentation du parcours utilisateur - coté équipes :
+• La validation des partenaires se fera par l’équipe dans l’espace « Validation des inscriptions -> validation des partenaires ».
+
+3. Connexion 
+Une fois validés, les partenaires accèdent à leur espace grâce à un ID et un mot de passe défini par l’équipe. 
+
+4. Salle
+Une fois connecter ils disposent d’un onglet salle similaire à celui des adhérents ou ils pourront : 
+• Consulter le calendrier d’occupation des 4 salles du Vill’Âge Jeunes.
+• Effectuer une demande de réservation en renseignant :
+o La date
+o L’heure
+o Un message expliquant le motif de la réservation
+• La demande est automatiquement envoyée par e-mail à l’équipe.
+• L’équipe valide ou refuse ensuite la réservation.
+
+5. Informations du compte
+Le partenaire peut accéder à sa fiche personnelle et :
+• Consulter les informations renseignées
+• Modifier certaines données, (à définir en amont avec le village jeunes)
+Parcours utilisateur
+
+WebApp - Vill’Âge Jeunes                                                                        2
 
 

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style_info_staff.css">
     <style>
         * {
             margin: 0;
@@ -396,93 +397,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .member-card {
-            background-color: #FFFFFF;
-            border-radius: clamp(0.75rem, 1vw, 1rem);
-            padding: clamp(1rem, 1.5vw, 1.5rem);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .member-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .member-card.hidden {
-            display: none;
-        }
-
-        .member-delete-btn {
-            position: absolute;
-            top: clamp(0.5rem, 0.8vw, 0.75rem);
-            right: clamp(0.5rem, 0.8vw, 0.75rem);
-            width: clamp(1.5rem, 2vw, 2rem);
-            height: clamp(1.5rem, 2vw, 2rem);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .member-delete-btn:hover {
-            opacity: 1;
-        }
-
-        .member-delete-btn svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .member-photo {
-            width: clamp(4rem, 6vw, 6rem);
-            height: clamp(4rem, 6vw, 6rem);
-            border-radius: 50%;
-            background-color: #f08d35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFFFFF;
-            font-size: clamp(0.8rem, 1.2vw, 1rem);
-            font-weight: 500;
-            margin-bottom: clamp(0.75rem, 1vw, 1rem);
-        }
-
-        .member-name {
-            font-size: clamp(1rem, 1.4vw, 1.2rem);
-            font-weight: 700;
-            color: #1e1e1d;
-            text-align: center;
-            margin-bottom: clamp(0.25rem, 0.5vw, 0.5rem);
-        }
-
-        .member-role {
-            font-size: clamp(0.85rem, 1.2vw, 1rem);
-            font-weight: 400;
-            color: #9e9e9e;
-            text-align: center;
-        }
-
-        .member-number {
-            font-size: clamp(0.75rem, 1vw, 0.9rem);
-            font-weight: 500;
-            color: #6e6f75;
-            text-align: center;
-            margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
-        }
-
         /* Footer */
         .footer {
             position: relative;
@@ -625,12 +539,269 @@
     </main>
 
     <!-- Footer -->
+    <!-- Modal Détails Membre -->
+    <div class="member-detail-overlay" id="memberDetailOverlay">
+        <div class="member-detail-widget">
+            <button class="member-detail-close" id="memberDetailClose">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <h2 class="member-detail-title">Détails du membre</h2>
+
+            <!-- Header avec photo et nom -->
+            <div class="member-detail-header">
+                <div class="member-detail-photo" id="memberDetailPhoto">Photo</div>
+                <div class="member-detail-header-info">
+                    <div class="member-detail-name" id="memberDetailName">{member_nom} {member_prenom}</div>
+                    <div class="member-detail-number" id="memberDetailNumber">N° {member_numero}</div>
+                    <div class="member-detail-role" id="memberDetailRole">{member_role}</div>
+                </div>
+            </div>
+
+            <!-- Informations personnelles -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations personnelles</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Genre :</span>
+                        <span class="member-detail-value" id="memberDetailGenre">{member_genre}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date de naissance :</span>
+                        <span class="member-detail-value" id="memberDetailDateNaissance">{member_date_naissance}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Surnom :</span>
+                        <span class="member-detail-value" id="memberDetailSurnom">{member_surnom}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Préférence nom :</span>
+                        <span class="member-detail-value" id="memberDetailPreferenceNom">{member_pref_nom_surnom}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailTelephone">{member_telephone}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailEmail">{member_email}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Adresse :</span>
+                        <span class="member-detail-value" id="memberDetailAdresse">{member_province}, {member_commune}, {member_quartier}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problèmes médicaux -->
+            <div class="member-detail-section member-detail-medical">
+                <h3 class="member-detail-section-title">Problèmes médicaux</h3>
+                <div class="member-detail-medical-content">
+                    <div class="member-detail-medical-info" id="memberDetailProblemesMedicaux">
+                        {member_information_medicale} ou "Pas de problème médical"
+                    </div>
+                    <div class="member-detail-commentaire-staff">
+                        <label class="member-detail-label">Commentaires staff :</label>
+                        <div class="member-detail-commentaires-list" id="memberDetailCommentairesList">
+                            <!-- Les commentaires seront générés par JavaScript -->
+                        </div>
+                        <div class="member-detail-commentaire-add">
+                            <textarea 
+                                class="member-detail-commentaire-input" 
+                                id="memberDetailCommentaireInput" 
+                                placeholder="Ajouter un commentaire..."
+                                rows="3"
+                            ></textarea>
+                            <button type="button" class="member-detail-btn-commentaire" id="memberDetailAddCommentaire">
+                                Ajouter le commentaire
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ce que je fais dans la vie -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Ce que je fais dans la vie</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Étudiant :</span>
+                        <span class="member-detail-value" id="memberDetailEstEtudiant">{member_est_etudiant}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Type établissement :</span>
+                        <span class="member-detail-value" id="memberDetailTypeEtablissement">{member_type_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Établissement :</span>
+                        <span class="member-detail-value" id="memberDetailEtablissement">{member_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">En recherche d'emploi :</span>
+                        <span class="member-detail-value" id="memberDetailRechercheEmploi">{member_recherche_emploi_details}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Activité payée :</span>
+                        <span class="member-detail-value" id="memberDetailActivitePayee">{member_activite_payee_secteur}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Association :</span>
+                        <span class="member-detail-value" id="memberDetailAsso">{member_asso_nom} - {member_asso_sujet}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Autre activité :</span>
+                        <span class="member-detail-value" id="memberDetailAutreActivite">{member_autre_activite_details}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobilité et Permis -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mobilité et Permis</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Mobilité :</span>
+                        <span class="member-detail-value" id="memberDetailMobilite">{member_mobilites}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Permis :</span>
+                        <span class="member-detail-value" id="memberDetailPermis">{member_permis}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Droit à l'image -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Autorisations</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation image :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationImage">{member_autorisation_image}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation urgence médicale :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationUrgence">{member_autorisation_urgence}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moins de 18 ans -->
+            <div class="member-detail-section" id="memberDetailMineurSection" style="display: none;">
+                <h3 class="member-detail-section-title">Représentant légal (moins de 18 ans)</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Nom :</span>
+                        <span class="member-detail-value" id="memberDetailParentNom">{member_nom_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailParentTelephone">{member_telephone_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailParentEmail">{member_email_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Adresse :</span>
+                        <span class="member-detail-value" id="memberDetailParentAdresse">{member_adresse_representant_legal}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations complémentaires</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date d'inscription :</span>
+                        <span class="member-detail-value" id="memberDetailDateInscription">{member_date_inscription}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Statut :</span>
+                        <span class="member-detail-value" id="memberDetailStatut">{member_est_actif}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Historique</h3>
+                <div class="member-detail-history">
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Dernier pointage :</span>
+                        <span class="member-detail-value" id="memberDetailDernierPointage">{member_dernier_pointage}</span>
+                    </div>
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Total pointages :</span>
+                        <span class="member-detail-value" id="memberDetailTotalPointage">{member_total_pointage}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion du paiement -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Paiement de l'adhésion</h3>
+                <div class="member-detail-paiement">
+                    <div class="member-detail-paiement-info">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant total :</span>
+                            <span class="member-detail-value" id="memberDetailMontantTotal">{member_adhesion_montant_total} €</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant payé :</span>
+                            <span class="member-detail-value" id="memberDetailMontantPaye">{member_adhesion_montant_paye} €</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Date d'adhésion :</span>
+                            <span class="member-detail-value" id="memberDetailDateAdhesion">{member_date_adhesion}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="member-detail-paiement-options">
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementTotal" name="paiementType" value="total">
+                            <span>Payé en totalité</span>
+                        </label>
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementPartiel" name="paiementType" value="partiel">
+                            <span>Paiement partiel</span>
+                        </label>
+                    </div>
+
+                    <div class="member-detail-paiement-commentaire" id="paiementPartielCommentaire" style="display: none;">
+                        <label class="member-detail-label">Commentaire sur le paiement partiel :</label>
+                        <textarea 
+                            class="member-detail-commentaire-input" 
+                            id="paiementPartielCommentaireInput" 
+                            placeholder="Ajouter un commentaire sur le paiement partiel..."
+                            rows="3"
+                        ></textarea>
+                        <button type="button" class="member-detail-btn-commentaire" id="savePaiementCommentaire">
+                            Enregistrer le commentaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="member-detail-actions">
+                <button type="button" class="member-detail-btn member-detail-btn-modify" id="memberDetailModify">Modifier</button>
+                <button type="button" class="member-detail-btn member-detail-btn-delete" id="memberDetailDelete">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
         <a href="#" class="footer-link">Politique de confidentialité</a>
         <span class="footer-separator">|</span>
         <a href="#" class="footer-link">Mentions légales</a>
     </footer>
-
+    
+    <script src="member-detail.js"></script>
     <script>
         // État de l'application - uniquement bénévoles
         let allMembers = [];
@@ -649,7 +820,7 @@
             }
         }
 
-        // Créer une card (AVEC bouton supprimer)
+        // Créer une card (AVEC bouton supprimer et ouverture du widget détails)
         function createMemberCard(member) {
             const card = document.createElement('div');
             card.className = 'member-card';
@@ -690,6 +861,16 @@
             number.className = 'member-number';
             number.textContent = `N° ${member.numero}`;
             card.appendChild(number);
+
+            // Ouvrir le widget de détails au clic sur la carte (sauf clic sur supprimer)
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.member-delete-btn')) {
+                    return;
+                }
+                if (typeof openMemberModal === 'function') {
+                    openMemberModal(member);
+                }
+            });
 
             return card;
         }
@@ -776,6 +957,9 @@
             generateTestData();
             renderCards();
             setupMenuToggle();
+            if (typeof setupMemberModal === 'function') {
+                setupMemberModal();
+            }
 
             // Écouter la recherche
             document.getElementById('searchInput').addEventListener('input', applySearchFilter);

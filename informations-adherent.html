@@ -7,530 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            display: block !important;
-            justify-content: flex-start !important;
-        }
-
-        body {
-            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #F7F7F7;
-            min-height: 100vh;
-            position: relative;
-            display: block !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-        }
-
-        /* Fond décoratif - Orange pour staff */
-        .background-decoration {
-            position: fixed;
-            top: -96px;
-            left: -116px;
-            width: 564px;
-            height: 1071px;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .background-decoration::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(31, 101, 142, 0.1) 0%, rgba(100, 157, 80, 0.1) 50%, rgba(240, 141, 53, 0.15) 100%);
-            border-radius: 50%;
-            filter: blur(100px);
-        }
-
-        /* Header sticky */
-        .header {
-            position: sticky;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(217, 217, 217, 0.2);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            width: 100vw;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: clamp(3vh, 4vw, 6vh) clamp(2.5vw, 3.5vw, 5vw) clamp(1.5vh, 2vw, 3vh);
-            height: clamp(8vh, 12vw, 18vh);
-            min-height: clamp(70px, 8.4vw, 180px);
-        }
-
-        .header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            align-items: flex-start;
-            position: relative;
-        }
-
-        .header-logo {
-            width: clamp(4rem, 7vw, 8rem);
-            height: clamp(4rem, 7vw, 8rem);
-            cursor: pointer;
-        }
-
-        .header-menu-container {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            margin-top: clamp(0.8rem, 1.5vw, 1.5rem);
-            z-index: 101;
-        }
-
-        .header-right {
-            display: flex;
-            gap: clamp(1.2rem, 2vw, 3rem);
-            align-items: center;
-        }
-
-        .header-menu {
-            width: clamp(2.5rem, 4vw, 5.5rem);
-            height: clamp(2.5rem, 4vw, 5.5rem);
-            background-color: rgba(31, 101, 142, 0.8);
-            border-radius: clamp(0.5rem, 0.8vw, 1rem);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .header-menu:hover {
-            background-color: rgba(31, 101, 142, 1);
-        }
-
-        .header-menu-icon {
-            width: 60%;
-            height: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .header-menu-icon span {
-            width: 100%;
-            height: 3px;
-            background-color: #F7F7F7;
-            border-radius: 2px;
-        }
-
-        /* Menu déroulant */
-        .sidebar-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: clamp(250px, 40vw, 350px);
-            background-color: #F7F7F7;
-            backdrop-filter: blur(10px);
-            z-index: 200;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            border-top-right-radius: clamp(1rem, 2vw, 1.5rem);
-            border-bottom-right-radius: clamp(1rem, 2vw, 1.5rem);
-            height: auto;
-            min-height: 100vh;
-        }
-
-        .sidebar-menu.open {
-            transform: translateX(0);
-        }
-
-        .menu-close {
-            width: clamp(2.5rem, 4vw, 5.5rem);
-            height: clamp(2.5rem, 4vw, 5.5rem);
-            background-color: rgba(31, 101, 142, 0.8);
-            border-radius: clamp(0.5rem, 0.8vw, 1rem);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin: clamp(1rem, 2vw, 1.5rem);
-            color: #1e1e1d;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .menu-close:hover {
-            background-color: rgba(31, 101, 142, 1);
-        }
-
-        .menu-close svg {
-            width: 60%;
-            height: 60%;
-            stroke: #1e1e1d;
-        }
-
-        .menu-nav {
-            display: flex;
-            flex-direction: column;
-            padding: 0 clamp(1rem, 2vw, 1.5rem);
-            padding-bottom: clamp(1rem, 2vw, 1.5rem);
-            flex: 0 1 auto;
-        }
-
-        .menu-item {
-            padding: clamp(1rem, 1.5vw, 1.5rem) clamp(1rem, 2vw, 1.5rem);
-            color: #1e1e1d;
-            text-decoration: none;
-            font-size: clamp(1rem, 1.5vw, 1.2rem);
-            font-weight: 700;
-            background-color: #F7F7F7;
-            transition: all 0.3s ease;
-            border-radius: clamp(0.5rem, 0.8vw, 0.75rem);
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-item:first-child {
-            border-top-left-radius: clamp(0.75rem, 1.2vw, 1rem);
-            border-top-right-radius: clamp(0.75rem, 1.2vw, 1rem);
-        }
-
-        .menu-item:last-child {
-            border-bottom-left-radius: clamp(0.75rem, 1.2vw, 1rem);
-            border-bottom-right-radius: clamp(0.75rem, 1.2vw, 1rem);
-        }
-
-        .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .menu-item.active {
-            background-color: rgba(31, 101, 142, 0.8);
-            color: #F7F7F7;
-        }
-
-        .menu-separator {
-            height: 1px;
-            background-color: rgba(110, 111, 117, 0.4);
-            margin: 0;
-        }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 150;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .header-profile {
-            width: clamp(2.5rem, 4vw, 5.5rem);
-            height: clamp(2.5rem, 4vw, 5.5rem);
-            background-color: #f08d35;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .header-profile:hover {
-            background-color: #d67a2a;
-        }
-
-        .header-profile-icon {
-            width: 60%;
-            height: 60%;
-            color: #F7F7F7;
-            font-size: clamp(1.2rem, 2vw, 2rem);
-        }
-
-        /* Contenu principal */
-        .main-content {
-            position: relative;
-            z-index: 1;
-            padding: 0 clamp(2.5vw, 4vw, 6vw);
-            padding-top: clamp(3vh, 4vw, 5vh);
-            padding-bottom: clamp(10vh, 12vw, 15vh);
-            margin-top: calc(clamp(2.5rem, 4vw, 5.5rem) + 2vh);
-        }
-
-        /* Titre de la page */
-        .page-title {
-            text-align: center;
-            margin-bottom: clamp(2rem, 3vw, 3rem);
-            position: relative;
-        }
-
-        .page-title h1 {
-            font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-            font-weight: 700;
-            color: #1e1e1d;
-            margin-bottom: clamp(0.5rem, 1vw, 1rem);
-        }
-
-        .page-title-underline {
-            width: clamp(200px, 30vw, 400px);
-            height: 2px;
-            background-color: #1e1e1d;
-            margin: 0 auto;
-        }
-
-        /* Barre de recherche */
-        .search-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: clamp(2rem, 3vw, 3rem);
-        }
-
-        .search-bar {
-            width: 100%;
-            max-width: clamp(400px, 60vw, 800px);
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: clamp(0.75rem, 1.2vw, 1.25rem) clamp(3rem, 4vw, 4rem) clamp(0.75rem, 1.2vw, 1.25rem) clamp(3rem, 4vw, 4rem);
-            border: none;
-            border-radius: clamp(25px, 4vw, 50px);
-            background-color: #FFFFFF;
-            font-size: clamp(0.9rem, 1.3vw, 1.1rem);
-            color: #1e1e1d;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .search-input::placeholder {
-            color: #9e9e9e;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: clamp(1rem, 1.5vw, 1.5rem);
-            top: 50%;
-            transform: translateY(-50%);
-            width: clamp(1.2rem, 1.8vw, 1.5rem);
-            height: clamp(1.2rem, 1.8vw, 1.5rem);
-            color: #9e9e9e;
-            pointer-events: none;
-        }
-
-        /* Navigation avec switch */
-        .view-navigation {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(1rem, 2vw, 2rem);
-            margin-bottom: clamp(2rem, 3vw, 3rem);
-        }
-
-        .view-arrow {
-            width: clamp(1.5rem, 2.5vw, 3rem);
-            height: clamp(1.5rem, 2.5vw, 3rem);
-            background-color: rgba(31, 101, 142, 0.8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #F7F7F7;
-            font-size: clamp(1rem, 1.5vw, 1.5rem);
-            font-weight: 700;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .view-arrow:hover {
-            background-color: rgba(31, 101, 142, 1);
-            transform: scale(1.1);
-        }
-
-        .view-title {
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
-            font-weight: 700;
-            color: #1e1e1d;
-            min-width: clamp(150px, 20vw, 250px);
-            text-align: center;
-        }
-
-        /* Grid de cards */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 25vw, 280px), 1fr));
-            gap: clamp(1rem, 1.5vw, 1.5rem);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .member-card {
-            background-color: #FFFFFF;
-            border-radius: clamp(0.75rem, 1vw, 1rem);
-            padding: clamp(1rem, 1.5vw, 1.5rem);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .member-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .member-card.hidden {
-            display: none;
-        }
-
-        .member-delete-btn {
-            position: absolute;
-            top: clamp(0.5rem, 0.8vw, 0.75rem);
-            right: clamp(0.5rem, 0.8vw, 0.75rem);
-            width: clamp(1.5rem, 2vw, 2rem);
-            height: clamp(1.5rem, 2vw, 2rem);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .member-delete-btn:hover {
-            opacity: 1;
-        }
-
-        .member-delete-btn svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .member-photo {
-            width: clamp(4rem, 6vw, 6rem);
-            height: clamp(4rem, 6vw, 6rem);
-            border-radius: 50%;
-            background-color: #f08d35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFFFFF;
-            font-size: clamp(0.8rem, 1.2vw, 1rem);
-            font-weight: 500;
-            margin-bottom: clamp(0.75rem, 1vw, 1rem);
-        }
-
-        .member-name {
-            font-size: clamp(1rem, 1.4vw, 1.2rem);
-            font-weight: 700;
-            color: #1e1e1d;
-            text-align: center;
-            margin-bottom: clamp(0.25rem, 0.5vw, 0.5rem);
-        }
-
-        .member-role {
-            font-size: clamp(0.85rem, 1.2vw, 1rem);
-            font-weight: 400;
-            color: #9e9e9e;
-            text-align: center;
-        }
-
-        .member-number {
-            font-size: clamp(0.75rem, 1vw, 0.9rem);
-            font-weight: 500;
-            color: #6e6f75;
-            text-align: center;
-            margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
-        }
-
-        /* Footer */
-        .footer {
-            position: relative;
-            z-index: 1;
-            background-color: #F7F7F7;
-            padding: clamp(1.5rem, 2vw, 2rem);
-            text-align: center;
-            border-top: 1px solid rgba(110, 111, 117, 0.2);
-            margin-top: clamp(3rem, 4vw, 5rem);
-        }
-
-        .footer-link {
-            color: #1e1e1d;
-            text-decoration: none;
-            font-size: clamp(0.85rem, 1.2vw, 1rem);
-            transition: color 0.3s ease;
-        }
-
-        .footer-link:hover {
-            color: rgba(31, 101, 142, 0.8);
-        }
-
-        .footer-separator {
-            display: inline-block;
-            margin: 0 clamp(0.5rem, 1vw, 1rem);
-            color: #6e6f75;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 40vw, 200px), 1fr));
-                gap: clamp(0.75rem, 2vw, 1rem);
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .cards-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (min-width: 1025px) {
-            .cards-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style_info_staff.css">
 </head>
 <body>
     <!-- Fond décoratif -->
@@ -626,6 +103,261 @@
         </div>
     </main>
 
+    <!-- Modal Détails Membre -->
+    <div class="member-detail-overlay" id="memberDetailOverlay">
+        <div class="member-detail-widget">
+            <button class="member-detail-close" id="memberDetailClose">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <h2 class="member-detail-title">Détails du membre</h2>
+
+            <!-- Header avec photo et nom -->
+            <div class="member-detail-header">
+                <div class="member-detail-photo" id="memberDetailPhoto">Photo</div>
+                <div class="member-detail-header-info">
+                    <div class="member-detail-name" id="memberDetailName">{member_nom} {member_prenom}</div>
+                    <div class="member-detail-number" id="memberDetailNumber">N° {member_numero}</div>
+                    <div class="member-detail-role" id="memberDetailRole">{member_role}</div>
+                </div>
+            </div>
+
+            <!-- Informations personnelles -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations personnelles</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Genre :</span>
+                        <span class="member-detail-value" id="memberDetailGenre">{member_genre}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date de naissance :</span>
+                        <span class="member-detail-value" id="memberDetailDateNaissance">{member_date_naissance}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Surnom :</span>
+                        <span class="member-detail-value" id="memberDetailSurnom">{member_surnom}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Préférence nom :</span>
+                        <span class="member-detail-value" id="memberDetailPreferenceNom">{member_pref_nom_surnom}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailTelephone">{member_telephone}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailEmail">{member_email}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Adresse :</span>
+                        <span class="member-detail-value" id="memberDetailAdresse">{member_province}, {member_commune}, {member_quartier}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problèmes médicaux (juste après les informations personnelles) -->
+            <div class="member-detail-section member-detail-medical">
+                <h3 class="member-detail-section-title">Problèmes médicaux</h3>
+                <div class="member-detail-medical-content">
+                    <div class="member-detail-medical-info" id="memberDetailProblemesMedicaux">
+                        {member_information_medicale} ou "Pas de problème médical"
+                    </div>
+                    <div class="member-detail-commentaire-staff">
+                        <label class="member-detail-label">Commentaires staff :</label>
+                        <div class="member-detail-commentaires-list" id="memberDetailCommentairesList">
+                            <!-- Les commentaires seront générés par JavaScript -->
+                        </div>
+                        <div class="member-detail-commentaire-add">
+                            <textarea 
+                                class="member-detail-commentaire-input" 
+                                id="memberDetailCommentaireInput" 
+                                placeholder="Ajouter un commentaire..."
+                                rows="3"
+                            ></textarea>
+                            <button type="button" class="member-detail-btn-commentaire" id="memberDetailAddCommentaire">
+                                Ajouter le commentaire
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ce que je fais dans la vie -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Ce que je fais dans la vie</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Étudiant :</span>
+                        <span class="member-detail-value" id="memberDetailEstEtudiant">{member_est_etudiant}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Type établissement :</span>
+                        <span class="member-detail-value" id="memberDetailTypeEtablissement">{member_type_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Établissement :</span>
+                        <span class="member-detail-value" id="memberDetailEtablissement">{member_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">En recherche d'emploi :</span>
+                        <span class="member-detail-value" id="memberDetailRechercheEmploi">{member_recherche_emploi_details}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Activité payée :</span>
+                        <span class="member-detail-value" id="memberDetailActivitePayee">{member_activite_payee_secteur}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Association :</span>
+                        <span class="member-detail-value" id="memberDetailAsso">{member_asso_nom} - {member_asso_sujet}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Autre activité :</span>
+                        <span class="member-detail-value" id="memberDetailAutreActivite">{member_autre_activite_details}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobilité et Permis -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mobilité et Permis</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Mobilité :</span>
+                        <span class="member-detail-value" id="memberDetailMobilite">{member_mobilites}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Permis :</span>
+                        <span class="member-detail-value" id="memberDetailPermis">{member_permis}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Droit à l'image -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Autorisations</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation image :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationImage">{member_autorisation_image}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation urgence médicale :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationUrgence">{member_autorisation_urgence}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moins de 18 ans -->
+            <div class="member-detail-section" id="memberDetailMineurSection" style="display: none;">
+                <h3 class="member-detail-section-title">Représentant légal (moins de 18 ans)</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Nom :</span>
+                        <span class="member-detail-value" id="memberDetailParentNom">{member_nom_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailParentTelephone">{member_telephone_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailParentEmail">{member_email_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Adresse :</span>
+                        <span class="member-detail-value" id="memberDetailParentAdresse">{member_adresse_representant_legal}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations complémentaires</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date d'inscription :</span>
+                        <span class="member-detail-value" id="memberDetailDateInscription">{member_date_inscription}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Statut :</span>
+                        <span class="member-detail-value" id="memberDetailStatut">{member_est_actif}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Historique</h3>
+                <div class="member-detail-history">
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Dernier pointage :</span>
+                        <span class="member-detail-value" id="memberDetailDernierPointage">{member_dernier_pointage}</span>
+                    </div>
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Total pointages :</span>
+                        <span class="member-detail-value" id="memberDetailTotalPointage">{member_total_pointage}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion du paiement -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Paiement de l'adhésion</h3>
+                <div class="member-detail-paiement">
+                    <div class="member-detail-paiement-info">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant total :</span>
+                            <span class="member-detail-value" id="memberDetailMontantTotal">{member_adhesion_montant_total} €</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant payé :</span>
+                            <span class="member-detail-value" id="memberDetailMontantPaye">{member_adhesion_montant_paye} €</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Date d'adhésion :</span>
+                            <span class="member-detail-value" id="memberDetailDateAdhesion">{member_date_adhesion}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="member-detail-paiement-options">
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementTotal" name="paiementType" value="total">
+                            <span>Payé en totalité</span>
+                        </label>
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementPartiel" name="paiementType" value="partiel">
+                            <span>Paiement partiel</span>
+                        </label>
+                    </div>
+
+                    <div class="member-detail-paiement-commentaire" id="paiementPartielCommentaire" style="display: none;">
+                        <label class="member-detail-label">Commentaire sur le paiement partiel :</label>
+                        <textarea 
+                            class="member-detail-commentaire-input" 
+                            id="paiementPartielCommentaireInput" 
+                            placeholder="Ajouter un commentaire sur le paiement partiel..."
+                            rows="3"
+                        ></textarea>
+                        <button type="button" class="member-detail-btn-commentaire" id="savePaiementCommentaire">
+                            Enregistrer le commentaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="member-detail-actions">
+                <button type="button" class="member-detail-btn member-detail-btn-modify" id="memberDetailModify">Modifier</button>
+                <button type="button" class="member-detail-btn member-detail-btn-delete" id="memberDetailDelete">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <a href="#" class="footer-link">Politique de confidentialité</a>
@@ -633,6 +365,7 @@
         <a href="#" class="footer-link">Mentions légales</a>
     </footer>
 
+    <script src="member-detail.js"></script>
     <script>
         // État de l'application
         let currentViewType = 'adherents'; // 'adherents', 'benevoles', 'partenaires'
@@ -695,6 +428,14 @@
                 deleteMember(member);
             });
             card.appendChild(deleteBtn);
+
+            // Event listener pour ouvrir le modal au clic sur la card
+            card.addEventListener('click', function(e) {
+                // Ne pas ouvrir si on clique sur le bouton supprimer
+                if (!e.target.closest('.member-delete-btn')) {
+                    openMemberModal(member);
+                }
+            });
 
             // Photo placeholder
             const photo = document.createElement('div');
@@ -834,6 +575,7 @@
             updateViewTitle();
             renderCards();
             setupMenuToggle();
+            setupMemberModal();
 
             // Écouter les changements de vue
             document.getElementById('prevView').addEventListener('click', () => switchView('prev'));

@@ -804,6 +804,86 @@ body {
     transform: translateY(-2px);
 }
 
+.member-detail-btn-validate {
+    background-color: rgba(100, 157, 80, 0.8);
+    color: #F7F7F7;
+}
+
+.member-detail-btn-validate:hover {
+    background-color: rgba(100, 157, 80, 1);
+    transform: translateY(-2px);
+}
+
+/* Section signature */
+.member-detail-signature-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.2vw, 1rem);
+}
+
+.member-detail-signature-wrapper {
+    position: relative;
+    width: 100%;
+    height: clamp(150px, 25vw, 250px);
+    border: 2px solid rgba(110, 111, 117, 0.3);
+    border-radius: clamp(0.5rem, 0.8vw, 0.75rem);
+    background-color: #FFFFFF;
+    overflow: hidden;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.member-detail-signature-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.member-detail-signature-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #9e9e9e;
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-style: italic;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+}
+
+.member-detail-signature-placeholder.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.member-detail-signature-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: clamp(0.5rem, 0.8vw, 0.75rem);
+}
+
+.member-detail-btn-signature-clear {
+    padding: clamp(0.5rem, 0.8vw, 0.75rem) clamp(1rem, 1.5vw, 1.5rem);
+    background-color: rgba(110, 111, 117, 0.2);
+    color: #1e1e1d;
+    border: none;
+    border-radius: clamp(0.5rem, 0.8vw, 0.75rem);
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.member-detail-btn-signature-clear:hover {
+    background-color: rgba(110, 111, 117, 0.3);
+    transform: translateY(-1px);
+}
+
 /* Section paiement */
 .member-detail-paiement {
     display: flex;
@@ -906,4 +986,64 @@ body {
     .cards-container {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* Styles pour les champs éditables */
+.member-detail-edit-input,
+.member-detail-edit-select,
+.member-detail-edit-textarea {
+    width: 100%;
+    padding: clamp(0.5rem, 0.8vw, 0.75rem);
+    border: 2px solid rgba(110, 111, 117, 0.3);
+    border-radius: clamp(0.5rem, 0.8vw, 0.75rem);
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-family: inherit;
+    color: #1e1e1d;
+    background-color: #FFFFFF;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.member-detail-edit-input:focus,
+.member-detail-edit-select:focus,
+.member-detail-edit-textarea:focus {
+    outline: none;
+    border-color: rgba(31, 101, 142, 0.6);
+    box-shadow: 0 0 0 3px rgba(31, 101, 142, 0.1);
+}
+
+.member-detail-edit-input:hover,
+.member-detail-edit-select:hover,
+.member-detail-edit-textarea:hover {
+    border-color: rgba(110, 111, 117, 0.5);
+}
+
+.member-detail-edit-textarea {
+    resize: vertical;
+    min-height: clamp(60px, 8vw, 80px);
+}
+
+.member-detail-edit-select {
+    cursor: pointer;
+}
+
+/* Boutons en mode édition */
+.member-detail-btn-cancel {
+    background-color: rgba(211, 47, 47, 0.8);
+    color: #F7F7F7;
+}
+
+.member-detail-btn-cancel:hover {
+    background-color: rgba(211, 47, 47, 1);
+    transform: translateY(-2px);
+}
+
+.member-detail-btn-save {
+    background-color: rgba(31, 101, 142, 0.8);
+    color: #F7F7F7;
+}
+
+.member-detail-btn-save:hover {
+    background-color: rgba(31, 101, 142, 1);
+    transform: translateY(-2px);
 }

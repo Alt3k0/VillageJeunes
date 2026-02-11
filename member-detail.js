@@ -41,11 +41,101 @@ function openMemberModal(member) {
 
     // Stocker l'ID du membre actuel dans le dataset de l'overlay
     overlay.dataset.currentMemberId = member.id || '';
+    
+    // S'assurer que tous les champs sont en mode lecture (spans, pas inputs)
+    // Convertir tous les inputs/selects/textarea en spans avant de remplir
+    const editInputs = document.querySelectorAll('#memberDetailOverlay .member-detail-edit-input, #memberDetailOverlay .member-detail-edit-select, #memberDetailOverlay .member-detail-edit-textarea');
+    editInputs.forEach(input => {
+        const value = input.value.trim() || input.textContent.trim() || 'Non renseigné';
+        const span = document.createElement('span');
+        span.className = 'member-detail-value';
+        // Récupérer l'ID original en enlevant les suffixes
+        const originalId = input.id.replace('Input', '').replace('Select', '').replace('Textarea', '');
+        span.id = originalId;
+        span.textContent = value;
+        input.parentElement.replaceChild(span, input);
+    });
+    
+    // Restaurer les champs spéciaux (nom/prénom, adresse, association) s'ils sont en mode édition
+    const nomInput = document.getElementById('memberDetailNomInput');
+    const prenomInput = document.getElementById('memberDetailPrenomInput');
+    if (nomInput || prenomInput) {
+        const nom = nomInput ? nomInput.value.trim() : '';
+        const prenom = prenomInput ? prenomInput.value.trim() : '';
+        const fullName = (nom + ' ' + prenom).trim() || '{member_nom} {member_prenom}';
+        const nameEl = document.getElementById('memberDetailName');
+        if (nameEl && nameEl.tagName === 'INPUT') {
+            const parent = nameEl.parentElement;
+            const newEl = document.createElement('div');
+            newEl.id = 'memberDetailName';
+            newEl.className = 'member-detail-name';
+            newEl.textContent = fullName;
+            parent.replaceChild(newEl, nameEl);
+        }
+        if (nomInput) nomInput.remove();
+        if (prenomInput) prenomInput.remove();
+    }
+    
+    // Restaurer l'adresse
+    const provinceInput = document.getElementById('memberDetailAdresseProvinceInput');
+    const communeInput = document.getElementById('memberDetailAdresseCommuneInput');
+    const quartierInput = document.getElementById('memberDetailAdresseQuartierInput');
+    if (provinceInput || communeInput || quartierInput) {
+        const province = provinceInput ? provinceInput.value.trim() : '';
+        const commune = communeInput ? communeInput.value.trim() : '';
+        const quartier = quartierInput ? quartierInput.value.trim() : '';
+        const adresse = [province, commune, quartier].filter(p => p).join(', ') || 'Non renseigné';
+        const adresseEl = document.getElementById('memberDetailAdresse');
+        if (!adresseEl || adresseEl.tagName === 'INPUT') {
+            const parent = (provinceInput || communeInput || quartierInput).parentElement;
+            if (adresseEl) adresseEl.remove();
+            const newEl = document.createElement('span');
+            newEl.id = 'memberDetailAdresse';
+            newEl.className = 'member-detail-value';
+            newEl.textContent = adresse;
+            parent.appendChild(newEl);
+        }
+        if (provinceInput) provinceInput.remove();
+        if (communeInput) communeInput.remove();
+        if (quartierInput) quartierInput.remove();
+    }
+    
+    // Restaurer l'association
+    const assoNomInput = document.getElementById('memberDetailAssoNomInput');
+    const assoSujetInput = document.getElementById('memberDetailAssoSujetInput');
+    if (assoNomInput || assoSujetInput) {
+        const nom = assoNomInput ? assoNomInput.value.trim() : '';
+        const sujet = assoSujetInput ? assoSujetInput.value.trim() : '';
+        const asso = (nom && sujet) ? `${nom} - ${sujet}` : 'Non renseigné';
+        const assoEl = document.getElementById('memberDetailAsso');
+        if (!assoEl || assoEl.tagName === 'INPUT') {
+            const parent = (assoNomInput || assoSujetInput).parentElement;
+            if (assoEl) assoEl.remove();
+            const newEl = document.createElement('span');
+            newEl.id = 'memberDetailAsso';
+            newEl.className = 'member-detail-value';
+            newEl.textContent = asso;
+            parent.appendChild(newEl);
+        }
+        if (assoNomInput) assoNomInput.remove();
+        if (assoSujetInput) assoSujetInput.remove();
+    }
 
     // Photo
     const photoEl = document.getElementById('memberDetailPhoto');
     if (photoEl) {
         photoEl.textContent = member.photo || 'Photo';
+    }
+
+    // Fonction utilitaire pour définir le texte d'un élément (gère inputs et spans)
+    function setElementText(elementId, text) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+            el.value = text;
+        } else {
+            el.textContent = text;
+        }
     }
 
     // Nom / numéro / rôle
@@ -458,11 +548,7 @@ function setupMemberModal() {
         }
     });
 
-    if (modifyBtn) {
-        modifyBtn.addEventListener('click', function () {
-            alert('Fonctionnalité de modification à venir');
-        });
-    }
+    // Le bouton Modifier est géré par setupModifyButton() dans chaque page
 
     if (deleteBtn) {
         deleteBtn.addEventListener('click', function () {

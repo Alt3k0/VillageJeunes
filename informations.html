@@ -372,37 +372,44 @@
         };
 
         // Générer les données de test
+        // Dans informations.html, on génère uniquement des membres validés (avec numéro et mot de passe)
         function generateTestData() {
-            // Générer 11 adhérents
+            // Générer 11 adhérents validés
             for (let i = 1; i <= 11; i++) {
                 allMembers.adherents.push({
                     id: `ADH${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    numero: `ADH${String(i).padStart(4, '0')}`, // Numéro généré lors de la validation
+                    password: '***', // Mot de passe défini (masqué pour sécurité)
                     nom: `Nom${i}`,
                     prenom: `Prénom${i}`,
-                    role: 'Adhérent'
+                    role: 'Adhérent',
+                    isPending: false // Membre validé
                 });
             }
 
-            // Générer 8 bénévoles
+            // Générer 8 bénévoles validés
             for (let i = 1; i <= 8; i++) {
                 allMembers.benevoles.push({
                     id: `BEN${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    numero: `BEN${String(i).padStart(4, '0')}`,
+                    password: '***',
                     nom: `Bénévole${i}`,
                     prenom: `Prénom${i}`,
-                    role: 'Bénévole'
+                    role: 'Bénévole',
+                    isPending: false
                 });
             }
 
-            // Générer 5 partenaires
+            // Générer 5 partenaires validés
             for (let i = 1; i <= 5; i++) {
                 allMembers.partenaires.push({
                     id: `PAR${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    numero: `PAR${String(i).padStart(4, '0')}`,
+                    password: '***',
                     nom: `Partenaire${i}`,
                     prenom: `Structure${i}`,
-                    role: 'Partenaire'
+                    role: 'Partenaire',
+                    isPending: false
                 });
             }
         }
@@ -461,12 +468,16 @@
         }
 
         // Afficher les cards selon le type de vue
+        // Dans informations.html, on affiche uniquement les membres validés (avec numéro)
         function renderCards() {
             const container = document.getElementById('cardsContainer');
             container.innerHTML = '';
 
             const members = allMembers[currentViewType];
-            members.forEach(member => {
+            // Filtrer uniquement les membres avec un numéro (validés)
+            const validatedMembers = members.filter(member => member.numero && !member.isPending);
+            
+            validatedMembers.forEach(member => {
                 const card = createMemberCard(member);
                 container.appendChild(card);
             });

@@ -783,6 +783,24 @@
                 </div>
             </div>
 
+            <!-- Mot de passe -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mot de passe</h3>
+                <div class="member-detail-password-container">
+                    <label class="member-detail-label" for="memberPasswordInput">Mot de passe à attribuer :</label>
+                    <input 
+                        type="password" 
+                        id="memberPasswordInput" 
+                        class="member-detail-password-input" 
+                        placeholder="Saisir le mot de passe"
+                        autocomplete="new-password"
+                    />
+                    <div class="member-detail-password-info">
+                        <small>Le mot de passe sert maintenant de mot de passe de connexion.</small>
+                    </div>
+                </div>
+            </div>
+
             <!-- Signature -->
             <div class="member-detail-section">
                 <h3 class="member-detail-section-title">Signature</h3>
@@ -827,37 +845,43 @@
         };
 
         // Générer les données de test
+        // Dans validation-inscription.html, on affiche uniquement les inscriptions en attente (sans numéro ni mot de passe)
         function generateTestData() {
-            // Générer 11 adhérents
-            for (let i = 1; i <= 11; i++) {
+            // Générer des inscriptions en attente (sans numéro ni mot de passe)
+            // Ces inscriptions apparaîtront uniquement dans validation-inscription.html
+            for (let i = 1; i <= 5; i++) {
                 allMembers.adherents.push({
-                    id: `ADH${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    id: `PENDING_ADH${String(i).padStart(4, '0')}`,
+                    numero: null, // Pas de numéro tant que non validé
+                    password: null, // Pas de mot de passe tant que non validé
                     nom: `Nom${i}`,
                     prenom: `Prénom${i}`,
-                    role: 'Adhérent'
+                    role: 'Adhérent',
+                    isPending: true // Flag pour identifier les inscriptions en attente
                 });
             }
 
-            // Générer 8 bénévoles
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 3; i++) {
                 allMembers.benevoles.push({
-                    id: `BEN${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    id: `PENDING_BEN${String(i).padStart(4, '0')}`,
+                    numero: null,
+                    password: null,
                     nom: `Bénévole${i}`,
                     prenom: `Prénom${i}`,
-                    role: 'Bénévole'
+                    role: 'Bénévole',
+                    isPending: true
                 });
             }
 
-            // Générer 5 partenaires
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 2; i++) {
                 allMembers.partenaires.push({
-                    id: `PAR${String(i).padStart(4, '0')}`,
-                    numero: String(i).padStart(4, '0'),
+                    id: `PENDING_PAR${String(i).padStart(4, '0')}`,
+                    numero: null,
+                    password: null,
                     nom: `Partenaire${i}`,
                     prenom: `Structure${i}`,
-                    role: 'Partenaire'
+                    role: 'Partenaire',
+                    isPending: true
                 });
             }
         }
@@ -905,12 +929,16 @@
         }
 
         // Afficher les cards selon le type de vue
+        // Dans validation-inscription.html, on affiche uniquement les inscriptions en attente (sans numéro)
         function renderCards() {
             const container = document.getElementById('cardsContainer');
             container.innerHTML = '';
 
             const members = allMembers[currentViewType];
-            members.forEach(member => {
+            // Filtrer uniquement les membres sans numéro (inscriptions en attente)
+            const pendingMembers = members.filter(member => !member.numero || member.isPending);
+            
+            pendingMembers.forEach(member => {
                 const card = createMemberCard(member);
                 container.appendChild(card);
             });
@@ -1108,9 +1136,15 @@
             }
         }
 
-        // Réinitialiser la signature à l'ouverture du modal
+        // Réinitialiser la signature et le mot de passe à l'ouverture du modal
         function resetSignatureOnModalOpen() {
-            // Attendre que le modal soit visible pour réinitialiser
+            // Réinitialiser le champ mot de passe
+            const passwordInput = document.getElementById('memberPasswordInput');
+            if (passwordInput) {
+                passwordInput.value = '';
+            }
+
+            // Attendre que le modal soit visible pour réinitialiser la signature
             setTimeout(function() {
                 clearSignature();
                 // Réajuster la taille du canvas après l'ouverture
@@ -1928,6 +1962,15 @@
                     saveMemberModifications();
                 } else {
                     // Mode lecture : valider l'inscription
+                    // Vérifier le mot de passe
+                    const passwordInput = document.getElementById('memberPasswordInput');
+                    const password = passwordInput ? passwordInput.value.trim() : '';
+                    if (!password) {
+                        alert('Veuillez saisir un mot de passe avant de valider.');
+                        passwordInput?.focus();
+                        return;
+                    }
+
                     // Première validation : vérifier la signature
                     if (!hasSignature()) {
                         alert('Veuillez signer avant de valider.');
@@ -1941,7 +1984,7 @@
                         return;
                     }
 
-                    const confirmMessage = 'Êtes-vous sûr de vouloir valider cette inscription ?\n\nCette action est définitive.';
+                    const confirmMessage = 'Êtes-vous sûr de vouloir valider cette inscription ?\n\nCette action est définitive et générera un numéro d\'adhérent.';
                     if (!confirm(confirmMessage)) {
                         return;
                     }
@@ -1957,14 +2000,56 @@
                     
                     // Envoyer les données au backend selon README-BACKEND-VARIABLES.md
                     // POST /api/staff/inscriptions/{inscription_id}/validate
-                    validateInscription(memberId, signatureData);
+                    validateInscription(memberId, password, signatureData);
                 }
             });
         }
 
+        // Générer un numéro adhérent selon le type
+        function generateMemberNumber(memberRole) {
+            // Le backend devrait générer le numéro, mais pour le frontend on simule
+            // Format: ADH0001, BEN0001, PAR0001
+            const prefix = memberRole === 'Adhérent' ? 'ADH' : memberRole === 'Bénévole' ? 'BEN' : 'PAR';
+            const existingNumbers = [];
+            
+            // Récupérer tous les numéros existants du même type
+            if (typeof allMembers !== 'undefined') {
+                const roleKey = memberRole === 'Adhérent' ? 'adherents' : memberRole === 'Bénévole' ? 'benevoles' : 'partenaires';
+                const members = allMembers[roleKey] || [];
+                members.forEach(m => {
+                    if (m.numero && typeof m.numero === 'string' && m.numero.startsWith(prefix)) {
+                        const num = parseInt(m.numero.replace(prefix, '')) || 0;
+                        existingNumbers.push(num);
+                    }
+                });
+            }
+            
+            // Trouver le prochain numéro disponible
+            let nextNum = 1;
+            while (existingNumbers.includes(nextNum)) {
+                nextNum++;
+            }
+            
+            return `${prefix}${String(nextNum).padStart(4, '0')}`;
+        }
+
         // Valider une inscription
-        async function validateInscription(memberId, signatureData) {
+        async function validateInscription(memberId, password, signatureData) {
             try {
+                // Récupérer les données du membre depuis le modal
+                const overlay = document.getElementById('memberDetailOverlay');
+                if (!overlay) {
+                    throw new Error('Overlay non trouvé');
+                }
+
+                // Récupérer le rôle du membre pour déterminer le type
+                const roleEl = document.getElementById('memberDetailRole');
+                const memberRole = roleEl ? roleEl.textContent.trim() : 'Adhérent';
+                
+                // Générer le numéro adhérent
+                const memberNumber = generateMemberNumber(memberRole);
+
+                // Envoyer la validation au backend
                 const response = await fetch(`/api/staff/inscriptions/${memberId}/validate`, {
                     method: 'POST',
                     headers: {
@@ -1972,7 +2057,10 @@
                     },
                     body: JSON.stringify({
                         action: 'approve',
-                        signature: signatureData
+                        password: password, // Mot de passe saisi par le staff
+                        memberNumber: memberNumber, // Numéro généré
+                        signature: signatureData, // Signature du staff
+                        role: memberRole // Rôle pour déterminer dans quelle section basculer
                     })
                 });
 
@@ -1983,10 +2071,24 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert('Inscription validée avec succès !');
+                    // Le backend devrait retourner le membre avec le numéro et le mot de passe
+                    const validatedMember = result.member || {
+                        id: memberId,
+                        numero: memberNumber,
+                        password: password,
+                        role: memberRole
+                    };
+
+                    alert(`Inscription validée avec succès !\n\nNuméro attribué : ${validatedMember.numero}\nMot de passe : ${password}`);
                     
-                    // Retirer l'inscription de la liste locale
+                    // Retirer l'inscription de la liste locale (elle n'apparaîtra plus ici)
                     removeInscriptionFromList(memberId);
+                    
+                    // Réinitialiser le champ mot de passe
+                    const passwordInput = document.getElementById('memberPasswordInput');
+                    if (passwordInput) {
+                        passwordInput.value = '';
+                    }
                     
                     // Fermer le modal
                     if (typeof closeMemberModal === 'function') {

@@ -2165,6 +2165,14 @@ function setupAddActivityWidget() {
         console.warn('Éléments du widget d\'ajout d\'activité non trouvés');
         return;
     }
+
+    // Compteurs de caractères (prévenir la troncature)
+    if (typeof attachCharCounter === 'function' && typeof VALIDATION !== 'undefined') {
+        const nameInput = document.getElementById('activityName');
+        const descInput = document.getElementById('activityDescription');
+        if (nameInput) attachCharCounter(nameInput, VALIDATION.MAX_LENGTH_SHORT);
+        if (descInput) attachCharCounter(descInput, VALIDATION.MAX_LENGTH_TEXT);
+    }
     
     // Ouvrir le widget
     addButton.addEventListener('click', () => {
@@ -2208,32 +2216,56 @@ function setupAddActivityWidget() {
         }
     });
     
-    // Gérer la soumission du formulaire
+    // Gérer la soumission du formulaire (validation des entrées pour sécurité)
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Récupérer les valeurs du formulaire
-        const name = document.getElementById('activityName').value.trim();
-        const date = document.getElementById('activityDate').value;
-        const startTime = document.getElementById('activityStartTime').value;
-        const endTime = document.getElementById('activityEndTime').value;
-        const category = document.getElementById('activityCategory').value;
-        const room = document.getElementById('activityRoom').value;
-        const responsible = document.getElementById('activityResponsible').value;
-        const description = document.getElementById('activityDescription').value.trim();
-        
-        // Validation
-        if (!name || !date || !startTime || !endTime || !category || !room || !responsible) {
-            alert('Veuillez remplir tous les champs obligatoires.');
+
+        let name, date, startTime, endTime, category, room, responsible, description;
+        try {
+            name = validateString(
+                getFormValue('#activityName'),
+                'Nom de l\'activité',
+                VALIDATION.MAX_LENGTH_SHORT,
+                true
+            );
+            date = validateDateString(
+                getFormValue('#activityDate'),
+                'Date',
+                true
+            );
+            startTime = getFormValue('#activityStartTime');
+            endTime = getFormValue('#activityEndTime');
+            if (!/^\d{1,2}:\d{2}$/.test(startTime) || !/^\d{1,2}:\d{2}$/.test(endTime)) {
+                throw new Error('Les heures doivent être au format HH:MM.');
+            }
+            if (startTime >= endTime) {
+                throw new Error('L\'heure de fin doit être après l\'heure de début.');
+            }
+            category = getFormValue('#activityCategory');
+            if (!category || !Object.prototype.hasOwnProperty.call(activityCategories, category)) {
+                throw new Error('Veuillez choisir une catégorie valide.');
+            }
+            room = validateString(
+                getFormValue('#activityRoom'),
+                'Salle',
+                VALIDATION.MAX_LENGTH_SHORT,
+                true
+            );
+            responsible = validateString(
+                getFormValue('#activityResponsible'),
+                'Responsable',
+                VALIDATION.MAX_LENGTH_SHORT,
+                true
+            );
+            description = validateOptionalString(
+                getFormValue('#activityDescription'),
+                VALIDATION.MAX_LENGTH_TEXT
+            );
+        } catch (err) {
+            alert(err instanceof Error ? err.message : 'Données invalides.');
             return;
         }
-        
-        // Vérifier que l'heure de fin est après l'heure de début
-        if (startTime >= endTime) {
-            alert('L\'heure de fin doit être après l\'heure de début.');
-            return;
-        }
-        
+
         // Créer l'objet activité
         const activityDate = new Date(date);
         const [startHour, startMinute] = startTime.split(':').map(Number);

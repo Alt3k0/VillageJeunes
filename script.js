@@ -1,6 +1,8 @@
 let currentStep = 1;
 const totalSteps = 8;
 
+// Dépendance : validation.js doit être chargé avant script.js (constantes et helpers de validation)
+
 // Fonction pour remplir un sélecteur de jours
 function fillDays(selectElement) {
     if (selectElement) {
@@ -282,8 +284,8 @@ function previousStep() {
         
         // Scroll vers le haut du formulaire
         document.querySelector('.form-container').scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
+            behavior: 'smooth',
+            block: 'start'
         });
     }
 }
@@ -326,94 +328,146 @@ function submitForm() {
         return;
     }
 
-    // Récupérer toutes les données du formulaire
-    const formData = {
-        // Étape 1
-        genre: Array.from(document.querySelectorAll('[name="genre"]:checked')).map(cb => cb.value),
-        dateNaissance: document.getElementById('dateNaissance')?.value || '',
-        jourNaissance: document.getElementById('jourNaissance')?.value || '',
-        moisNaissance: document.getElementById('moisNaissance')?.value || '',
-        anneeNaissance: document.getElementById('anneeNaissance')?.value || '',
-        nom: document.querySelector('[name="nom"]')?.value || '',
-        prenom: document.querySelector('[name="prenom"]')?.value || '',
-        surnom: document.querySelector('[name="surnom"]')?.value || '',
-        preferenceNom: Array.from(document.querySelectorAll('[name="preferenceNom"]:checked')).map(cb => cb.value),
-        
-        // Étape 2
-        ville: document.querySelector('[name="ville"]')?.value || '',
-        quartier: document.querySelector('[name="quartier"]')?.value || '',
-        email: document.querySelector('[name="email"]')?.value || '',
-        telephone: document.querySelector('[name="telephone"]')?.value || '',
-        whatsapp: document.querySelector('[name="whatsapp"]')?.checked || false,
-        
-        // Étape 3
-        decouverte: Array.from(document.querySelectorAll('[name="decouverte"]:checked')).map(cb => cb.value),
-        
-        // Étape 4
-        activite: Array.from(document.querySelectorAll('[name="activite"]:checked')).map(cb => cb.value),
-        nomEtablissement: document.querySelector('[name="nomEtablissement"]')?.value || '',
-        clicMouv: document.querySelector('[name="clicMouv"]')?.checked || false,
-        secteurRecherche: document.querySelector('[name="secteurRecherche"]')?.value || '',
-        typeActivitePayee: Array.from(document.querySelectorAll('[name="typeActivitePayee"]:checked')).map(cb => cb.value),
-        secteurActivite: document.querySelector('[name="secteurActivite"]')?.value || '',
-        nomAsso: document.querySelector('[name="nomAsso"]')?.value || '',
-        sujetAsso: document.querySelector('[name="sujetAsso"]')?.value || '',
-        autreActivite: document.querySelector('[name="autreActivite"]')?.value || '',
-        
-        // Étape 5
-        mobilite: Array.from(document.querySelectorAll('[name="mobilite"]:checked')).map(cb => cb.value),
-        permis: Array.from(document.querySelectorAll('[name="permis"]:checked')).map(cb => cb.value),
-        
-        // Étape 6
-        objectif: Array.from(document.querySelectorAll('[name="objectif"]:checked')).map(cb => cb.value),
-        objectifAutre: document.querySelector('[name="objectifAutre"]')?.value || '',
-        amener: Array.from(document.querySelectorAll('[name="amener"]:checked')).map(cb => cb.value),
-        aideEspace: document.querySelector('[name="aideEspace"]')?.value || '',
-        reseauParticulier: document.querySelector('[name="reseauParticulier"]')?.value || '',
-        autreIdee: document.querySelector('[name="autreIdee"]')?.value || '',
-        
-        // Étape 7
-        typeProjet: Array.from(document.querySelectorAll('[name="typeProjet"]:checked')).map(cb => cb.value),
-        typeProjetAutre: document.querySelector('[name="typeProjetAutre"]')?.value || '',
-        benevolat: Array.from(document.querySelectorAll('[name="benevolat"]:checked')).map(cb => cb.value),
-        
-        // Étape 8
-        saisFaire: document.querySelector('[name="saisFaire"]')?.value || '',
-        aimeraisFaire: document.querySelector('[name="aimeraisFaire"]')?.value || '',
-        peuxTransmettre: document.querySelector('[name="peuxTransmettre"]')?.value || '',
-        aimeraisApprendre: document.querySelector('[name="aimeraisApprendre"]')?.value || '',
-        
-        // Étape 9
-        droitImage: droitImage?.value || '',
-        
-        // Étape 7
-        reglementAccepte: document.getElementById('reglement-accepte')?.value === 'true' || false,
-        donneesPersonnelles: donneesPersonnelles?.checked || false,
-        medecin: medecin?.checked || false,
-        problemeSante: document.querySelector('[name="problemeSante"]')?.value || '',
-        autorisationUrgence: autorisationUrgence?.checked || false,
-        dateSignature: document.querySelector('[name="dateSignature"]')?.value || '',
-        signature: document.querySelector('[name="signature"]')?.value || '',
-        
-        // Étape 11
-        parentReglement: document.querySelector('[name="parentReglement"]')?.checked || false,
-        parentInfosExactes: document.querySelector('[name="parentInfosExactes"]')?.checked || false,
-        parentAutorisationSante: document.querySelector('[name="parentAutorisationSante"]')?.checked || false,
-        parentNom: document.querySelector('[name="parentNom"]')?.value || '',
-        parentTelephone: document.querySelector('[name="parentTelephone"]')?.value || '',
-        parentEmail: document.querySelector('[name="parentEmail"]')?.value || '',
-        parentAdresse: document.querySelector('[name="parentAdresse"]')?.value || '',
-        parentDate: document.querySelector('[name="parentDate"]')?.value || '',
-        parentSignature: document.querySelector('[name="parentSignature"]')?.value || '',
-        
-    };
+    let formData;
+    try {
+        // Lecture et validation sécurisées des champs (type, longueur, format)
+        const genreEls = document.querySelectorAll('[name="genre"]:checked');
+        const preferenceNomEls = document.querySelectorAll('[name="preferenceNom"]:checked');
+        const decouverteEls = document.querySelectorAll('[name="decouverte"]:checked');
+        const activiteEls = document.querySelectorAll('[name="activite"]:checked');
+        const typeActivitePayeeEls = document.querySelectorAll('[name="typeActivitePayee"]:checked');
+        const mobiliteEls = document.querySelectorAll('[name="mobilite"]:checked');
+        const permisEls = document.querySelectorAll('[name="permis"]:checked');
+        const objectifEls = document.querySelectorAll('[name="objectif"]:checked');
+        const amenerEls = document.querySelectorAll('[name="amener"]:checked');
+        const typeProjetEls = document.querySelectorAll('[name="typeProjet"]:checked');
+        const benevolatEls = document.querySelectorAll('[name="benevolat"]:checked');
+
+        const genre = validateStringArray(genreEls, 'Genre');
+        const dateNaissance = validateDateString(document.getElementById('dateNaissance')?.value, 'Date de naissance', true);
+        const jourNaissance = getFormValue('#jourNaissance') || document.getElementById('jourNaissance')?.value || '';
+        const moisNaissance = getFormValue('#moisNaissance') || document.getElementById('moisNaissance')?.value || '';
+        const anneeNaissance = getFormValue('#anneeNaissance') || document.getElementById('anneeNaissance')?.value || '';
+        const nom = validateString(getFormValue('[name="nom"]'), 'Nom', VALIDATION.MAX_LENGTH_SHORT, true);
+        const prenom = validateString(getFormValue('[name="prenom"]'), 'Prénom', VALIDATION.MAX_LENGTH_SHORT, true);
+        const surnom = validateOptionalString(getFormValue('[name="surnom"]'));
+        const preferenceNom = validateStringArray(preferenceNomEls, 'Préférence nom');
+
+        const ville = validateOptionalString(getFormValue('[name="ville"]'));
+        const quartier = validateOptionalString(getFormValue('[name="quartier"]'));
+        const email = validateEmail(getFormValue('[name="email"]'), true);
+        const telephone = validateOptionalString(getFormValue('[name="telephone"]'));
+        const whatsapp = document.querySelector('[name="whatsapp"]')?.checked === true;
+
+        const decouverte = validateStringArray(decouverteEls, 'Découverte');
+        const activite = validateStringArray(activiteEls, 'Activité');
+        const nomEtablissement = validateOptionalString(getFormValue('[name="nomEtablissement"]'));
+        const clicMouv = document.querySelector('[name="clicMouv"]')?.checked === true;
+        const secteurRecherche = validateOptionalString(getFormValue('[name="secteurRecherche"]'));
+        const typeActivitePayee = validateStringArray(typeActivitePayeeEls, 'Type activité payée');
+        const secteurActivite = validateOptionalString(getFormValue('[name="secteurActivite"]'));
+        const nomAsso = validateOptionalString(getFormValue('[name="nomAsso"]'));
+        const sujetAsso = validateOptionalString(getFormValue('[name="sujetAsso"]'));
+        const autreActivite = validateOptionalString(getFormValue('[name="autreActivite"]'), VALIDATION.MAX_LENGTH_TEXT);
+
+        const mobilite = validateStringArray(mobiliteEls, 'Mobilité');
+        const permis = validateStringArray(permisEls, 'Permis');
+        const objectif = validateStringArray(objectifEls, 'Objectif');
+        const objectifAutre = validateOptionalString(getFormValue('[name="objectifAutre"]'));
+        const amener = validateStringArray(amenerEls, 'Amener');
+        const aideEspace = validateOptionalString(getFormValue('[name="aideEspace"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const reseauParticulier = validateOptionalString(getFormValue('[name="reseauParticulier"]'));
+        const autreIdee = validateOptionalString(getFormValue('[name="autreIdee"]'), VALIDATION.MAX_LENGTH_TEXT);
+
+        const typeProjet = validateStringArray(typeProjetEls, 'Type de projet');
+        const typeProjetAutre = validateOptionalString(getFormValue('[name="typeProjetAutre"]'));
+        const benevolat = validateStringArray(benevolatEls, 'Bénévolat');
+        const saisFaire = validateOptionalString(getFormValue('[name="saisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const aimeraisFaire = validateOptionalString(getFormValue('[name="aimeraisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const peuxTransmettre = validateOptionalString(getFormValue('[name="peuxTransmettre"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const aimeraisApprendre = validateOptionalString(getFormValue('[name="aimeraisApprendre"]'), VALIDATION.MAX_LENGTH_TEXT);
+
+        const problemeSante = validateOptionalString(getFormValue('[name="problemeSante"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const dateSignature = validateDateString(getFormValue('[name="dateSignature"]'), 'Date de signature');
+        const signature = validateSignature(getFormValue('[name="signature"]'), true);
+
+        const parentNom = validateOptionalString(getFormValue('[name="parentNom"]'));
+        const parentTelephone = validateOptionalString(getFormValue('[name="parentTelephone"]'));
+        const parentEmail = validateOptionalString(getFormValue('[name="parentEmail"]'));
+        const parentAdresse = validateOptionalString(getFormValue('[name="parentAdresse"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const parentDate = validateDateString(getFormValue('[name="parentDate"]'), 'Date représentant légal');
+        const parentSignature = validateSignature(getFormValue('[name="parentSignature"]'));
+
+        formData = {
+            genre,
+            dateNaissance,
+            jourNaissance,
+            moisNaissance,
+            anneeNaissance,
+            nom,
+            prenom,
+            surnom,
+            preferenceNom,
+            ville,
+            quartier,
+            email,
+            telephone,
+            whatsapp,
+            decouverte,
+            activite,
+            nomEtablissement,
+            clicMouv,
+            secteurRecherche,
+            typeActivitePayee,
+            secteurActivite,
+            nomAsso,
+            sujetAsso,
+            autreActivite,
+            mobilite,
+            permis,
+            objectif,
+            objectifAutre,
+            amener,
+            aideEspace,
+            reseauParticulier,
+            autreIdee,
+            typeProjet,
+            typeProjetAutre,
+            benevolat,
+            saisFaire,
+            aimeraisFaire,
+            peuxTransmettre,
+            aimeraisApprendre,
+            droitImage: droitImage?.value || '',
+            reglementAccepte: true,
+            donneesPersonnelles: donneesPersonnelles?.checked === true,
+            medecin: medecin?.checked === true,
+            problemeSante,
+            autorisationUrgence: autorisationUrgence?.checked === true,
+            dateSignature,
+            signature,
+            parentReglement: document.querySelector('[name="parentReglement"]')?.checked === true,
+            parentInfosExactes: document.querySelector('[name="parentInfosExactes"]')?.checked === true,
+            parentAutorisationSante: document.querySelector('[name="parentAutorisationSante"]')?.checked === true,
+            parentNom,
+            parentTelephone,
+            parentEmail,
+            parentAdresse,
+            parentDate,
+            parentSignature,
+        };
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Une erreur est survenue lors de la validation des données.';
+        alert(message);
+        return;
+    }
 
     // Afficher les données (à remplacer par l'envoi au serveur)
     console.log('Données du formulaire:', formData);
-    
+
     // Ici, vous pouvez ajouter l'envoi des données au serveur
     // fetch('/api/submit', { method: 'POST', body: JSON.stringify(formData) })
-    
+
     // Rediriger vers la page de confirmation
     window.location.href = 'confirmation.html';
 }
@@ -580,7 +634,19 @@ document.addEventListener('DOMContentLoaded', function() {
     showStep(1);
     setupConditionalFields();
     initializeDateSelector();
-    
+
+    // Compteurs de caractères (prévenir la troncature) et messages d'aide
+    if (typeof attachCharCounter === 'function') {
+        document.querySelectorAll('[data-max-length]').forEach(function (el) {
+            var max = parseInt(el.getAttribute('data-max-length'), 10);
+            if (!isNaN(max)) attachCharCounter(el, max);
+        });
+    }
+    if (typeof setInputHint === 'function') {
+        setInputHint('[name="telephone"]', 'Chiffres et espaces uniquement.');
+        setInputHint('[name="parentTelephone"]', 'Chiffres et espaces uniquement.');
+    }
+
     // Vérifier l'âge au chargement initial
     checkAgeAndUpdateStep8();
     

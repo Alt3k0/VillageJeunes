@@ -45,17 +45,17 @@
 
                 <div class="form-group">
                     <label class="form-label">NOM:</label>
-                    <input type="text" class="form-input" name="nom" placeholder="________________">
+                    <input type="text" class="form-input" name="nom" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Prénom:</label>
-                    <input type="text" class="form-input" name="prenom" placeholder="________________">
+                    <input type="text" class="form-input" name="prenom" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Surnom:</label>
-                    <input type="text" class="form-input" name="surnom" placeholder="________________">
+                    <input type="text" class="form-input" name="surnom" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
@@ -108,19 +108,19 @@
                     <select class="form-input form-select" name="commune" id="commune-select" style="display: none;">
                         <option value="">Sélectionnez une commune</option>
                     </select>
-                    <input type="text" class="form-input" name="ville-village-tribu" id="ville-village-tribu-input" placeholder="Ville/Village/Tribu" style="display: none;">
+                    <input type="text" class="form-input" name="ville-village-tribu" id="ville-village-tribu-input" placeholder="Ville/Village/Tribu" style="display: none;" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" id="quartier-label">Quartier:</label>
                     <div id="quartier-container" style="display: none;">
-                        <input type="text" class="form-input" name="quartier-input" id="quartier-input" placeholder="Indiquez votre quartier" style="display: none;">
+                        <input type="text" class="form-input" name="quartier-input" id="quartier-input" placeholder="Indiquez votre quartier" style="display: none;" data-max-length="250">
                         <select class="form-input form-select" name="quartier-select" id="quartier-select" style="display: none;">
                             <option value="">Sélectionnez d'abord une commune</option>
                         </select>
                     </div>
                     <div id="district-container" style="display: none;">
-                        <input type="text" class="form-input" name="district-input" id="district-input" placeholder="Indiquez votre district coutumier" style="display: none;">
+                        <input type="text" class="form-input" name="district-input" id="district-input" placeholder="Indiquez votre district coutumier" style="display: none;" data-max-length="250">
                         <select class="form-input form-select" name="district-select" id="district-select" style="display: none;">
                             <option value="">Sélectionnez d'abord une commune</option>
                         </select>
@@ -129,12 +129,12 @@
 
                 <div class="form-group">
                     <label class="form-label">Email:</label>
-                    <input type="email" class="form-input" name="email" placeholder="________________">
+                    <input type="email" class="form-input" name="email" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Téléphone:</label>
-                    <input type="tel" class="form-input" name="telephone" placeholder="________________">
+                    <input type="tel" class="form-input" name="telephone" placeholder="Chiffres et espaces uniquement" data-max-length="250">
                 </div>
 
                 <div class="checkbox-group">
@@ -145,7 +145,7 @@
                 </div>
                 <div class="form-group conditional-field" id="probleme-sante-fields" style="display: none;">
                     <label class="form-label">Si j'ai un problème de santé à signaler (allergie, asthme, épilepsie...), je le note ici :</label>
-                    <textarea class="form-textarea" name="problemeSante" placeholder=""></textarea>
+                    <textarea class="form-textarea" name="problemeSante" placeholder="" data-max-length="1000"></textarea>
                 </div>
 
                 <div class="button-group">
@@ -234,7 +234,7 @@
                     </div>
                     <div class="form-group conditional-field" id="etudes-sup-fields" style="display: none;">
                         <label class="form-label">Établissement:</label>
-                        <input type="text" class="form-input" name="etudesSup" placeholder="Indiquez votre établissement d'études supérieures">
+                        <input type="text" class="form-input" name="etudesSup" placeholder="Indiquez votre établissement d'études supérieures" data-max-length="250">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Établissement:</label>
@@ -257,7 +257,7 @@
                     </label>
                 </div>
                 <div class="form-group conditional-field" id="emploi-fields" style="display: none;">
-                    <input type="text" class="form-input" name="secteurRecherche" placeholder="Je recherche principalement dans :">
+                    <input type="text" class="form-input" name="secteurRecherche" placeholder="Je recherche principalement dans :" data-max-length="250">
                 </div>
 
                 <div class="checkbox-group">
@@ -286,7 +286,7 @@
                         </label>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="secteurActivite" placeholder="Dans quel secteur ?:">
+                        <input type="text" class="form-input" name="secteurActivite" placeholder="Dans quel secteur ?" data-max-length="250">
                     </div>
                 </div>
 
@@ -298,10 +298,10 @@
                 </div>
                 <div class="conditional-field" id="asso-fields" style="display: none;">
                     <div class="form-group">
-                        <input type="text" class="form-input" name="nomAsso" placeholder="Nom :">
+                        <input type="text" class="form-input" name="nomAsso" placeholder="Nom :" data-max-length="250">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="sujetAsso" placeholder="Pour quel sujet ?:">
+                        <input type="text" class="form-input" name="sujetAsso" placeholder="Pour quel sujet ?" data-max-length="250">
                     </div>
                 </div>
 
@@ -312,7 +312,7 @@
                     </label>
                 </div>
                 <div class="form-group conditional-field" id="autre-fields" style="display: none;">
-                    <input type="text" class="form-input" name="autreActivite" placeholder="________________">
+                    <input type="text" class="form-input" name="autreActivite" placeholder="________________" data-max-length="1000">
                 </div>
 
                 <div class="button-group">
@@ -490,22 +490,22 @@
 
                 <div class="form-group">
                     <label class="form-label">NOM et Prénom de la personne responsable :</label>
-                    <input type="text" class="form-input" name="parentNom" placeholder="________________">
+                    <input type="text" class="form-input" name="parentNom" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Téléphone :</label>
-                    <input type="tel" class="form-input" name="parentTelephone" placeholder="________________">
+                    <input type="tel" class="form-input" name="parentTelephone" placeholder="Chiffres et espaces uniquement" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email :</label>
-                    <input type="email" class="form-input" name="parentEmail" placeholder="________________">
+                    <input type="email" class="form-input" name="parentEmail" placeholder="________________" data-max-length="250">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Adresse :</label>
-                    <input type="text" class="form-input" name="parentAdresse" placeholder="________________">
+                    <input type="text" class="form-input" name="parentAdresse" placeholder="________________" data-max-length="1000">
                 </div>
 
                 <div class="form-group">
@@ -649,6 +649,7 @@ Contact coordinateur DDEC : Stevens GUILLEMAIN, Coordinateur des actions jeuness
     </div>
 
     <script src="form-data.js"></script>
+    <script src="validation.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

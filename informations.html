@@ -361,6 +361,7 @@
         <a href="#" class="footer-link">Mentions légales</a>
     </footer>
 
+    <script src="validation.js"></script>
     <script src="member-detail.js"></script>
     <script>
         // État de l'application
@@ -513,9 +514,15 @@
             renderCards();
         }
 
-        // Recherche dynamique
+        // Recherche dynamique (terme limité pour éviter abus)
         function applySearchFilter() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            let searchTerm;
+            try {
+                searchTerm = validateSearchTerm(document.getElementById('searchInput').value).toLowerCase();
+            } catch (e) {
+                alert(e instanceof Error ? e.message : 'Recherche invalide.');
+                return;
+            }
             const cards = document.querySelectorAll('.member-card');
 
             cards.forEach(card => {
@@ -646,6 +653,22 @@
             originalMemberData = null;
         }
 
+        const MEMBER_DATA_TEXT_FIELDS = ['member_information_medicale', 'member_recherche_emploi_details', 'member_autre_activite_details', 'member_adresse_representant_legal'];
+
+        function sanitizeMemberData(data) {
+            if (!data || typeof data !== 'object') return data;
+            const out = {};
+            for (const [key, val] of Object.entries(data)) {
+                if (typeof val === 'string') {
+                    const max = MEMBER_DATA_TEXT_FIELDS.includes(key) ? VALIDATION.MAX_LENGTH_TEXT : VALIDATION.MAX_LENGTH_SHORT;
+                    out[key] = safeTruncate(val, max);
+                } else {
+                    out[key] = val;
+                }
+            }
+            return out;
+        }
+
         // Collecter les données depuis l'affichage actuel
         function collectMemberDataFromDisplay() {
             const overlay = document.getElementById('memberDetailOverlay');
@@ -654,46 +677,45 @@
             const memberId = overlay.dataset.currentMemberId;
             if (!memberId) return null;
 
-            // Récupérer les valeurs actuelles depuis les éléments
             const nameEl = document.getElementById('memberDetailName');
             const nameParts = nameEl ? nameEl.textContent.trim().split(' ') : ['', ''];
-            
-            // Structure selon README-BACKEND-VARIABLES.md avec placeholders {member_*}
-            return {
-                member_id: memberId, // {member_id}
-                member_nom: nameParts[0] || '', // {member_nom}
-                member_prenom: nameParts.slice(1).join(' ') || '', // {member_prenom}
-                member_numero: getTextContent('memberDetailNumber').replace('N° ', '') || '', // {member_numero}
-                member_role: getTextContent('memberDetailRole') || '', // {member_role}
-                member_genre: getTextContent('memberDetailGenre') || '', // {member_genre}
-                member_date_naissance: getTextContent('memberDetailDateNaissance') || '', // {member_date_naissance}
-                member_surnom: getTextContent('memberDetailSurnom') || '', // {member_surnom}
-                member_pref_nom_surnom: getTextContent('memberDetailPreferenceNom') || '', // {member_pref_nom_surnom}
-                member_telephone: getTextContent('memberDetailTelephone') || '', // {member_telephone}
-                member_email: getTextContent('memberDetailEmail') || '', // {member_email}
-                member_province: extractAddressPart('memberDetailAdresse', 0) || '', // {member_province}
-                member_commune: extractAddressPart('memberDetailAdresse', 1) || '', // {member_commune}
-                member_quartier: extractAddressPart('memberDetailAdresse', 2) || '', // {member_quartier}
-                member_information_medicale: getTextContent('memberDetailProblemesMedicaux') || '', // {member_information_medicale}
-                member_est_etudiant: getTextContent('memberDetailEstEtudiant') === 'Oui' ? true : false, // {member_est_etudiant}
-                member_type_etablissement: getTextContent('memberDetailTypeEtablissement') || '', // {member_type_etablissement}
-                member_etablissement: getTextContent('memberDetailEtablissement') || '', // {member_etablissement}
-                member_recherche_emploi_details: getTextContent('memberDetailRechercheEmploi') || '', // {member_recherche_emploi_details}
-                member_activite_payee_secteur: getTextContent('memberDetailActivitePayee') || '', // {member_activite_payee_secteur}
-                member_asso_nom: extractAssoPart('memberDetailAsso', 0) || '', // {member_asso_nom}
-                member_asso_sujet: extractAssoPart('memberDetailAsso', 1) || '', // {member_asso_sujet}
-                member_autre_activite_details: getTextContent('memberDetailAutreActivite') || '', // {member_autre_activite_details}
-                member_mobilites: getTextContent('memberDetailMobilite') || '', // {member_mobilites}
-                member_permis: getTextContent('memberDetailPermis') || '', // {member_permis}
-                member_autorisation_image: getTextContent('memberDetailAutorisationImage') === 'Oui' ? true : false, // {member_autorisation_image}
-                member_autorisation_urgence: getTextContent('memberDetailAutorisationUrgence') === 'Oui' ? true : false, // {member_autorisation_urgence}
-                member_nom_representant_legal: getTextContent('memberDetailParentNom') || '', // {member_nom_representant_legal}
-                member_telephone_representant_legal: getTextContent('memberDetailParentTelephone') || '', // {member_telephone_representant_legal}
-                member_email_representant_legal: getTextContent('memberDetailParentEmail') || '', // {member_email_representant_legal}
-                member_adresse_representant_legal: getTextContent('memberDetailParentAdresse') || '', // {member_adresse_representant_legal}
-                member_date_inscription: getTextContent('memberDetailDateInscription') || '', // {member_date_inscription}
-                member_est_actif: getTextContent('memberDetailStatut') === 'Actif' ? true : false // {member_est_actif}
+
+            const raw = {
+                member_id: memberId,
+                member_nom: nameParts[0] || '',
+                member_prenom: nameParts.slice(1).join(' ') || '',
+                member_numero: getTextContent('memberDetailNumber').replace('N° ', '') || '',
+                member_role: getTextContent('memberDetailRole') || '',
+                member_genre: getTextContent('memberDetailGenre') || '',
+                member_date_naissance: getTextContent('memberDetailDateNaissance') || '',
+                member_surnom: getTextContent('memberDetailSurnom') || '',
+                member_pref_nom_surnom: getTextContent('memberDetailPreferenceNom') || '',
+                member_telephone: getTextContent('memberDetailTelephone') || '',
+                member_email: getTextContent('memberDetailEmail') || '',
+                member_province: extractAddressPart('memberDetailAdresse', 0) || '',
+                member_commune: extractAddressPart('memberDetailAdresse', 1) || '',
+                member_quartier: extractAddressPart('memberDetailAdresse', 2) || '',
+                member_information_medicale: getTextContent('memberDetailProblemesMedicaux') || '',
+                member_est_etudiant: getTextContent('memberDetailEstEtudiant') === 'Oui',
+                member_type_etablissement: getTextContent('memberDetailTypeEtablissement') || '',
+                member_etablissement: getTextContent('memberDetailEtablissement') || '',
+                member_recherche_emploi_details: getTextContent('memberDetailRechercheEmploi') || '',
+                member_activite_payee_secteur: getTextContent('memberDetailActivitePayee') || '',
+                member_asso_nom: extractAssoPart('memberDetailAsso', 0) || '',
+                member_asso_sujet: extractAssoPart('memberDetailAsso', 1) || '',
+                member_autre_activite_details: getTextContent('memberDetailAutreActivite') || '',
+                member_mobilites: getTextContent('memberDetailMobilite') || '',
+                member_permis: getTextContent('memberDetailPermis') || '',
+                member_autorisation_image: getTextContent('memberDetailAutorisationImage') === 'Oui',
+                member_autorisation_urgence: getTextContent('memberDetailAutorisationUrgence') === 'Oui',
+                member_nom_representant_legal: getTextContent('memberDetailParentNom') || '',
+                member_telephone_representant_legal: getTextContent('memberDetailParentTelephone') || '',
+                member_email_representant_legal: getTextContent('memberDetailParentEmail') || '',
+                member_adresse_representant_legal: getTextContent('memberDetailParentAdresse') || '',
+                member_date_inscription: getTextContent('memberDetailDateInscription') || '',
+                member_est_actif: getTextContent('memberDetailStatut') === 'Actif'
             };
+            return sanitizeMemberData(raw);
         }
 
         // Fonction utilitaire pour obtenir le texte d'un élément
@@ -1100,7 +1122,7 @@
             }
         }
 
-        // Collecter les données depuis les inputs pour sauvegarde
+        // Collecter les données depuis les inputs pour sauvegarde (sanitisées avant envoi)
         function collectMemberDataFromInputs() {
             const overlay = document.getElementById('memberDetailOverlay');
             if (!overlay) return null;
@@ -1116,42 +1138,42 @@
             const assoNomInput = document.getElementById('memberDetailAssoNomInput');
             const assoSujetInput = document.getElementById('memberDetailAssoSujetInput');
 
-            // Structure selon README-BACKEND-VARIABLES.md avec placeholders {member_*}
-            return {
-                member_id: memberId, // {member_id}
-                member_nom: nomInput ? nomInput.value.trim() : '', // {member_nom}
-                member_prenom: prenomInput ? prenomInput.value.trim() : '', // {member_prenom}
-                member_numero: getInputValue('memberDetailNumber') || '', // {member_numero}
-                member_role: getInputValue('memberDetailRole') || '', // {member_role}
-                member_genre: getInputValue('memberDetailGenre') || '', // {member_genre}
-                member_date_naissance: getInputValue('memberDetailDateNaissance') || '', // {member_date_naissance}
-                member_surnom: getInputValue('memberDetailSurnom') || '', // {member_surnom}
-                member_pref_nom_surnom: getInputValue('memberDetailPreferenceNom') || '', // {member_pref_nom_surnom}
-                member_telephone: getInputValue('memberDetailTelephone') || '', // {member_telephone}
-                member_email: getInputValue('memberDetailEmail') || '', // {member_email}
-                member_province: provinceInput ? provinceInput.value.trim() : '', // {member_province}
-                member_commune: communeInput ? communeInput.value.trim() : '', // {member_commune}
-                member_quartier: quartierInput ? quartierInput.value.trim() : '', // {member_quartier}
-                member_information_medicale: getInputValue('memberDetailProblemesMedicaux') || '', // {member_information_medicale}
-                member_est_etudiant: getInputValue('memberDetailEstEtudiant') === 'Oui', // {member_est_etudiant}
-                member_type_etablissement: getInputValue('memberDetailTypeEtablissement') || '', // {member_type_etablissement}
-                member_etablissement: getInputValue('memberDetailEtablissement') || '', // {member_etablissement}
-                member_recherche_emploi_details: getInputValue('memberDetailRechercheEmploi') || '', // {member_recherche_emploi_details}
-                member_activite_payee_secteur: getInputValue('memberDetailActivitePayee') || '', // {member_activite_payee_secteur}
-                member_asso_nom: assoNomInput ? assoNomInput.value.trim() : '', // {member_asso_nom}
-                member_asso_sujet: assoSujetInput ? assoSujetInput.value.trim() : '', // {member_asso_sujet}
-                member_autre_activite_details: getInputValue('memberDetailAutreActivite') || '', // {member_autre_activite_details}
-                member_mobilites: getInputValue('memberDetailMobilite') || '', // {member_mobilites}
-                member_permis: getInputValue('memberDetailPermis') || '', // {member_permis}
-                member_autorisation_image: getInputValue('memberDetailAutorisationImage') === 'Oui', // {member_autorisation_image}
-                member_autorisation_urgence: getInputValue('memberDetailAutorisationUrgence') === 'Oui', // {member_autorisation_urgence}
-                member_nom_representant_legal: getInputValue('memberDetailParentNom') || '', // {member_nom_representant_legal}
-                member_telephone_representant_legal: getInputValue('memberDetailParentTelephone') || '', // {member_telephone_representant_legal}
-                member_email_representant_legal: getInputValue('memberDetailParentEmail') || '', // {member_email_representant_legal}
-                member_adresse_representant_legal: getInputValue('memberDetailParentAdresse') || '', // {member_adresse_representant_legal}
-                member_date_inscription: getInputValue('memberDetailDateInscription') || '', // {member_date_inscription}
-                member_est_actif: getInputValue('memberDetailStatut') === 'Actif' // {member_est_actif}
+            const raw = {
+                member_id: memberId,
+                member_nom: nomInput ? nomInput.value.trim() : '',
+                member_prenom: prenomInput ? prenomInput.value.trim() : '',
+                member_numero: getInputValue('memberDetailNumber') || '',
+                member_role: getInputValue('memberDetailRole') || '',
+                member_genre: getInputValue('memberDetailGenre') || '',
+                member_date_naissance: getInputValue('memberDetailDateNaissance') || '',
+                member_surnom: getInputValue('memberDetailSurnom') || '',
+                member_pref_nom_surnom: getInputValue('memberDetailPreferenceNom') || '',
+                member_telephone: getInputValue('memberDetailTelephone') || '',
+                member_email: getInputValue('memberDetailEmail') || '',
+                member_province: provinceInput ? provinceInput.value.trim() : '',
+                member_commune: communeInput ? communeInput.value.trim() : '',
+                member_quartier: quartierInput ? quartierInput.value.trim() : '',
+                member_information_medicale: getInputValue('memberDetailProblemesMedicaux') || '',
+                member_est_etudiant: getInputValue('memberDetailEstEtudiant') === 'Oui',
+                member_type_etablissement: getInputValue('memberDetailTypeEtablissement') || '',
+                member_etablissement: getInputValue('memberDetailEtablissement') || '',
+                member_recherche_emploi_details: getInputValue('memberDetailRechercheEmploi') || '',
+                member_activite_payee_secteur: getInputValue('memberDetailActivitePayee') || '',
+                member_asso_nom: assoNomInput ? assoNomInput.value.trim() : '',
+                member_asso_sujet: assoSujetInput ? assoSujetInput.value.trim() : '',
+                member_autre_activite_details: getInputValue('memberDetailAutreActivite') || '',
+                member_mobilites: getInputValue('memberDetailMobilite') || '',
+                member_permis: getInputValue('memberDetailPermis') || '',
+                member_autorisation_image: getInputValue('memberDetailAutorisationImage') === 'Oui',
+                member_autorisation_urgence: getInputValue('memberDetailAutorisationUrgence') === 'Oui',
+                member_nom_representant_legal: getInputValue('memberDetailParentNom') || '',
+                member_telephone_representant_legal: getInputValue('memberDetailParentTelephone') || '',
+                member_email_representant_legal: getInputValue('memberDetailParentEmail') || '',
+                member_adresse_representant_legal: getInputValue('memberDetailParentAdresse') || '',
+                member_date_inscription: getInputValue('memberDetailDateInscription') || '',
+                member_est_actif: getInputValue('memberDetailStatut') === 'Actif'
             };
+            return sanitizeMemberData(raw);
         }
 
         // Fonction utilitaire pour obtenir la valeur d'un input/select/textarea
@@ -1378,6 +1400,9 @@
 
             // Écouter la recherche
             document.getElementById('searchInput').addEventListener('input', applySearchFilter);
+            if (typeof attachCharCounter === 'function' && typeof VALIDATION !== 'undefined') {
+                attachCharCounter('#searchInput', VALIDATION.MAX_LENGTH_SHORT);
+            }
 
             // Initialiser les boutons de modification
             setupModifyButton();

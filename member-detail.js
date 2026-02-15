@@ -562,9 +562,16 @@ function setupMemberModal() {
             const commentaireInput = document.getElementById('paiementPartielCommentaireInput');
             if (!commentaireInput) return;
 
-            const commentaire = commentaireInput.value.trim();
-            if (!commentaire) {
-                alert('Veuillez saisir un commentaire');
+            let commentaire;
+            try {
+                commentaire = validateString(
+                    commentaireInput.value,
+                    'Commentaire sur le paiement partiel',
+                    VALIDATION.MAX_LENGTH_TEXT,
+                    true
+                );
+            } catch (e) {
+                alert(e instanceof Error ? e.message : 'Données invalides.');
                 return;
             }
 
@@ -579,9 +586,16 @@ function setupMemberModal() {
             const commentaireInput = document.getElementById('memberDetailCommentaireInput');
             if (!commentaireInput) return;
 
-            const nouveauCommentaire = commentaireInput.value.trim();
-            if (!nouveauCommentaire) {
-                alert('Veuillez saisir un commentaire');
+            let nouveauCommentaire;
+            try {
+                nouveauCommentaire = validateString(
+                    commentaireInput.value,
+                    'Commentaire',
+                    VALIDATION.MAX_LENGTH_TEXT,
+                    true
+                );
+            } catch (e) {
+                alert(e instanceof Error ? e.message : 'Données invalides.');
                 return;
             }
 
@@ -621,6 +635,14 @@ function setupMemberModal() {
             commentaireInput.value = '';
             alert('Commentaire ajouté avec succès');
         });
+    }
+
+    // Compteurs de caractères sur les champs commentaire (prévenir la troncature)
+    if (typeof attachCharCounter === 'function' && typeof VALIDATION !== 'undefined') {
+        var paiementInput = document.getElementById('paiementPartielCommentaireInput');
+        var commentInput = document.getElementById('memberDetailCommentaireInput');
+        if (paiementInput) attachCharCounter(paiementInput, VALIDATION.MAX_LENGTH_TEXT);
+        if (commentInput) attachCharCounter(commentInput, VALIDATION.MAX_LENGTH_TEXT);
     }
 }
 

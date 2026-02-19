@@ -425,13 +425,13 @@ function openMemberModal(member) {
     const montantTotalEl = document.getElementById('memberDetailMontantTotal');
     if (montantTotalEl) {
         var montantTotal = (typeof member.adhesionMontantTotal !== 'undefined') ? member.adhesionMontantTotal : 0;
-        montantTotalEl.textContent = montantTotal + ' €';
+        montantTotalEl.textContent = montantTotal + ' francs CFP';
     }
 
     const montantPayeEl = document.getElementById('memberDetailMontantPaye');
     if (montantPayeEl) {
         var montantPaye = (typeof member.adhesionMontantPaye !== 'undefined') ? member.adhesionMontantPaye : 0;
-        montantPayeEl.textContent = montantPaye + ' €';
+        montantPayeEl.textContent = montantPaye + ' francs CFP';
     }
 
     const dateAdhesionEl = document.getElementById('memberDetailDateAdhesion');

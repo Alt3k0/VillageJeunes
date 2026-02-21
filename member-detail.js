@@ -154,6 +154,12 @@ function openMemberModal(member) {
         roleEl.textContent = member.role || '';
     }
 
+    // Bouton Pointage (visible uniquement pour les bénévoles)
+    const pointageWrap = document.getElementById('memberDetailPointageWrap');
+    if (pointageWrap) {
+        pointageWrap.style.display = (member.role === 'Bénévole') ? 'block' : 'none';
+    }
+
     // Problèmes médicaux
     const problemesMedicauxEl = document.getElementById('memberDetailProblemesMedicaux');
     if (problemesMedicauxEl) {

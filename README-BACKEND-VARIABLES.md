@@ -28,6 +28,8 @@ Ces variables sont utilisées dans les pages `informations-adherent.html`, `vali
 | `{member_numero}` | String | Numéro d'adhérent/bénévole/partenaire | Affichage et recherche (format: "0001", "0002", etc.) |
 | `{member_role}` | String | Rôle du membre | Valeurs: "Adhérent", "Bénévole", "Partenaire" |
 | `{member_photo}` | String (URL) | URL de la photo de profil | Affichage de l'avatar (optionnel, peut être null) |
+| `{member_dernier_pointage}` | String (DateTime) | Date du dernier pointage | Affichage dans le détail membre (optionnel) |
+| `{member_total_pointage}` | Number | Nombre total de pointages | Affichage dans le détail membre (optionnel) |
 
 **Structure JSON attendue :**
 ```json
@@ -37,7 +39,9 @@ Ces variables sont utilisées dans les pages `informations-adherent.html`, `vali
   "prenom": "{member_prenom}",
   "numero": "{member_numero}",
   "role": "{member_role}",
-  "photo": "{member_photo}"
+  "photo": "{member_photo}",
+  "dernierPointage": "{member_dernier_pointage}",
+  "totalPointage": {member_total_pointage}
 }
 ```
 
@@ -360,6 +364,139 @@ Récupère les participants inscrits et leur statut de présence pour une activi
 
 ---
 
+## 📍 Pointage
+
+Le pointage permet d'enregistrer la présence des adhérents (sur la borne, page `index.html`) et des bénévoles (par le staff, page `informations.html`).
+
+### **Pointage Adhérent** (page d'accueil `index.html`)
+
+**Contexte :** L'adhérent arrive au Village Jeunes et effectue son pointage sur la borne (page d'accueil publique).
+
+**Données envoyées au clic sur « Valider » :**
+```json
+{
+  "date": "YYYY-MM-DD",
+  "identifiant": "{identifiant}",
+  "activite": "{activite_label}"
+}
+```
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `date` | String | Date du jour au format `YYYY-MM-DD` |
+| `identifiant` | String | Numéro d'adhérent ou identifiant saisi par l'utilisateur |
+| `activite` | String | Libellé de l'activité choisie (voir valeurs ci-dessous) |
+
+**Valeurs possibles pour `activite` :**
+- `Chill`
+- `Participer à une activité`
+- `Travailler`
+- `Imprimer un CV ou autre papier`
+- `Venir s'informer`
+- `Autre`
+
+**Note :** Le mot de passe est saisi pour authentification mais n'est pas inclus dans le payload pour des raisons de sécurité. Le backend doit vérifier l'identifiant + mot de passe avant d'enregistrer le pointage.
+
+**Comportement après validation :**
+- Affichage d'une alerte de succès
+- Fermeture du widget
+- L'utilisateur reste sur la page d'accueil (`index.html`)
+
+---
+
+### **Pointage Bénévole** (page staff `informations.html`)
+
+**Contexte :** Le staff effectue le pointage d'un bénévole depuis l'onglet Bénévoles (détail membre → bouton Pointage).
+
+**Données envoyées au clic sur « Valider » :**
+```json
+{
+  "date": "YYYY-MM-DD",
+  "benevole": {
+    "id": "{member_id}",
+    "nom": "{member_nom}",
+    "prenom": "{member_prenom}",
+    "numero": "{member_numero}"
+  },
+  "activite": "{activite_label}"
+}
+```
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `date` | String | Date du jour au format `YYYY-MM-DD` |
+| `benevole` | Object | Données du bénévole pointé (celui sur lequel on a cliqué) |
+| `activite` | String | Libellé de l'activité choisie (voir valeurs ci-dessous) |
+
+**Valeurs possibles pour `activite` :**
+- `Aider à la logistique`
+- `Animer une activité`
+- `Participer à une réunion`
+- `Autre`
+
+**Comportement après validation :**
+- Affichage d'une alerte de succès
+- Fermeture du widget
+- L'utilisateur reste sur le détail du membre bénévole
+
+---
+
+### **Endpoints API attendus pour le Pointage**
+
+#### POST `/api/pointage/adherent`
+Enregistre le pointage d'un adhérent (borne)
+
+**Body attendu :**
+```json
+{
+  "identifiant": "{identifiant}",
+  "motdepasse": "{motdepasse}",
+  "date": "YYYY-MM-DD",
+  "activite": "{activite_label}"
+}
+```
+
+**Note :** Le frontend envoie actuellement `identifiant` et `activite` (le mot de passe sera ajouté lors de l'intégration backend pour la vérification côté serveur).
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Pointage enregistré avec succès"
+}
+```
+
+#### POST `/api/staff/pointage/benevole`
+Enregistre le pointage d'un bénévole (staff)
+
+**Body attendu :**
+```json
+{
+  "date": "YYYY-MM-DD",
+  "benevole": {
+    "id": "{member_id}",
+    "nom": "{member_nom}",
+    "prenom": "{member_prenom}",
+    "numero": "{member_numero}"
+  },
+  "activite": "{activite_label}"
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Pointage enregistré"
+}
+```
+
+**Variables d'affichage (détail membre) :** Le widget détail membre affiche `{member_dernier_pointage}` et `{member_total_pointage}`. Ces champs doivent être fournis par le backend dans les données membre (voir section Variables Membres).
+
+---
+
+## 🔄 Endpoints API Attendus (suite)
+
 ### **Validation Inscription**
 
 #### GET `/api/staff/inscriptions?status={status}`
@@ -482,6 +619,8 @@ Avant de considérer l'intégration comme complète :
 - [ ] Tous les endpoints API sont connectés (dont PATCH activités et POST appel)
 - [ ] Modification de salle : appel PATCH lors du changement dans le select
 - [ ] Validation appel : appel POST avec animateur et adherentsPresents
+- [ ] Pointage adhérent : appel POST `/api/pointage/adherent` depuis `index.html`
+- [ ] Pointage bénévole : appel POST `/api/staff/pointage/benevole` depuis `informations.html`
 - [ ] La gestion des erreurs est en place
 - [ ] Les réponses API correspondent aux formats attendus
 - [ ] Les données sont correctement affichées dans le frontend
@@ -489,7 +628,10 @@ Avant de considérer l'intégration comme complète :
 ---
 
 **Dernière mise à jour :** 17 Février 2026  
-**Version :** 2.1
+**Version :** 2.2
+
+**Changelog v2.2 (17/02/2026) :**
+- Ajout section **Pointage** : données, comportement et endpoints pour le pointage adhérent (borne) et bénévole (staff)
 
 **Changelog v2.1 (17/02/2026) :**
 - Ajout endpoint **PATCH** `/api/staff/activities/{activity_id}` pour modification de salle et responsable

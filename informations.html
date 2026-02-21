@@ -119,6 +119,9 @@
                     <div class="member-detail-name" id="memberDetailName">{member_nom} {member_prenom}</div>
                     <div class="member-detail-number" id="memberDetailNumber">N° {member_numero}</div>
                     <div class="member-detail-role" id="memberDetailRole">{member_role}</div>
+                    <div class="member-detail-pointage-wrap" id="memberDetailPointageWrap" style="display: none;">
+                        <button type="button" class="member-detail-btn-pointage" id="memberDetailPointageBtn">Pointage</button>
+                    </div>
                 </div>
             </div>
 
@@ -355,6 +358,36 @@
         </div>
     </div>
 
+    <!-- Widget Pointage Bénévole -->
+    <div class="pointage-overlay" id="pointageOverlay">
+        <div class="pointage-widget">
+            <button type="button" class="pointage-close" id="pointageClose">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <h2 class="pointage-title">Pointage Bénévole</h2>
+            <div class="pointage-form">
+                <div class="pointage-group">
+                    <label>Bénévole</label>
+                    <div class="pointage-benevole-display" id="pointageBenevoleDisplay">—</div>
+                </div>
+                <div class="pointage-group">
+                    <label for="pointageActiviteSelect">Ce qu'il est venu faire</label>
+                    <select id="pointageActiviteSelect" class="pointage-select">
+                        <option value="">Sélectionner une activité</option>
+                        <option value="logistique">Aider à la logistique</option>
+                        <option value="animer">Animer une activité</option>
+                        <option value="reunion">Participer à une réunion</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <button type="button" class="pointage-validate-btn" id="pointageValidateBtn">Valider</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <a href="#" class="footer-link">Politique de confidentialité</a>
@@ -551,6 +584,79 @@
             if (index !== -1) {
                 allMembers[currentViewType].splice(index, 1);
                 renderCards();
+            }
+        }
+
+        // Widget Pointage Bénévole (le bénévole est celui sur lequel on a cliqué)
+        function setupPointageWidget() {
+            const pointageOverlay = document.getElementById('pointageOverlay');
+            const pointageClose = document.getElementById('pointageClose');
+            const pointageBtn = document.getElementById('memberDetailPointageBtn');
+            const pointageBenevoleDisplay = document.getElementById('pointageBenevoleDisplay');
+            const pointageActiviteSelect = document.getElementById('pointageActiviteSelect');
+            const pointageValidateBtn = document.getElementById('pointageValidateBtn');
+
+            let currentPointageBenevole = null;
+
+            function openPointageWidget(benevole) {
+                if (!pointageOverlay || !pointageActiviteSelect || !benevole) return;
+                currentPointageBenevole = benevole;
+                pointageOverlay.classList.add('active');
+                if (pointageBenevoleDisplay) {
+                    pointageBenevoleDisplay.textContent = `${benevole.nom} ${benevole.prenom} (${benevole.numero})`;
+                }
+                pointageActiviteSelect.value = '';
+            }
+
+            function closePointageWidget() {
+                if (pointageOverlay) pointageOverlay.classList.remove('active');
+                currentPointageBenevole = null;
+            }
+
+            if (pointageBtn) {
+                pointageBtn.addEventListener('click', function() {
+                    const overlay = document.getElementById('memberDetailOverlay');
+                    const memberId = overlay?.dataset?.currentMemberId;
+                    const benevole = memberId ? allMembers.benevoles.find(b => b.id === memberId) : null;
+                    openPointageWidget(benevole);
+                });
+            }
+
+            if (pointageClose) pointageClose.addEventListener('click', closePointageWidget);
+            if (pointageOverlay) {
+                pointageOverlay.addEventListener('click', function(e) {
+                    if (e.target === this) closePointageWidget();
+                });
+            }
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && pointageOverlay?.classList.contains('active')) {
+                    closePointageWidget();
+                }
+            });
+
+            if (pointageValidateBtn) {
+                pointageValidateBtn.addEventListener('click', function() {
+                    const activiteValue = pointageActiviteSelect?.value;
+                    const activiteLabels = {
+                        logistique: 'Aider à la logistique',
+                        animer: 'Animer une activité',
+                        reunion: 'Participer à une réunion',
+                        autre: 'Autre'
+                    };
+                    if (!currentPointageBenevole || !activiteValue) {
+                        alert('Veuillez sélectionner une activité.');
+                        return;
+                    }
+                    const benevole = currentPointageBenevole;
+                    const payload = {
+                        date: new Date().toISOString().slice(0, 10),
+                        benevole: { id: benevole.id, nom: benevole.nom, prenom: benevole.prenom, numero: benevole.numero },
+                        activite: activiteLabels[activiteValue] || activiteValue
+                    };
+                    console.log('Pointage validé:', payload);
+                    alert(`Pointage enregistré : ${benevole.nom} ${benevole.prenom} - ${activiteLabels[activiteValue] || activiteValue}`);
+                    closePointageWidget();
+                });
             }
         }
 
@@ -1394,6 +1500,7 @@
             renderCards();
             setupMenuToggle();
             setupMemberModal();
+            setupPointageWidget();
 
             // Écouter les changements de vue
             document.getElementById('prevView').addEventListener('click', () => switchView('prev'));

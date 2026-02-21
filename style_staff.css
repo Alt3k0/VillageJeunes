@@ -8,7 +8,7 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: clip; /* clip au lieu de hidden pour ne pas casser position: sticky */
     display: block !important;
     justify-content: flex-start !important;
 }
@@ -2190,13 +2190,18 @@ body {
 
 /* Responsive */
 @media (min-width: 1024px) {
-    /* PC : menu toujours déroulé sur la gauche, collé au bord */
+    /* PC : header sticky + menu toujours déroulé sur la gauche */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
     .sidebar-menu {
         transform: translateX(0);
         position: fixed;
         left: 0;
         top: clamp(8vh, 12vw, 18vh);
-        min-top: clamp(70px, 8.4vw, 180px);
         height: calc(100vh - clamp(8vh, 12vw, 18vh) - clamp(2vh, 3vw, 4vh));
         min-height: calc(100vh - clamp(70px, 8.4vw, 180px) - clamp(20px, 2.5vw, 30px));
         width: clamp(250px, 20vw, 300px);
@@ -2204,11 +2209,7 @@ body {
         border-top-right-radius: clamp(1rem, 2vw, 1.5rem);
         border-bottom-right-radius: clamp(1rem, 2vw, 1.5rem);
         z-index: 99;
-    }
-
-    .header {
-        z-index: 100;
-        position: relative;
+        padding-top: clamp(1rem, 1.5vw, 1.5rem);
     }
 
     .main-content {

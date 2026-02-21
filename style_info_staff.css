@@ -8,7 +8,7 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: clip; /* clip au lieu de hidden pour ne pas casser position: sticky */
     display: block !important;
     justify-content: flex-start !important;
 }
@@ -301,42 +301,68 @@ body {
     margin-bottom: clamp(2rem, 3vw, 3rem);
 }
 
+/* Barre de recherche - même style que Planning et salles (accueil-staff) */
 .search-bar {
+    background-color: #F7F7F7;
+    border: 1px solid #d9d0e3;
+    border-radius: clamp(20px, 2.5vw, 40px);
     width: 100%;
-    max-width: clamp(400px, 60vw, 800px);
-    position: relative;
+    max-width: clamp(280px, 70vw, 500px);
+    min-height: clamp(40px, 5vw, 56px);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: clamp(8px, 1vw, 16px);
+    padding: clamp(8px, 1vw, 14px) clamp(12px, 1.5vw, 25px);
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    border-color: #f08d35;
+    box-shadow: 0 0 0 2px rgba(240, 141, 53, 0.1);
+}
+
+.search-icon {
+    width: clamp(16px, 2vw, 24px);
+    height: clamp(16px, 2vw, 24px);
+    flex-shrink: 0;
+    color: #9586a8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .search-input {
-    width: 100%;
-    padding: clamp(0.75rem, 1.2vw, 1.25rem) clamp(3rem, 4vw, 4rem) clamp(0.75rem, 1.2vw, 1.25rem) clamp(3rem, 4vw, 4rem);
+    flex: 1;
+    min-width: 0;
     border: none;
-    border-radius: clamp(25px, 4vw, 50px);
-    background-color: #FFFFFF;
+    background: transparent;
     font-size: clamp(0.9rem, 1.3vw, 1.1rem);
     color: #1e1e1d;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
+    font-family: inherit;
 }
 
 .search-input:focus {
     outline: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .search-input::placeholder {
-    color: #9e9e9e;
+    color: #6e6f75;
 }
 
-.search-icon {
-    position: absolute;
-    left: clamp(1rem, 1.5vw, 1.5rem);
-    top: 50%;
-    transform: translateY(-50%);
-    width: clamp(1.2rem, 1.8vw, 1.5rem);
-    height: clamp(1.2rem, 1.8vw, 1.5rem);
-    color: #9e9e9e;
-    pointer-events: none;
+/* Compteur de caractères - sur la même ligne à droite (comme le chevron Planning) */
+.search-bar .char-counter {
+    flex-shrink: 0;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    color: #6e6f75;
+    white-space: nowrap;
+    margin-top: 0;
 }
 
 /* Navigation avec switch */
@@ -985,6 +1011,57 @@ body {
 @media (min-width: 1025px) {
     .cards-container {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* PC : même layout que accueil-staff */
+@media (min-width: 1024px) {
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .sidebar-menu {
+        transform: translateX(0);
+        position: fixed;
+        left: 0;
+        top: clamp(8vh, 12vw, 18vh);
+        height: calc(100vh - clamp(8vh, 12vw, 18vh) - clamp(2vh, 3vw, 4vh));
+        min-height: calc(100vh - clamp(70px, 8.4vw, 180px) - clamp(20px, 2.5vw, 30px));
+        width: clamp(250px, 20vw, 300px);
+        border-radius: 0;
+        border-top-right-radius: clamp(1rem, 2vw, 1.5rem);
+        border-bottom-right-radius: clamp(1rem, 2vw, 1.5rem);
+        z-index: 99;
+        padding-top: clamp(1rem, 1.5vw, 1.5rem);
+    }
+
+    .main-content {
+        margin-left: clamp(250px, 20vw, 300px);
+        padding-left: clamp(2rem, 3vw, 3rem);
+    }
+
+    .menu-close {
+        display: none;
+    }
+
+    .menu-overlay {
+        display: none;
+    }
+
+    .header-menu {
+        display: none;
+    }
+
+    .header-menu-container {
+        display: none;
+    }
+}
+
+@media (max-width: 1023px) {
+    .main-content {
+        margin-left: 0;
     }
 }
 

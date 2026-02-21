@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style_staff.css">
     <link rel="stylesheet" href="style_info_staff.css">
 </head>
 <body>
@@ -462,7 +463,7 @@
             // Numéro
             const number = document.createElement('div');
             number.className = 'member-number';
-            number.textContent = `N° ${member.numero}`;
+            number.textContent = member.numero ? `N° ${member.numero}` : '—';
             card.appendChild(number);
 
             return card;

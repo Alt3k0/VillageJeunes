@@ -141,9 +141,9 @@
                         <option value="">Rechercher une activité</option>
                         <optgroup label="Catégories">
                             <option value="category:numerique">Numérique</option>
-                            <option value="category:solidaire">Solidaire</option>
-                            <option value="category:artistique">Artistique/Culturel</option>
-                            <option value="category:formation">Formation/Atelier</option>
+                            <option value="category:arts-vivants">Arts vivants</option>
+                            <option value="category:projet-pro">Projet pro</option>
+                            <option value="category:solidarite">Solidarité</option>
                         </optgroup>
                         <optgroup label="Activités" id="activitiesList">
                             <!-- Les activités seront ajoutées dynamiquement -->
@@ -161,14 +161,14 @@
                             <div class="dropdown-item" data-value="category:numerique">
                                 <span>Numérique</span>
                             </div>
-                            <div class="dropdown-item" data-value="category:solidaire">
-                                <span>Solidaire</span>
+                            <div class="dropdown-item" data-value="category:arts-vivants">
+                                <span>Arts vivants</span>
                             </div>
-                            <div class="dropdown-item" data-value="category:artistique">
-                                <span>Artistique/Culturel</span>
+                            <div class="dropdown-item" data-value="category:projet-pro">
+                                <span>Projet pro</span>
                             </div>
-                            <div class="dropdown-item" data-value="category:formation">
-                                <span>Formation/Atelier</span>
+                            <div class="dropdown-item" data-value="category:solidarite">
+                                <span>Solidarité</span>
                             </div>
                         </div>
                         <div class="dropdown-group" id="activitiesGroup">
@@ -288,19 +288,27 @@
             <div class="legend-items">
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #1f658e;"></div>
-                    <span>Salle Numérique</span>
+                    <span>Salle de l'Eau</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #649d50;"></div>
-                    <span>Salle Solidaire</span>
+                    <span>Salle de la Terre + patio</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #f08d35;"></div>
-                    <span>Salle Artistique/Culturel</span>
+                    <span>Salle du Feu</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #9b59b6;"></div>
-                    <span>Salle Emploi/Formation</span>
+                    <span>Salle du Vent</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6e6f75;"></div>
+                    <span>Salle de formation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e6b800;"></div>
+                    <span>Accueil</span>
                 </div>
             </div>
         </div>
@@ -328,14 +336,64 @@
                         <span class="activity-detail-time-separator">•</span>
                         <span class="activity-detail-time-detail" id="activityDetailTimeDetail">14h00 - 15h30</span>
                     </div>
+                    <div class="activity-detail-badges">
+                        <div class="activity-detail-salle-badge" id="activityDetailSalleBadge">
+                            <select id="activityDetailSalleSelect" class="activity-detail-salle-select" title="Changer la salle">
+                                <!-- Options remplies par JS -->
+                            </select>
+                        </div>
+                        <div class="activity-detail-benevole-badge" id="activityDetailBenevoleBadge">
+                            <span id="activityDetailBenevoleName">—</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="activity-detail-description-box">
                     <div class="activity-detail-description-label">Description :</div>
                     <div class="activity-detail-description" id="activityDetailDescription">Pendant 1h nous allons faire une activité, décrire l'activiter et possiblement ajouter si il y a des contre-indications médicales ou autres.</div>
                 </div>
-                <button class="activity-detail-register-button" id="registerActivityButton">
-                    <span class="activity-detail-register-button-text">Je m'inscris</span>
+                <div class="activity-detail-register-wrapper" id="activityDetailRegisterWrapper">
+                    <button class="activity-detail-register-button" id="registerActivityButton">
+                        <span class="activity-detail-register-button-text">Faire l'appel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget Faire l'appel -->
+        <div class="appel-overlay" id="appelOverlay">
+            <div class="appel-widget">
+                <button class="appel-close" id="closeAppelWidget">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                 </button>
+                <h2 class="appel-title">Faire l'appel</h2>
+                <p class="appel-activity-name" id="appelActivityName"></p>
+                <div class="appel-animateur-group">
+                    <label for="appelAnimateurSelect">Animateur / Bénévole</label>
+                    <select id="appelAnimateurSelect" class="appel-select"></select>
+                </div>
+                <div class="appel-participants-section">
+                    <div class="appel-participants-header">
+                        <span>Participants</span>
+                        <button type="button" class="appel-add-btn" id="appelAddAdherent">+ Ajouter</button>
+                    </div>
+                    <ul class="appel-participants-list" id="appelParticipantsList"></ul>
+                </div>
+                <button type="button" class="appel-validate-btn" id="appelValidateBtn">Valider l'appel</button>
+            </div>
+        </div>
+
+        <!-- Modal d'ajout d'adhérent à l'appel -->
+        <div class="appel-add-modal" id="appelAddModal">
+            <div class="appel-add-modal-content">
+                <h3>Ajouter un adhérent</h3>
+                <select id="appelAddAdherentSelect" class="appel-select"></select>
+                <div class="appel-add-modal-actions">
+                    <button type="button" class="appel-add-modal-cancel" id="appelAddModalCancel">Annuler</button>
+                    <button type="button" class="appel-add-modal-confirm" id="appelAddModalConfirm">Ajouter</button>
+                </div>
             </div>
         </div>
 
@@ -383,21 +441,23 @@
                             <select id="activityCategory" class="form-select" required>
                                 <option value="">Sélectionner une catégorie</option>
                                 <option value="numerique">Numérique</option>
-                                <option value="solidaire">Solidaire</option>
-                                <option value="artistique">Artistique/Culturel</option>
-                                <option value="formation">Formation/Atelier</option>
+                                <option value="arts-vivants">Arts vivants</option>
+                                <option value="projet-pro">Projet pro</option>
+                                <option value="solidarite">Solidarité</option>
                             </select>
                     </div>
 
                     <div class="form-group half-width">
                         <label for="activityRoom" class="form-label">Salle *</label>
-                        <select id="activityRoom" class="form-select" required>
-                            <option value="">Sélectionner une salle</option>
-                            <option value="Salle Numérique">Salle Numérique</option>
-                            <option value="Salle Solidaire">Salle Solidaire</option>
-                            <option value="Salle Artistique/Culturel">Salle Artistique/Culturel</option>
-                            <option value="Salle Emploi/Formation">Salle Emploi/Formation</option>
-                        </select>
+                            <select id="activityRoom" class="form-select" required>
+                                <option value="">Sélectionner une salle</option>
+                                <option value="Salle du Vent">Salle du Vent</option>
+                                <option value="Salle du Feu">Salle du Feu</option>
+                                <option value="Salle de l'Eau">Salle de l'Eau</option>
+                                <option value="Salle de la Terre + patio">Salle de la Terre + patio</option>
+                                <option value="Salle de formation">Salle de formation</option>
+                                <option value="Accueil">Accueil</option>
+                            </select>
                     </div>
 
                     <!-- Responsable - pleine largeur -->

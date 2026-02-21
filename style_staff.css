@@ -735,32 +735,45 @@ body {
     color: #fafafa;
 }
 
-/* Styles pour les réservations de salles */
-.calendar-day.salle-numerique {
-    background-color: rgba(31, 101, 142, 0.5) !important;
+/* Styles pour les réservations de salles (charte : bleu=eau, vert=terre, orange=feu, violet=vent, gris=formation, jaune=accueil) */
+.calendar-day.salle-eau {
+    background-color: rgba(31, 101, 142, 0.5) !important; /* Bleu #1f658e */
     color: #fafafa;
     font-weight: 600;
 }
 
-.calendar-day.salle-solidaire {
-    background-color: rgba(100, 157, 80, 0.5) !important;
+.calendar-day.salle-terre-patio {
+    background-color: rgba(100, 157, 80, 0.5) !important; /* Vert #649d50 */
     color: #fafafa;
     font-weight: 600;
 }
 
-.calendar-day.salle-artistique {
-    background-color: rgba(240, 141, 53, 0.5) !important;
+.calendar-day.salle-feu {
+    background-color: rgba(240, 141, 53, 0.5) !important; /* Orange #f08d35 */
     color: #fafafa;
     font-weight: 600;
 }
 
-.calendar-day.salle-emploi {
-    background-color: rgba(155, 89, 182, 0.5) !important;
+.calendar-day.salle-vent {
+    background-color: rgba(155, 89, 182, 0.5) !important; /* Violet #9b59b6 */
     color: #fafafa;
+    font-weight: 600;
+}
+
+.calendar-day.salle-formation {
+    background-color: rgba(110, 111, 117, 0.6) !important; /* Gris #6e6f75 */
+    color: #fafafa;
+    font-weight: 600;
+}
+
+.calendar-day.salle-accueil {
+    background-color: rgba(230, 184, 0, 0.6) !important; /* Jaune or #e6b800 */
+    color: #1e1e1d;
     font-weight: 600;
 }
 
 .calendar-day.multiple-salles {
+    /* Dégradé 4 couleurs charte (bleu, vert, orange, violet) */
     background: linear-gradient(135deg, 
         rgba(31, 101, 142, 0.6) 0%, 
         rgba(100, 157, 80, 0.6) 25%, 
@@ -770,27 +783,27 @@ body {
     font-weight: 700;
 }
 
-/* Styles pour les activités */
+/* Styles pour les activités (4 catégories) */
 .calendar-day.activity-numerique {
     background-color: rgba(31, 101, 142, 0.5) !important;
     color: #fafafa;
     font-weight: 600;
 }
 
-.calendar-day.activity-solidaire {
-    background-color: rgba(100, 157, 80, 0.5) !important;
-    color: #fafafa;
-    font-weight: 600;
-}
-
-.calendar-day.activity-artistique {
+.calendar-day.activity-arts-vivants {
     background-color: rgba(240, 141, 53, 0.5) !important;
     color: #fafafa;
     font-weight: 600;
 }
 
-.calendar-day.activity-formation {
+.calendar-day.activity-projet-pro {
     background-color: rgba(155, 89, 182, 0.5) !important;
+    color: #fafafa;
+    font-weight: 600;
+}
+
+.calendar-day.activity-solidarite {
+    background-color: rgba(100, 157, 80, 0.5) !important;
     color: #fafafa;
     font-weight: 600;
 }
@@ -807,10 +820,12 @@ body {
 }
 
 /* Priorité pour les dates sélectionnées avec réservations */
-.calendar-day.selected.salle-numerique,
-.calendar-day.selected.salle-solidaire,
-.calendar-day.selected.salle-artistique,
-.calendar-day.selected.salle-emploi,
+.calendar-day.selected.salle-vent,
+.calendar-day.selected.salle-feu,
+.calendar-day.selected.salle-eau,
+.calendar-day.selected.salle-terre-patio,
+.calendar-day.selected.salle-formation,
+.calendar-day.selected.salle-accueil,
 .calendar-day.selected.multiple-salles {
     border: 2px solid #1e1e1d;
     box-shadow: 0 0 0 2px rgba(30, 30, 29, 0.2);
@@ -818,9 +833,9 @@ body {
 
 /* Priorité pour les dates sélectionnées avec activités */
 .calendar-day.selected.activity-numerique,
-.calendar-day.selected.activity-solidaire,
-.calendar-day.selected.activity-artistique,
-.calendar-day.selected.activity-formation,
+.calendar-day.selected.activity-arts-vivants,
+.calendar-day.selected.activity-projet-pro,
+.calendar-day.selected.activity-solidarite,
 .calendar-day.selected.multiple-activities {
     border: 2px solid #1e1e1d;
     box-shadow: 0 0 0 2px rgba(30, 30, 29, 0.2);
@@ -1160,7 +1175,8 @@ body {
     color: #6e6f75;
 }
 
-.activity-card-location {
+.activity-card-location,
+.activity-card-responsible {
     font-size: clamp(12px, 1.5vw, 18px);
     color: #6e6f75;
 }
@@ -1379,24 +1395,39 @@ body {
     height: 100%;
 }
 
+/* Multi-lane layout : variables pour colonnes (éviter superpositions) */
 .schedule-activity {
+    --activity-content-left: clamp(40px, 5vw, 60px);
+    --activity-content-right: clamp(8px, 1vw, 12px);
+    --activity-gap: 6px;
+
     position: absolute;
-    left: clamp(40px, 5vw, 60px);
-    right: clamp(8px, 1vw, 12px);
+    left: calc(
+        var(--activity-content-left) +
+        var(--activity-col, 0) * (
+            (100% - var(--activity-content-left) - var(--activity-content-right) - (var(--activity-total, 1) - 1) * var(--activity-gap)) / var(--activity-total, 1) +
+            var(--activity-gap)
+        )
+    );
+    width: calc(
+        (100% - var(--activity-content-left) - var(--activity-content-right) - (var(--activity-total, 1) - 1) * var(--activity-gap)) / var(--activity-total, 1) -
+        var(--activity-gap)
+    );
+    right: auto;
     border-radius: clamp(4px, 0.5vw, 8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden;
     z-index: 15;
     min-height: clamp(28px, 3.5vw, 44px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .schedule-activity:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .schedule-activity-text {
@@ -1432,6 +1463,18 @@ body {
     color: #414d55;
     text-align: center;
     line-height: 1.2;
+}
+
+.schedule-activity-meta {
+    font-size: clamp(8px, 1vw, 12px);
+    font-weight: 400;
+    color: #6e6f75;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .schedule-current-time {
@@ -1540,10 +1583,12 @@ body {
 }
 
 .activity-detail-card {
+    --activity-color: #1f658e;
+    --salle-color: #6e6f75;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--activity-color);
     border-radius: clamp(18px, 2.2vw, 36px);
     box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
                 0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
@@ -1699,6 +1744,71 @@ body {
     font-weight: 500;
 }
 
+/* Badges Salle et Bénévole (style Atelier numérique) */
+.activity-detail-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.2vw, 18px);
+    justify-content: center;
+    width: 100%;
+}
+
+.activity-detail-salle-badge {
+    background: var(--salle-color);
+    border-radius: 12px;
+    padding: clamp(8px, 1vw, 12px) clamp(14px, 1.6vw, 20px);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.12);
+    min-width: clamp(140px, 18vw, 200px);
+}
+
+.activity-detail-salle-select {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Rubik', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%23fff' stroke-width='2'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    padding-right: 22px;
+}
+
+.activity-detail-salle-select option {
+    background: #414d55;
+    color: #fff;
+}
+
+.activity-detail-benevole-badge {
+    background: rgba(250, 251, 253, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: clamp(8px, 1vw, 12px) clamp(14px, 1.6vw, 20px);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
+    font-family: 'Rubik', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 500;
+    color: #3d7b9a;
+    min-width: clamp(120px, 15vw, 180px);
+    text-align: center;
+}
+
+.activity-detail-register-wrapper {
+    width: 100%;
+    max-width: clamp(220px, 55vw, 560px);
+    border: 2px solid var(--activity-color);
+    border-radius: clamp(12px, 1.5vw, 24px);
+    padding: clamp(4px, 0.5vw, 8px);
+    margin-top: clamp(6px, 0.8vw, 12px);
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.08);
+}
+
 .activity-detail-description-box {
     background: rgba(250, 251, 253, 0.6);
     backdrop-filter: blur(10px);
@@ -1737,13 +1847,12 @@ body {
 }
 
 .activity-detail-register-button {
-    background: rgba(31, 101, 142, 0.85);
+    background: var(--activity-color);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: clamp(12px, 1.5vw, 24px);
+    border-radius: clamp(10px, 1.2vw, 20px);
     width: 100%;
-    max-width: clamp(220px, 55vw, 560px);
     height: clamp(45px, 5.6vw, 90px);
     display: flex;
     align-items: center;
@@ -1755,9 +1864,9 @@ body {
 }
 
 .activity-detail-register-button:hover {
-    background: rgba(31, 101, 142, 1);
+    filter: brightness(1.1);
     transform: translateY(-2px);
-    box-shadow: 0px 6px 16px 0px rgba(31, 101, 142, 0.4);
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.15);
 }
 
 .activity-detail-register-button:active {
@@ -1773,6 +1882,278 @@ body {
     text-align: center;
     letter-spacing: clamp(0.2px, 0.03vw, 0.5px);
 }
+
+/* Widget Faire l'appel */
+.appel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem);
+}
+
+.appel-overlay.active {
+    display: flex;
+}
+
+.appel-widget {
+    background: #F7F7F7;
+    border-radius: clamp(12px, 1.5vw, 24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 500px);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(20px, 2.5vw, 35px);
+    position: relative;
+    animation: slideDown 0.3s ease;
+}
+
+.appel-close {
+    position: absolute;
+    top: clamp(8px, 1vw, 15px);
+    right: clamp(8px, 1vw, 15px);
+    width: clamp(28px, 3.5vw, 40px);
+    height: clamp(28px, 3.5vw, 40px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.appel-close svg {
+    width: 100%;
+    height: 100%;
+}
+
+.appel-title {
+    font-size: clamp(18px, 2.2vw, 28px);
+    font-weight: 700;
+    color: #1e1e1d;
+    margin-bottom: clamp(8px, 1vw, 12px);
+}
+
+.appel-activity-name {
+    font-size: clamp(14px, 1.6vw, 18px);
+    color: #3d7b9a;
+    font-weight: 500;
+    margin-bottom: clamp(16px, 2vw, 24px);
+}
+
+.appel-animateur-group {
+    margin-bottom: clamp(16px, 2vw, 24px);
+}
+
+.appel-animateur-group label {
+    display: block;
+    font-size: clamp(12px, 1.4vw, 14px);
+    font-weight: 600;
+    color: #1e1e1d;
+    margin-bottom: clamp(6px, 0.8vw, 10px);
+}
+
+.appel-select {
+    width: 100%;
+    padding: clamp(10px, 1.2vw, 14px);
+    border: 2px solid #e5e5e5;
+    border-radius: clamp(8px, 1vw, 12px);
+    font-size: clamp(13px, 1.5vw, 16px);
+    background: #fff;
+    cursor: pointer;
+}
+
+.appel-select:focus {
+    border-color: #1f658e;
+    outline: none;
+}
+
+.appel-participants-section {
+    margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.appel-participants-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(10px, 1.2vw, 14px);
+}
+
+.appel-participants-header span {
+    font-size: clamp(14px, 1.6vw, 18px);
+    font-weight: 600;
+    color: #1e1e1d;
+}
+
+.appel-add-btn {
+    padding: clamp(6px, 0.8vw, 10px) clamp(12px, 1.5vw, 16px);
+    background: rgba(31, 101, 142, 0.15);
+    border: 2px solid #1f658e;
+    border-radius: clamp(6px, 0.8vw, 10px);
+    color: #1f658e;
+    font-size: clamp(12px, 1.4vw, 14px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.appel-add-btn:hover {
+    background: rgba(31, 101, 142, 0.25);
+}
+
+.appel-participants-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: clamp(180px, 25vw, 280px);
+    overflow-y: auto;
+    border: 2px solid #e5e5e5;
+    border-radius: clamp(8px, 1vw, 12px);
+    background: #fff;
+}
+
+.appel-participant-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    padding: clamp(10px, 1.2vw, 14px);
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.appel-participant-item:last-child {
+    border-bottom: none;
+}
+
+.appel-participant-empty {
+    padding: clamp(16px, 2vw, 24px);
+    text-align: center;
+    color: #6e6f75;
+    font-size: clamp(13px, 1.5vw, 15px);
+}
+
+.appel-participant-item input[type="checkbox"] {
+    width: clamp(18px, 2.2vw, 24px);
+    height: clamp(18px, 2.2vw, 24px);
+    accent-color: #1f658e;
+    cursor: pointer;
+}
+
+.appel-participant-item .participant-info {
+    flex: 1;
+}
+
+.appel-participant-item .participant-name {
+    font-weight: 600;
+    color: #1e1e1d;
+    font-size: clamp(13px, 1.5vw, 16px);
+}
+
+.appel-participant-item .participant-numero {
+    font-size: clamp(11px, 1.3vw, 13px);
+    color: #6e6f75;
+}
+
+.appel-participant-remove {
+    padding: clamp(4px, 0.5vw, 6px);
+    background: transparent;
+    border: none;
+    color: #d32f2f;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.appel-participant-remove:hover {
+    background: rgba(211, 47, 47, 0.1);
+}
+
+.appel-validate-btn {
+    width: 100%;
+    padding: clamp(14px, 1.8vw, 20px);
+    background: linear-gradient(135deg, #1f658e 0%, #3d7b9a 100%);
+    border: none;
+    border-radius: clamp(10px, 1.2vw, 14px);
+    color: #F7F7F7;
+    font-size: clamp(14px, 1.6vw, 18px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(31, 101, 142, 0.3);
+}
+
+.appel-validate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 101, 142, 0.4);
+}
+
+/* Modal ajout adhérent */
+.appel-add-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.appel-add-modal.active {
+    display: flex;
+}
+
+.appel-add-modal-content {
+    background: #F7F7F7;
+    border-radius: clamp(12px, 1.5vw, 20px);
+    padding: clamp(20px, 2.5vw, 30px);
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.appel-add-modal-content h3 {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 600;
+    color: #1e1e1d;
+    margin-bottom: clamp(12px, 1.5vw, 18px);
+}
+
+.appel-add-modal-content .appel-select {
+    margin-bottom: clamp(16px, 2vw, 20px);
+}
+
+.appel-add-modal-actions {
+    display: flex;
+    gap: clamp(10px, 1.2vw, 16px);
+    justify-content: flex-end;
+}
+
+.appel-add-modal-cancel {
+    padding: clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px);
+    background: #e5e5e5;
+    border: none;
+    border-radius: clamp(8px, 1vw, 10px);
+    font-weight: 600;
+    color: #1e1e1d;
+    cursor: pointer;
+}
+
+.appel-add-modal-confirm {
+    padding: clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px);
+    background: #1f658e;
+    border: none;
+    border-radius: clamp(8px, 1vw, 10px);
+    font-weight: 600;
+    color: #F7F7F7;
+    cursor: pointer;
+}
+
+/* TODO Adhérent : bouton "Je souhaite participer" à la place de "Je m'inscris" dans accueil-adherent */
 
 /* Footer */
 .footer {
@@ -2124,9 +2505,11 @@ body {
         font-size: clamp(0.85rem, 1.8vw, 1rem);
     }
 
-    /* Widget emploi du temps - améliorations mobile */
+    /* Widget emploi du temps - améliorations mobile/tablette */
     .schedule-timeline {
         padding-left: clamp(55px, 7vw, 85px);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .schedule-time-label {
@@ -2154,9 +2537,18 @@ body {
     }
     
     .schedule-activity {
-        left: clamp(45px, 6vw, 70px);
-        right: clamp(10px, 1.5vw, 16px);
+        --activity-content-left: clamp(45px, 6vw, 70px);
+        --activity-content-right: clamp(10px, 1.5vw, 16px);
+        --activity-gap: 4px;
         min-height: clamp(32px, 4vw, 48px);
+    }
+
+    .schedule-activity-title {
+        font-size: clamp(10px, 1.2vw, 14px);
+    }
+
+    .schedule-activity-meta {
+        font-size: clamp(7px, 0.9vw, 10px);
     }
 
     .schedule-current-time {

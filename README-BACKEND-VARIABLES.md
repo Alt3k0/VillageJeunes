@@ -53,14 +53,14 @@ Ces variables sont utilisées dans `accueil-staff.html` pour le calendrier des a
 |------------|------|-------------|-------------|
 | `{activity_id}` | String/Number | Identifiant unique de l'activité | Identifiant pour suppression/modification |
 | `{activity_title}` | String | Nom de l'activité | Affichage dans le calendrier et les cards |
-| `{activity_category}` | String | Catégorie de l'activité | Valeurs: "numerique", "solidaire", "artistique", "formation" |
-| `{activity_category_name}` | String | Nom affiché de la catégorie | Valeurs: "Numérique", "Solidaire", "Artistique/Culturel", "Formation/Atelier" |
-| `{activity_category_color}` | String (Hex) | Couleur associée à la catégorie | Couleurs: "#1f658e", "#649d50", "#f08d35", "#9b59b6" |
+| `{activity_category}` | String | Catégorie de l'activité | Valeurs: "numerique", "arts-vivants", "projet-pro", "solidarite" |
+| `{activity_category_name}` | String | Nom affiché de la catégorie | Valeurs: "Numérique", "Arts vivants", "Projet pro", "Solidarité" |
+| `{activity_category_color}` | String (Hex) | Couleur associée à la catégorie | Couleurs: "#1f658e", "#f08d35", "#9b59b6", "#649d50" |
 | `{activity_date}` | String | Date de l'activité | Format: "YYYY-MM-DD" (ex: "2026-02-15") |
 | `{activity_time}` | String | Heure affichée | Format: "09h00 - 11h00" |
 | `{activity_time_start}` | String | Heure de début | Format: "HH:mm" (ex: "09:00") - pour création/modification |
 | `{activity_time_end}` | String | Heure de fin | Format: "HH:mm" (ex: "11:00") - pour création/modification |
-| `{activity_location}` | String | Salle où se déroule l'activité | Valeurs: "Salle Numérique", "Salle Solidaire", "Salle Artistique/Culturel", "Salle Emploi/Formation" |
+| `{activity_location}` | String | Salle où se déroule l'activité | Valeurs: "Salle du Vent", "Salle du Feu", "Salle de l'Eau", "Salle de la Terre + patio", "Salle de formation", "Accueil" |
 | `{activity_description}` | String | Description détaillée | Texte long affiché dans les widgets (optionnel) |
 | `{activity_responsible}` | String | Nom du bénévole/animateur responsable | Affichage du nom du responsable |
 | `{activity_max_participants}` | Number | Nombre maximum de participants | Limite d'inscriptions (optionnel) |
@@ -89,6 +89,8 @@ Ces variables sont utilisées dans `accueil-staff.html` pour le calendrier des a
 ```
 
 **Note :** Les salles sont dérivées des activités via `activity_location`. Pas besoin de structure séparée pour les salles.
+
+**Interaction staff :** Le staff peut modifier la salle (`location`) d'une activité depuis le détail d'activité. Cette modification doit être envoyée au backend via PATCH (voir section Endpoints).
 
 ---
 
@@ -242,6 +244,29 @@ Crée une nouvelle activité
 }
 ```
 
+#### PATCH `/api/staff/activities/{activity_id}`
+Met à jour une activité (ex. changement de salle par le staff)
+
+**Body attendu (champs partiels possibles) :**
+```json
+{
+  "location": "{activity_location}",
+  "responsible": "{activity_responsible}"
+}
+```
+
+**Cas d'usage :** Le staff peut modifier la salle d'une activité depuis le détail d'activité (select). Cette modification doit être persistée côté backend.
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "activity": {
+    // Structure complète de l'activité mise à jour
+  }
+}
+```
+
 #### DELETE `/api/staff/activities/{activity_id}`
 Supprime une activité
 
@@ -250,6 +275,86 @@ Supprime une activité
 {
   "success": true,
   "message": "Activité supprimée avec succès"
+}
+```
+
+---
+
+### **Appel (Présence)**
+
+Ces endpoints sont utilisés par le widget « Faire l'appel » dans `accueil-staff.html`.
+
+| Placeholder | Type | Description | Utilisation |
+|------------|------|-------------|-------------|
+| `{appel_activity_id}` | String/Number | Identifiant de l'activité | Référence à l'activité concernée |
+| `{appel_animateur}` | String | Nom du bénévole/animateur effectuant l'appel | Peut différer de `activity_responsible` initial |
+| `{appel_adherent_id}` | String/Number | Identifiant de l'adhérent | Pour chaque participant |
+| `{appel_present}` | Boolean | Présent ou absent | true = présent, false = absent |
+
+**Structure JSON pour l'appel :**
+```json
+{
+  "activity": {
+    "id": "{activity_id}",
+    "title": "{activity_title}",
+    "date": "{activity_date}",
+    "time": "{activity_time}",
+    "location": "{activity_location}",
+    "responsible": "{appel_animateur}"
+  },
+  "animateur": "{appel_animateur}",
+  "adherentsPresents": [
+    {
+      "id": "{appel_adherent_id}",
+      "nom": "{member_nom}",
+      "numero": "{member_numero}"
+    }
+  ]
+}
+```
+
+#### POST `/api/staff/activities/{activity_id}/appel`
+Enregistre l'appel (présence) pour une activité
+
+**Body attendu :**
+```json
+{
+  "animateur": "{appel_animateur}",
+  "adherentsPresents": [
+    {
+      "id": "{member_id}",
+      "nom": "{member_nom}",
+      "numero": "{member_numero}"
+    }
+  ]
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Appel enregistré",
+  "presentsCount": 5,
+  "totalCount": 6
+}
+```
+
+#### GET `/api/staff/activities/{activity_id}/appel`
+Récupère les participants inscrits et leur statut de présence pour une activité (optionnel, pour pré-remplir le widget)
+
+**Réponse attendue :**
+```json
+{
+  "participants": [
+    {
+      "id": "{member_id}",
+      "nom": "{member_nom}",
+      "numero": "{member_numero}",
+      "present": true
+    }
+  ],
+  "animateur": "{activity_responsible}"
 }
 ```
 
@@ -311,11 +416,20 @@ Valide une inscription
 - **Format heure affichée :** "09h00 - 11h00" (géré côté frontend)
 
 ### **Catégories d'Activités**
-Les catégories sont fixes :
-- `numerique` → Salle Numérique (Bleu: #1f658e)
-- `solidaire` → Salle Solidaire (Vert: #649d50)
-- `artistique` → Salle Artistique/Culturel (Orange: #f08d35)
-- `formation` → Salle Emploi/Formation (Violet: #9b59b6)
+Les catégories sont fixes (4 couleurs) :
+- `numerique` → Numérique (Bleu: #1f658e)
+- `arts-vivants` → Arts vivants (Orange: #f08d35)
+- `projet-pro` → Projet pro (Violet: #9b59b6)
+- `solidarite` → Solidarité (Vert: #649d50)
+
+### **Salles réservables**
+Les salles sont fixes (charte graphique) :
+- Salle de l'Eau (Bleu: #1f658e)
+- Salle de la Terre + patio (Vert: #649d50)
+- Salle du Feu (Orange: #f08d35)
+- Salle du Vent (Violet: #9b59b6)
+- Salle de formation (Gris: #6e6f75)
+- Accueil (Jaune or: #e6b800)
 
 ### **Gestion des Erreurs**
 Toutes les réponses d'erreur doivent suivre ce format :
@@ -365,12 +479,18 @@ S'assurer que les structures JSON correspondent aux formats attendus listés ci-
 Avant de considérer l'intégration comme complète :
 
 - [ ] Tous les placeholders sont remplacés par les vraies variables
-- [ ] Tous les endpoints API sont connectés
+- [ ] Tous les endpoints API sont connectés (dont PATCH activités et POST appel)
+- [ ] Modification de salle : appel PATCH lors du changement dans le select
+- [ ] Validation appel : appel POST avec animateur et adherentsPresents
 - [ ] La gestion des erreurs est en place
 - [ ] Les réponses API correspondent aux formats attendus
 - [ ] Les données sont correctement affichées dans le frontend
 
 ---
 
-**Dernière mise à jour :** Février 2026  
-**Version :** 2.0 (Révisée et simplifiée)
+**Dernière mise à jour :** 17 Février 2026  
+**Version :** 2.1
+
+**Changelog v2.1 (17/02/2026) :**
+- Ajout endpoint **PATCH** `/api/staff/activities/{activity_id}` pour modification de salle et responsable
+- Ajout section **Appel (Présence)** : variables et endpoints POST/GET pour le widget « Faire l'appel »

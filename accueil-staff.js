@@ -18,29 +18,51 @@ const monthsFull = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
 
 // Noms des salles
 const salles = [
-    'Salle Numérique',
-    'Salle Solidaire',
-    'Salle Artistique/Culturel',
-    'Salle Emploi/Formation'
+    'Salle du Vent',
+    'Salle du Feu',
+    'Salle de l\'Eau',
+    'Salle de la Terre + patio',
+    'Salle de formation',
+    'Accueil'
 ];
 
-// Catégories d'activités avec leurs couleurs (correspondent aux salles)
+// Mapping salle -> classe CSS (4 couleurs pour 6 salles)
+const salleToClass = {
+    'Salle du Vent': 'salle-vent',
+    'Salle du Feu': 'salle-feu',
+    'Salle de l\'Eau': 'salle-eau',
+    'Salle de la Terre + patio': 'salle-terre-patio',
+    'Salle de formation': 'salle-formation',
+    'Accueil': 'salle-accueil'
+};
+
+// Couleurs par salle (charte graphique)
+const salleToColor = {
+    'Salle de l\'Eau': '#1f658e',
+    'Salle de la Terre + patio': '#649d50',
+    'Salle du Feu': '#f08d35',
+    'Salle du Vent': '#9b59b6',
+    'Salle de formation': '#6e6f75',
+    'Accueil': '#e6b800'
+};
+
+// Catégories d'activités avec leurs couleurs (4 couleurs)
 const activityCategories = {
     'numerique': {
         name: 'Numérique',
-        color: '#1f658e' // Bleu - Salle Numérique
+        color: '#1f658e' // Bleu
     },
-    'solidaire': {
-        name: 'Solidaire',
-        color: '#649d50' // Vert - Salle Solidaire
+    'arts-vivants': {
+        name: 'Arts vivants',
+        color: '#f08d35' // Orange
     },
-    'artistique': {
-        name: 'Artistique/Culturel',
-        color: '#f08d35' // Orange - Salle Artistique/Culturel
+    'projet-pro': {
+        name: 'Projet pro',
+        color: '#9b59b6' // Violet
     },
-    'formation': {
-        name: 'Formation/Atelier',
-        color: '#9b59b6' // Violet - Salle Emploi/Formation
+    'solidarite': {
+        name: 'Solidarité',
+        color: '#649d50' // Vert
     }
 };
 
@@ -53,6 +75,28 @@ let currentActivityDetail = null;
 let currentActivityList = [];
 let currentActivityIndex = 0;
 let activityDetailContext = null;
+
+// Liste des animateurs/bénévoles (alignée avec le formulaire d'ajout)
+const ANIMATEURS = [
+    'Marie Dupont', 'Jean Martin', 'Sophie Bernard', 'Pierre Leroy', 'Léa Petit',
+    'Animateur 1', 'Animateur 2', 'Animateur 3', 'Animateur 4', 'Animateur 5',
+    'Animateur 6', 'Animateur 7', 'Animateur 8', 'Animateur 9', 'Animateur 10'
+];
+
+// Adhérents disponibles pour l'appel (données démo - à remplacer par API)
+const ADHERENTS_DEMO = [
+    { id: 'adh1', nom: 'Alice Martin', numero: '0001' },
+    { id: 'adh2', nom: 'Bob Dupont', numero: '0002' },
+    { id: 'adh3', nom: 'Clara Bernard', numero: '0003' },
+    { id: 'adh4', nom: 'David Leroy', numero: '0004' },
+    { id: 'adh5', nom: 'Emma Petit', numero: '0005' },
+    { id: 'adh6', nom: 'Félix Moreau', numero: '0006' },
+    { id: 'adh7', nom: 'Gabrielle Simon', numero: '0007' },
+    { id: 'adh8', nom: 'Hugo Laurent', numero: '0008' }
+];
+
+// Participants par activité (activityId -> [{ id, nom, numero, present }])
+let activityParticipants = {};
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
@@ -271,22 +315,22 @@ function createDayElementSalles(day, isOtherMonth, isSelected = false, date = nu
         
         // Simulation de réservations pour démo (appliquer à toutes les dates correspondantes)
         if (dayOfMonth === 5) {
-            dayElement.classList.add('salle-numerique');
+            dayElement.classList.add('salle-vent');
         } else if (dayOfMonth === 10) {
-            dayElement.classList.add('salle-solidaire');
+            dayElement.classList.add('salle-feu');
         } else if (dayOfMonth === 15) {
-            dayElement.classList.add('salle-artistique');
+            dayElement.classList.add('salle-eau');
         } else if (dayOfMonth === 20) {
-            dayElement.classList.add('salle-emploi');
+            dayElement.classList.add('salle-terre-patio');
         } else if (dayOfMonth === 25) {
             dayElement.classList.add('multiple-salles'); // Plusieurs salles réservées
         } else if (dayOfMonth === 7) {
             // Exemple : plusieurs salles le même jour
             dayElement.classList.add('multiple-salles');
         } else if (dayOfMonth === 12) {
-            dayElement.classList.add('salle-numerique');
+            dayElement.classList.add('salle-formation');
         } else if (dayOfMonth === 18) {
-            dayElement.classList.add('salle-solidaire');
+            dayElement.classList.add('salle-accueil');
         }
     }
     
@@ -605,18 +649,53 @@ function setupActivityWidgets() {
     
     if (registerActivityButton) {
         registerActivityButton.addEventListener('click', function() {
-            console.log('Inscription à l\'activité');
-            alert('Inscription à l\'activité (fonctionnalité à implémenter)');
+            if (currentActivityDetail) openAppelWidget(currentActivityDetail);
         });
     }
+
+    const salleSelect = document.getElementById('activityDetailSalleSelect');
+    if (salleSelect) {
+        salleSelect.addEventListener('change', function() {
+            const newSalle = this.value;
+            if (!currentActivityDetail) return;
+            currentActivityDetail.location = newSalle;
+            if (currentActivityList[currentActivityIndex]) {
+                currentActivityList[currentActivityIndex].location = newSalle;
+            }
+            const dateKey = currentActivityDetail.dateKey || formatDateKey(selectedDate);
+            const acts = activitiesData[dateKey];
+            if (acts) {
+                const updateAct = (a) => {
+                    if (a === currentActivityDetail || (a.title === currentActivityDetail.title && a.time === currentActivityDetail.time)) {
+                        return { ...a, location: newSalle };
+                    }
+                    return a;
+                };
+                activitiesData[dateKey] = Array.isArray(acts) ? acts.map(updateAct) : updateAct(acts);
+            }
+            const card = document.querySelector('.activity-detail-card');
+            if (card) {
+                card.style.setProperty('--salle-color', salleToColor[newSalle] || '#6e6f75');
+            }
+        });
+    }
+
+    setupAppelWidget();
     
     // Fermer avec Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            if (activityDetailOverlay && activityDetailOverlay.classList.contains('active')) {
+            const appelOverlay = document.getElementById('appelOverlay');
+            const addModal = document.getElementById('appelAddModal');
+            if (addModal?.classList.contains('active')) {
+                addModal.classList.remove('active');
+            } else if (appelOverlay?.classList.contains('active')) {
+                appelOverlay.classList.remove('active');
+            } else if (activityDetailOverlay && activityDetailOverlay.classList.contains('active')) {
                 activityDetailOverlay.classList.remove('active');
+            } else {
+                closeActivityPopup();
             }
-            closeActivityPopup();
         }
     });
     
@@ -693,14 +772,22 @@ function createActivityCard(activity, activitiesList) {
     timeDiv.textContent = activity.time || '';
     card.appendChild(timeDiv);
     
-    // Lieu
+    // Lieu (salle)
     if (activity.location) {
         const locationDiv = document.createElement('div');
         locationDiv.className = 'activity-card-location';
         locationDiv.textContent = activity.location;
         card.appendChild(locationDiv);
     }
-    
+
+    // Animateur responsable
+    if (activity.responsible) {
+        const responsibleDiv = document.createElement('div');
+        responsibleDiv.className = 'activity-card-responsible';
+        responsibleDiv.textContent = activity.responsible;
+        card.appendChild(responsibleDiv);
+    }
+
     // Événement de clic
     card.addEventListener('click', function() {
         showActivityDetail(activity, 'search', activitiesList);
@@ -740,14 +827,19 @@ function displayActivityInDetail(activity) {
     const description = document.getElementById('activityDetailDescription');
     const dateElement = document.getElementById('activityDetailDate');
     const timeElement = document.getElementById('activityDetailTimeDetail');
-    
+    const salleBadge = document.getElementById('activityDetailSalleBadge');
+    const salleSelect = document.getElementById('activityDetailSalleSelect');
+    const benevoleBadge = document.getElementById('activityDetailBenevoleBadge');
+    const benevoleName = document.getElementById('activityDetailBenevoleName');
+    const card = document.querySelector('.activity-detail-card');
+
     if (!name || !description) {
         return;
     }
-    
+
     name.textContent = activity.title || 'Activité';
     description.textContent = activity.description || 'Aucune description disponible.';
-    
+
     if (dateElement) {
         const activityDate = activity.date || (activity.dateKey ? new Date(activity.dateKey) : selectedDate);
         if (activityDate) {
@@ -759,11 +851,33 @@ function displayActivityInDetail(activity) {
             dateElement.textContent = formatDateShort(selectedDate);
         }
     }
-    
+
     if (timeElement) {
         timeElement.textContent = activity.time || '';
     }
-    
+
+    // Couleurs selon activité et salle
+    const activityColor = activity.categoryColor || activityCategories.numerique?.color || '#1f658e';
+    const salle = activity.location?.trim() || '';
+    const salleColor = salleToColor[salle] || '#6e6f75';
+    if (card) {
+        card.style.setProperty('--activity-color', activityColor);
+        card.style.setProperty('--salle-color', salleColor);
+    }
+
+    // Badge Salle (select modifiable)
+    if (salleSelect && salleBadge) {
+        salleSelect.innerHTML = '<option value="">—</option>' + salles.map(s => `<option value="${s}" ${s === salle ? 'selected' : ''}>${s}</option>`).join('');
+        salleBadge.style.display = '';
+    }
+
+    // Badge Bénévole (toujours visible)
+    const responsible = activity.responsible?.trim();
+    if (benevoleName && benevoleBadge) {
+        benevoleName.textContent = responsible || '—';
+        benevoleBadge.style.display = '';
+    }
+
     currentActivityDetail = activity;
 }
 
@@ -783,6 +897,140 @@ function navigateToNextActivity() {
     currentActivityIndex = (currentActivityIndex + 1) % currentActivityList.length;
     const activity = currentActivityList[currentActivityIndex];
     displayActivityInDetail(activity);
+}
+
+// --- Widget Faire l'appel ---
+function getActivityId(activity) {
+    return `${activity.title || ''}-${activity.dateKey || formatDateKey(selectedDate)}-${activity.time || ''}`;
+}
+
+function openAppelWidget(activity) {
+    const overlay = document.getElementById('appelOverlay');
+    const activityNameEl = document.getElementById('appelActivityName');
+    const animateurSelect = document.getElementById('appelAnimateurSelect');
+    const participantsList = document.getElementById('appelParticipantsList');
+
+    if (!overlay || !activityNameEl || !animateurSelect || !participantsList) return;
+
+    const activityId = getActivityId(activity);
+    activityNameEl.textContent = `${activity.title || 'Activité'} • ${activity.time || ''}`;
+
+    // Remplir le select animateur
+    animateurSelect.innerHTML = ANIMATEURS.map(a => `<option value="${a}" ${a === (activity.responsible || '') ? 'selected' : ''}>${a}</option>`).join('');
+
+    // Charger ou initialiser les participants (démo : 2-4 adhérents aléatoires)
+    if (!activityParticipants[activityId]) {
+        const count = Math.min(2 + Math.floor(Math.random() * 3), ADHERENTS_DEMO.length);
+        const shuffled = [...ADHERENTS_DEMO].sort(() => Math.random() - 0.5);
+        activityParticipants[activityId] = shuffled.slice(0, count).map(a => ({
+            id: a.id,
+            nom: a.nom,
+            numero: a.numero,
+            present: true
+        }));
+    }
+
+    renderAppelParticipants(activityId, participantsList);
+    overlay.classList.add('active');
+}
+
+function renderAppelParticipants(activityId, listEl) {
+    const participants = activityParticipants[activityId] || [];
+    listEl.innerHTML = participants.map(p => `
+        <li class="appel-participant-item" data-id="${p.id}">
+            <input type="checkbox" ${p.present ? 'checked' : ''} data-present>
+            <div class="participant-info">
+                <div class="participant-name">${p.nom}</div>
+                <div class="participant-numero">N° ${p.numero}</div>
+            </div>
+            <button type="button" class="appel-participant-remove" title="Retirer">✕</button>
+        </li>
+    `).join('') || '<li class="appel-participant-empty">Aucun participant</li>';
+
+    listEl.querySelectorAll('.appel-participant-item').forEach(item => {
+        const id = item.dataset.id;
+        item.querySelector('input[data-present]')?.addEventListener('change', (e) => {
+            const p = activityParticipants[activityId].find(x => x.id === id);
+            if (p) p.present = e.target.checked;
+        });
+        item.querySelector('.appel-participant-remove')?.addEventListener('click', () => {
+            activityParticipants[activityId] = activityParticipants[activityId].filter(x => x.id !== id);
+            renderAppelParticipants(activityId, listEl);
+        });
+    });
+}
+
+function setupAppelWidget() {
+    const overlay = document.getElementById('appelOverlay');
+    const closeBtn = document.getElementById('closeAppelWidget');
+    const addBtn = document.getElementById('appelAddAdherent');
+    const validateBtn = document.getElementById('appelValidateBtn');
+    const addModal = document.getElementById('appelAddModal');
+    const addSelect = document.getElementById('appelAddAdherentSelect');
+    const addCancel = document.getElementById('appelAddModalCancel');
+    const addConfirm = document.getElementById('appelAddModalConfirm');
+
+    if (closeBtn) closeBtn.addEventListener('click', () => overlay?.classList.remove('active'));
+    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            if (!currentActivityDetail) return;
+            const activityId = getActivityId(currentActivityDetail);
+            const current = activityParticipants[activityId] || [];
+            const available = ADHERENTS_DEMO.filter(a => !current.some(p => p.id === a.id));
+            addSelect.innerHTML = '<option value="">Sélectionner un adhérent</option>' +
+                available.map(a => `<option value="${a.id}">${a.nom} (${a.numero})</option>`).join('');
+            addModal?.classList.add('active');
+        });
+    }
+
+    if (addCancel) addCancel.addEventListener('click', () => addModal?.classList.remove('active'));
+    if (addModal) addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.remove('active'); });
+
+    if (addConfirm) {
+        addConfirm.addEventListener('click', () => {
+            const id = addSelect?.value;
+            if (!id || !currentActivityDetail) return;
+            const adherent = ADHERENTS_DEMO.find(a => a.id === id);
+            if (!adherent) return;
+            const activityId = getActivityId(currentActivityDetail);
+            if (!activityParticipants[activityId]) activityParticipants[activityId] = [];
+            activityParticipants[activityId].push({ id: adherent.id, nom: adherent.nom, numero: adherent.numero, present: true });
+            renderAppelParticipants(activityId, document.getElementById('appelParticipantsList'));
+            addModal?.classList.remove('active');
+        });
+    }
+
+    if (validateBtn) {
+        validateBtn.addEventListener('click', () => {
+            if (!currentActivityDetail) return;
+            const activityId = getActivityId(currentActivityDetail);
+            const animateurSelect = document.getElementById('appelAnimateurSelect');
+            const animateur = animateurSelect?.value || currentActivityDetail.responsible;
+            const participants = activityParticipants[activityId] || [];
+            const presents = participants.filter(p => p.present);
+
+            const payload = {
+                activity: { ...currentActivityDetail, responsible: animateur },
+                animateur,
+                adherentsPresents: presents.map(p => ({ id: p.id, nom: p.nom, numero: p.numero }))
+            };
+            console.log('Appel validé:', payload);
+
+            // Mettre à jour l'animateur dans les données locales
+            const dateKey = currentActivityDetail.dateKey || formatDateKey(selectedDate);
+            const acts = activitiesData[dateKey];
+            if (acts) {
+                const updateAct = (a) => (a.title === currentActivityDetail.title && a.time === currentActivityDetail.time) ? { ...a, responsible: animateur } : a;
+                activitiesData[dateKey] = Array.isArray(acts) ? acts.map(updateAct) : updateAct(acts);
+            }
+
+            overlay?.classList.remove('active');
+            document.getElementById('activityDetailOverlay')?.classList.remove('active');
+            alert(`Appel validé : ${presents.length} présent(s) sur ${participants.length} inscrit(s).`);
+        });
+    }
 }
 
 // Configurer les écouteurs d'événements
@@ -1080,24 +1328,24 @@ function createDayElement(day, isOtherMonth, isSelected = false, date = null, ye
                 const category = uniqueCategories[0];
                 if (category === 'numerique') {
                     dayElement.classList.add('activity-numerique');
-                } else if (category === 'solidaire') {
-                    dayElement.classList.add('activity-solidaire');
-                } else if (category === 'artistique') {
-                    dayElement.classList.add('activity-artistique');
-                } else if (category === 'formation') {
-                    dayElement.classList.add('activity-formation');
+                } else if (category === 'arts-vivants') {
+                    dayElement.classList.add('activity-arts-vivants');
+                } else if (category === 'projet-pro') {
+                    dayElement.classList.add('activity-projet-pro');
+                } else if (category === 'solidarite') {
+                    dayElement.classList.add('activity-solidarite');
                 }
             } else if (activity.category) {
                 // Fallback : utiliser la catégorie de l'objet unique
                 const category = activity.category;
                 if (category === 'numerique') {
                     dayElement.classList.add('activity-numerique');
-                } else if (category === 'solidaire') {
-                    dayElement.classList.add('activity-solidaire');
-                } else if (category === 'artistique') {
-                    dayElement.classList.add('activity-artistique');
-                } else if (category === 'formation') {
-                    dayElement.classList.add('activity-formation');
+                } else if (category === 'arts-vivants') {
+                    dayElement.classList.add('activity-arts-vivants');
+                } else if (category === 'projet-pro') {
+                    dayElement.classList.add('activity-projet-pro');
+                } else if (category === 'solidarite') {
+                    dayElement.classList.add('activity-solidarite');
                 }
             }
         }
@@ -1241,15 +1489,15 @@ function showActivityPopup(date) {
         
         // Attendre un frame supplémentaire pour que le timeline ait sa hauteur calculée
         requestAnimationFrame(() => {
+            // Calculer les colonnes pour éviter les superpositions
+            const activitiesWithColumns = computeActivityColumns(activities);
             // Ajouter les activités au timeline
-            console.log('Ajout des activités au timeline:', { activitiesCount: activities.length, activities: activities, timelineHeight: timeline.offsetHeight });
-            if (activities.length > 0) {
-                activities.forEach((activity, index) => {
-                    console.log(`Création du bloc d'activité ${index}:`, activity);
-                    const activityBlock = createActivityBlock(activity);
+            console.log('Ajout des activités au timeline:', { activitiesCount: activitiesWithColumns.length, timelineHeight: timeline.offsetHeight });
+            if (activitiesWithColumns.length > 0) {
+                activitiesWithColumns.forEach((activity, index) => {
+                    const activityBlock = createActivityBlock(activity, activity.columnIndex ?? 0, activity.totalColumns ?? 1);
                     if (activityBlock) {
                         timeline.appendChild(activityBlock);
-                        console.log(`Bloc d'activité ${index} ajouté au timeline`);
                     } else {
                         console.warn(`Bloc d'activité ${index} non créé (retourné null)`, activity);
                     }
@@ -1300,6 +1548,62 @@ function showActivityPopup(date) {
         console.log('Widget affiché', { activitiesCount: activities.length, date: formatDateShort(date), isToday });
         });
     });
+}
+
+/**
+ * Parse l'heure d'une activité (format "10h00 - 12h00") en minutes depuis minuit
+ * @returns {{ startMinutes: number, endMinutes: number } | null}
+ */
+function parseActivityTime(activity) {
+    if (!activity?.time) return null;
+    const timeParts = activity.time.split(' - ');
+    if (timeParts.length !== 2) return null;
+    const startMatch = timeParts[0].match(/(\d+)h(\d+)?/);
+    const endMatch = timeParts[1].match(/(\d+)h(\d+)?/);
+    if (!startMatch || !endMatch) return null;
+    const startMinutes = parseInt(startMatch[1]) * 60 + (startMatch[2] ? parseInt(startMatch[2]) : 0);
+    const endMinutes = parseInt(endMatch[1]) * 60 + (endMatch[2] ? parseInt(endMatch[2]) : 0);
+    return { startMinutes, endMinutes };
+}
+
+/**
+ * Calcule les colonnes pour éviter les superpositions (algorithme multi-lanes)
+ * @param {Array} activities - Liste d'activités avec propriété time
+ * @returns {Array} Activités enrichies avec columnIndex et totalColumns
+ */
+function computeActivityColumns(activities) {
+    if (!activities?.length) return [];
+
+    const withTime = activities.map(a => {
+        const parsed = parseActivityTime(a);
+        if (!parsed) return { ...a, columnIndex: 0, totalColumns: 1 };
+        return { ...a, startMinutes: parsed.startMinutes, endMinutes: parsed.endMinutes };
+    });
+
+    const parseable = withTime.filter(a => a.startMinutes != null);
+    if (parseable.length === 0) return withTime;
+
+    parseable.sort((a, b) => a.startMinutes - b.startMinutes);
+
+    const columnEndTimes = [];
+
+    parseable.forEach(activity => {
+        let col = 0;
+        while (col < columnEndTimes.length && columnEndTimes[col] > activity.startMinutes) {
+            col++;
+        }
+        columnEndTimes[col] = activity.endMinutes;
+        activity.columnIndex = col;
+    });
+
+    parseable.forEach(activity => {
+        const overlapping = parseable.filter(a =>
+            a.startMinutes < activity.endMinutes && a.endMinutes > activity.startMinutes
+        );
+        activity.totalColumns = overlapping.length ? Math.max(...overlapping.map(a => a.columnIndex)) + 1 : 1;
+    });
+
+    return withTime;
 }
 
 // Récupérer les réservations de salles pour une date donnée
@@ -1452,10 +1756,11 @@ function showSallesPopup(date) {
         
         // Attendre un frame supplémentaire pour que le timeline ait sa hauteur calculée
         requestAnimationFrame(() => {
-            // Ajouter les réservations de salles au timeline
-            if (sallesReservations.length > 0) {
-                sallesReservations.forEach(salle => {
-                    const salleBlock = createActivityBlock(salle);
+            // Calculer les colonnes et ajouter les réservations de salles au timeline
+            const sallesWithColumns = computeActivityColumns(sallesReservations);
+            if (sallesWithColumns.length > 0) {
+                sallesWithColumns.forEach(salle => {
+                    const salleBlock = createActivityBlock(salle, salle.columnIndex ?? 0, salle.totalColumns ?? 1);
                     if (salleBlock) {
                         timeline.appendChild(salleBlock);
                     }
@@ -1506,17 +1811,24 @@ function showSallesPopup(date) {
     });
 }
 
-// Créer un bloc d'activité pour le timeline
-function createActivityBlock(activity) {
+// Créer un bloc d'activité pour le timeline (multi-lanes pour éviter les superpositions)
+function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
     if (!activity) {
         console.error('createActivityBlock: activity est null ou undefined');
         return null;
     }
-    
+
+    const col = Math.max(0, columnIndex);
+    const total = Math.max(1, totalColumns);
+
     const block = document.createElement('div');
     block.className = 'schedule-activity';
     block.style.cursor = 'pointer';
-    
+    block.setAttribute('data-column', col);
+    block.setAttribute('data-total-columns', total);
+    block.style.setProperty('--activity-col', col);
+    block.style.setProperty('--activity-total', total);
+
     // Stocker les données de l'activité pour le clic
     block.dataset.activityTitle = activity.title || '';
     block.dataset.activityTime = activity.time || '';
@@ -1524,6 +1836,7 @@ function createActivityBlock(activity) {
     block.dataset.activityDescription = activity.description || '';
     block.dataset.activityCategory = activity.categoryName || '';
     block.dataset.activityColor = activity.categoryColor || '#649d50';
+    block.dataset.activityResponsible = activity.responsible || '';
     block.dataset.activityId = activity.id || `${activity.title}-${activity.time}-${activity.dateKey || formatDateKey(selectedDate)}`;
     
     // Vérifier que l'activité a une propriété time
@@ -1587,26 +1900,33 @@ function createActivityBlock(activity) {
                     block.style.opacity = '0.5';
                 }
                 
-                // Créer le contenu du texte avec meilleure structure
+                // Créer le contenu du texte (titre, durée, salle, responsable)
                 const textContainer = document.createElement('div');
                 textContainer.className = 'schedule-activity-text';
-                
+
                 const titleSpan = document.createElement('span');
                 titleSpan.className = 'schedule-activity-title';
                 titleSpan.textContent = activity.title;
                 textContainer.appendChild(titleSpan);
-                
-                // Afficher la durée seulement si le bloc est assez haut
+
                 if (height >= 32) {
                     const durationSpan = document.createElement('span');
                     durationSpan.className = 'schedule-activity-duration';
                     durationSpan.textContent = formatDuration(durationHours);
                     textContainer.appendChild(durationSpan);
                 } else {
-                    // Si le bloc est petit, mettre titre et durée sur la même ligne
                     titleSpan.textContent = `${activity.title} (${formatDuration(durationHours)})`;
                 }
-                
+
+                // Salle et responsable si le bloc est assez haut (≥ 48px)
+                if (height >= 48 && (activity.location || activity.responsible)) {
+                    const metaSpan = document.createElement('span');
+                    metaSpan.className = 'schedule-activity-meta';
+                    const parts = [activity.location, activity.responsible].filter(Boolean);
+                    if (parts.length) metaSpan.textContent = parts.join(' • ');
+                    textContainer.appendChild(metaSpan);
+                }
+
                 block.appendChild(textContainer);
                 
                 // Ajouter l'icône de suppression en haut à droite
@@ -1666,6 +1986,7 @@ function createActivityBlock(activity) {
     
     // Ajouter l'événement de clic
     block.addEventListener('click', function(e) {
+        if (e.target.closest('.activity-delete-btn')) return;
         e.stopPropagation();
         const activityData = {
             title: block.dataset.activityTitle,
@@ -1674,10 +1995,11 @@ function createActivityBlock(activity) {
             description: block.dataset.activityDescription,
             categoryName: block.dataset.activityCategory,
             categoryColor: block.dataset.activityColor,
+            responsible: block.dataset.activityResponsible || '',
             date: selectedDate,
             dateKey: formatDateKey(selectedDate)
         };
-        
+
         const activities = getActivitiesForDate(selectedDate);
         showActivityDetail(activityData, 'schedule', activities);
     });
@@ -1823,28 +2145,32 @@ function generateYearActivities(year) {
             category: 'numerique',
             categoryName: 'Numérique',
             categoryColor: '#1f658e',
-            location: 'Salle Numérique',
+            location: 'Salle du Vent',
+            responsible: 'Marie Dupont',
             description: 'Initiation aux outils numériques et bureautique. Pour débutants et intermédiaires.',
             dates: [
                 { month: 1, day: 5, time: '10h00 - 12h00' },
                 { month: 1, day: 12, time: '14h00 - 16h00' },
                 { month: 1, day: 19, time: '09h00 - 11h00' },
+                { month: 1, day: 25, time: '10h00 - 12h00' },
                 { month: 2, day: 3, time: '10h00 - 12h00' },
                 { month: 2, day: 15, time: '14h00 - 16h00' }
             ]
         },
         {
             title: 'Aide aux Devoirs',
-            category: 'solidaire',
-            categoryName: 'Solidaire',
+            category: 'solidarite',
+            categoryName: 'Solidarité',
             categoryColor: '#649d50',
-            location: 'Salle Solidaire',
+            location: 'Salle du Feu',
+            responsible: 'Jean Martin',
             description: 'Soutien scolaire pour tous les niveaux. Accompagnement personnalisé pour réussir vos études.',
             dates: [
                 { month: 1, day: 3, time: '16h00 - 18h00' },
                 { month: 1, day: 10, time: '16h00 - 18h00' },
                 { month: 1, day: 17, time: '16h00 - 18h00' },
                 { month: 1, day: 24, time: '16h00 - 18h00' },
+                { month: 1, day: 25, time: '10h00 - 12h00' },
                 { month: 2, day: 7, time: '16h00 - 18h00' },
                 { month: 2, day: 14, time: '16h00 - 18h00' },
                 { month: 2, day: 21, time: '16h00 - 18h00' }
@@ -1852,10 +2178,11 @@ function generateYearActivities(year) {
         },
         {
             title: 'Atelier Créatif',
-            category: 'artistique',
-            categoryName: 'Artistique/Culturel',
+            category: 'arts-vivants',
+            categoryName: 'Arts vivants',
             categoryColor: '#f08d35',
-            location: 'Salle Artistique/Culturel',
+            location: 'Salle de l\'Eau',
+            responsible: 'Sophie Bernard',
             description: 'Venez découvrir différentes techniques créatives et artistiques. Matériel fourni.',
             dates: [
                 { month: 1, day: 8, time: '14h00 - 16h00' },
@@ -1867,25 +2194,28 @@ function generateYearActivities(year) {
         },
         {
             title: 'Formation Professionnelle',
-            category: 'formation',
-            categoryName: 'Formation/Atelier',
+            category: 'projet-pro',
+            categoryName: 'Projet pro',
             categoryColor: '#9b59b6',
-            location: 'Salle Emploi/Formation',
+            location: 'Salle de la Terre + patio',
+            responsible: 'Pierre Leroy',
             description: 'Ateliers de formation professionnelle et recherche d\'emploi. CV, entretiens, compétences.',
             dates: [
                 { month: 1, day: 6, time: '10h00 - 12h00' },
                 { month: 1, day: 13, time: '10h00 - 12h00' },
                 { month: 1, day: 20, time: '10h00 - 12h00' },
+                { month: 1, day: 25, time: '10h00 - 12h00' },
                 { month: 2, day: 6, time: '10h00 - 12h00' },
                 { month: 2, day: 13, time: '10h00 - 12h00' }
             ]
         },
         {
             title: 'Visite Culturelle',
-            category: 'artistique',
-            categoryName: 'Artistique/Culturel',
+            category: 'arts-vivants',
+            categoryName: 'Arts vivants',
             categoryColor: '#f08d35',
-            location: 'Musée de la ville',
+            location: 'Accueil',
+            responsible: 'Léa Petit',
             description: 'Découverte du patrimoine culturel local. Visite guidée avec médiateur culturel.',
             dates: [
                 { month: 1, day: 11, time: '14h00 - 17h00' },
@@ -1911,7 +2241,8 @@ function generateYearActivities(year) {
                         description: activity.description,
                         category: activity.category,
                         categoryName: activity.categoryName,
-                        categoryColor: activity.categoryColor
+                        categoryColor: activity.categoryColor,
+                        responsible: activity.responsible
                     });
                 } else {
                     // Convertir l'objet unique en tableau
@@ -1923,7 +2254,8 @@ function generateYearActivities(year) {
                         description: activity.description,
                         category: activity.category,
                         categoryName: activity.categoryName,
-                        categoryColor: activity.categoryColor
+                        categoryColor: activity.categoryColor,
+                        responsible: activity.responsible
                     }];
                 }
             } else {
@@ -1934,7 +2266,8 @@ function generateYearActivities(year) {
                     description: activity.description,
                     category: activity.category,
                     categoryName: activity.categoryName,
-                    categoryColor: activity.categoryColor
+                    categoryColor: activity.categoryColor,
+                    responsible: activity.responsible
                 };
             }
         });
@@ -1947,7 +2280,7 @@ function generateYearActivities(year) {
             {
                 title: 'Atelier Numérique - Journée spéciale',
                 time: '09h00 - 11h00',
-                location: 'Salle Numérique',
+                location: 'Salle du Vent',
                 description: 'Initiation aux outils numériques et bureautique. Pour débutants et intermédiaires.',
                 category: 'numerique',
                 categoryName: 'Numérique',
@@ -1956,28 +2289,28 @@ function generateYearActivities(year) {
             {
                 title: 'Aide aux Devoirs - Journée spéciale',
                 time: '11h00 - 13h00',
-                location: 'Salle Solidaire',
+                location: 'Salle du Feu',
                 description: 'Soutien scolaire pour tous les niveaux. Accompagnement personnalisé pour réussir vos études.',
-                category: 'solidaire',
-                categoryName: 'Solidaire',
+                category: 'solidarite',
+                categoryName: 'Solidarité',
                 categoryColor: '#649d50'
             },
             {
                 title: 'Atelier Créatif - Journée spéciale',
                 time: '14h00 - 16h00',
-                location: 'Salle Artistique/Culturel',
+                location: 'Salle de l\'Eau',
                 description: 'Venez découvrir différentes techniques créatives et artistiques. Matériel fourni.',
-                category: 'artistique',
-                categoryName: 'Artistique/Culturel',
+                category: 'arts-vivants',
+                categoryName: 'Arts vivants',
                 categoryColor: '#f08d35'
             },
             {
                 title: 'Formation Professionnelle - Journée spéciale',
                 time: '16h00 - 18h00',
-                location: 'Salle Emploi/Formation',
+                location: 'Salle de formation',
                 description: 'Ateliers de formation professionnelle et recherche d\'emploi. CV, entretiens, compétences.',
-                category: 'formation',
-                categoryName: 'Formation/Atelier',
+                category: 'projet-pro',
+                categoryName: 'Projet pro',
                 categoryColor: '#9b59b6'
             }
         ];
@@ -2031,10 +2364,10 @@ function generateYearActivities(year) {
         'Formation Professionnelle - Journée spéciale'
     ];
     
-    const day15Categories = ['numerique', 'solidaire', 'artistique', 'formation'];
-    const day15CategoryNames = ['Numérique', 'Solidaire', 'Artistique/Culturel', 'Formation/Atelier'];
+    const day15Categories = ['numerique', 'solidarite', 'arts-vivants', 'projet-pro'];
+    const day15CategoryNames = ['Numérique', 'Solidarité', 'Arts vivants', 'Projet pro'];
     const day15CategoryColors = ['#1f658e', '#649d50', '#f08d35', '#9b59b6'];
-    const day15Locations = ['Salle Numérique', 'Salle Solidaire', 'Salle Artistique/Culturel', 'Salle Emploi/Formation'];
+    const day15Locations = ['Salle du Vent', 'Salle du Feu', 'Salle de l\'Eau', 'Salle de formation'];
     const day15Times = ['09h00 - 11h00', '11h00 - 13h00', '14h00 - 16h00', '16h00 - 18h00'];
     const day15Descriptions = [
         'Initiation aux outils numériques et bureautique. Pour débutants et intermédiaires.',

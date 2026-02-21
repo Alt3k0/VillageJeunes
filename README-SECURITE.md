@@ -150,7 +150,7 @@ Toute la lecture et la validation sont dans un `try/catch` avant construction de
 - **2217-2222** – Nom : `validateString(getFormValue('#activityName'), 'Nom de l\'activité', VALIDATION.MAX_LENGTH_SHORT, true)`.
 - **2223-2228** – Date : `validateDateString(getFormValue('#activityDate'), 'Date', true)`.
 - **2229-2236** – Heures début/fin : format `HH:MM` (regex) et vérification début &lt; fin.
-- **2238-2241** – Catégorie : présence dans `activityCategories` (numerique, solidaire, artistique, formation).
+- **2238-2241** – Catégorie : présence dans `activityCategories` (numerique, arts-vivants, projet-pro, solidarite).
 - **2240-2244** – Salle : `validateString(..., 'Salle', VALIDATION.MAX_LENGTH_SHORT, true)`.
 - **2246-2250** – Responsable : `validateString(..., 'Responsable', VALIDATION.MAX_LENGTH_SHORT, true)`.
 - **2252-2255** – Description : `validateOptionalString(..., VALIDATION.MAX_LENGTH_TEXT)`.

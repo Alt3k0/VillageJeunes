@@ -6,19 +6,23 @@ const monthsFull = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil
 let currentDate = new Date(2026, 1, 1); // Février 2026 par défaut
 let selectedDate = new Date(2026, 1, 25); // Date sélectionnée par défaut (25 février)
 
-// Catégories d'activités avec leurs couleurs
+// Catégories d'activités avec leurs couleurs (alignées avec accueil-staff)
 const activityCategories = {
-    'sortie': {
-        name: 'Sortie',
-        color: '#649d50' // Vert
-    },
-    'aide': {
-        name: 'Aide/Assistance',
+    'numerique': {
+        name: 'Numérique',
         color: '#1f658e' // Bleu
     },
-    'formation': {
-        name: 'Formation/Atelier',
+    'arts-vivants': {
+        name: 'Arts vivants',
         color: '#f08d35' // Orange
+    },
+    'projet-pro': {
+        name: 'Projet pro',
+        color: '#9b59b6' // Violet
+    },
+    'solidarite': {
+        name: 'Solidarité',
+        color: '#649d50' // Vert
     }
 };
 
@@ -30,10 +34,10 @@ function generateYearActivities(year) {
     const predefinedActivities = [
         {
             title: 'Sortie Nature',
-            category: 'sortie',
-            categoryName: 'Sortie',
+            category: 'solidarite',
+            categoryName: 'Solidarité',
             categoryColor: '#649d50',
-            location: 'Parc municipal',
+            location: 'Salle de la Terre + patio',
             description: 'Balade découverte de la faune et de la flore locale. Activité en plein air pour toute la famille.',
             dates: [
                 { month: 1, day: 5, time: '10h00 - 12h00' },
@@ -45,10 +49,10 @@ function generateYearActivities(year) {
         },
         {
             title: 'Aide aux Devoirs',
-            category: 'aide',
-            categoryName: 'Aide/Assistance',
-            categoryColor: '#1f658e',
-            location: 'Salle d\'étude',
+            category: 'solidarite',
+            categoryName: 'Solidarité',
+            categoryColor: '#649d50',
+            location: 'Salle du Feu',
             description: 'Soutien scolaire pour tous les niveaux. Accompagnement personnalisé pour réussir vos études.',
             dates: [
                 { month: 1, day: 3, time: '16h00 - 18h00' },
@@ -62,10 +66,10 @@ function generateYearActivities(year) {
         },
         {
             title: 'Atelier Créatif',
-            category: 'formation',
-            categoryName: 'Formation/Atelier',
+            category: 'arts-vivants',
+            categoryName: 'Arts vivants',
             categoryColor: '#f08d35',
-            location: 'Salle principale',
+            location: 'Salle de l\'Eau',
             description: 'Venez découvrir différentes techniques créatives et artistiques. Matériel fourni.',
             dates: [
                 { month: 1, day: 8, time: '14h00 - 16h00' },
@@ -77,10 +81,10 @@ function generateYearActivities(year) {
         },
         {
             title: 'Formation Numérique',
-            category: 'formation',
-            categoryName: 'Formation/Atelier',
-            categoryColor: '#f08d35',
-            location: 'Salle informatique',
+            category: 'numerique',
+            categoryName: 'Numérique',
+            categoryColor: '#1f658e',
+            location: 'Salle du Vent',
             description: 'Initiation aux outils numériques et bureautique. Pour débutants et intermédiaires.',
             dates: [
                 { month: 1, day: 6, time: '10h00 - 12h00' },
@@ -92,10 +96,10 @@ function generateYearActivities(year) {
         },
         {
             title: 'Visite Culturelle',
-            category: 'sortie',
-            categoryName: 'Sortie',
-            categoryColor: '#649d50',
-            location: 'Musée de la ville',
+            category: 'arts-vivants',
+            categoryName: 'Arts vivants',
+            categoryColor: '#f08d35',
+            location: 'Accueil',
             description: 'Découverte du patrimoine culturel local. Visite guidée avec médiateur culturel.',
             dates: [
                 { month: 1, day: 11, time: '14h00 - 17h00' },

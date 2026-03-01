@@ -1,10 +1,23 @@
-// Gestion du calendrier et des interactions
+// Gestion du calendrier et des interactions - Partie Adhérent (lecture seule, Je suis intéressé)
 
+const weekdays = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
 const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 const monthsFull = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-let currentDate = new Date(2026, 1, 1); // Février 2026 par défaut
-let selectedDate = new Date(2026, 1, 25); // Date sélectionnée par défaut (25 février)
+let currentView = 'activites';
+let currentDate = new Date(2026, 1, 25);
+let currentDateSalles = new Date(2026, 1, 25);
+let selectedDate = new Date(2026, 1, 25);
+
+const salles = ['Salle du Vent', 'Salle du Feu', "Salle de l'Eau", 'Salle de la Terre + patio', 'Salle de formation', 'Accueil'];
+const salleToColor = {
+    "Salle de l'Eau": '#1f658e',
+    'Salle de la Terre + patio': '#649d50',
+    'Salle du Feu': '#f08d35',
+    'Salle du Vent': '#9b59b6',
+    'Salle de formation': '#6e6f75',
+    'Accueil': '#e6b800'
+};
 
 // Catégories d'activités avec leurs couleurs (alignées avec accueil-staff)
 const activityCategories = {
@@ -26,11 +39,10 @@ const activityCategories = {
     }
 };
 
-// Génération de 4-5 activités avec plusieurs dates et horaires
+// Génération de 4-5 activités avec plusieurs dates et horaires (format compatible staff)
 function generateYearActivities(year) {
     const activities = {};
     
-    // Définir 5 activités avec leurs dates et horaires multiples
     const predefinedActivities = [
         {
             title: 'Sortie Nature',
@@ -38,6 +50,7 @@ function generateYearActivities(year) {
             categoryName: 'Solidarité',
             categoryColor: '#649d50',
             location: 'Salle de la Terre + patio',
+            responsible: 'Marie Dupont',
             description: 'Balade découverte de la faune et de la flore locale. Activité en plein air pour toute la famille.',
             dates: [
                 { month: 1, day: 5, time: '10h00 - 12h00' },
@@ -53,6 +66,7 @@ function generateYearActivities(year) {
             categoryName: 'Solidarité',
             categoryColor: '#649d50',
             location: 'Salle du Feu',
+            responsible: 'Jean Martin',
             description: 'Soutien scolaire pour tous les niveaux. Accompagnement personnalisé pour réussir vos études.',
             dates: [
                 { month: 1, day: 3, time: '16h00 - 18h00' },
@@ -69,7 +83,8 @@ function generateYearActivities(year) {
             category: 'arts-vivants',
             categoryName: 'Arts vivants',
             categoryColor: '#f08d35',
-            location: 'Salle de l\'Eau',
+            location: "Salle de l'Eau",
+            responsible: 'Sophie Bernard',
             description: 'Venez découvrir différentes techniques créatives et artistiques. Matériel fourni.',
             dates: [
                 { month: 1, day: 8, time: '14h00 - 16h00' },
@@ -85,6 +100,7 @@ function generateYearActivities(year) {
             categoryName: 'Numérique',
             categoryColor: '#1f658e',
             location: 'Salle du Vent',
+            responsible: 'Pierre Leroy',
             description: 'Initiation aux outils numériques et bureautique. Pour débutants et intermédiaires.',
             dates: [
                 { month: 1, day: 6, time: '10h00 - 12h00' },
@@ -100,6 +116,7 @@ function generateYearActivities(year) {
             categoryName: 'Arts vivants',
             categoryColor: '#f08d35',
             location: 'Accueil',
+            responsible: 'Léa Petit',
             description: 'Découverte du patrimoine culturel local. Visite guidée avec médiateur culturel.',
             dates: [
                 { month: 1, day: 11, time: '14h00 - 17h00' },
@@ -110,19 +127,27 @@ function generateYearActivities(year) {
         }
     ];
     
-    // Créer les activités pour chaque date
+    // Créer les activités pour chaque date (format tableau si plusieurs par jour)
     predefinedActivities.forEach(activity => {
         activity.dates.forEach(dateInfo => {
             const dateKey = `${year}-${String(dateInfo.month + 1).padStart(2, '0')}-${String(dateInfo.day).padStart(2, '0')}`;
-            activities[dateKey] = {
+            const act = {
                 title: activity.title,
                 time: dateInfo.time,
                 location: activity.location,
                 description: activity.description,
                 category: activity.category,
                 categoryName: activity.categoryName,
-                categoryColor: activity.categoryColor
+                categoryColor: activity.categoryColor,
+                responsible: activity.responsible
             };
+            if (activities[dateKey]) {
+                activities[dateKey] = Array.isArray(activities[dateKey])
+                    ? [...activities[dateKey], act]
+                    : [activities[dateKey], act];
+            } else {
+                activities[dateKey] = act;
+            }
         });
     });
     
@@ -167,172 +192,194 @@ let allActivitiesList = []; // Liste de toutes les activités uniques avec leurs
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
-    // Générer les activités pour toute l'année
     const year = currentDate.getFullYear();
     activitiesData = generateYearActivities(year);
     
-    renderCalendar();
+    initializeCalendar();
     setupEventListeners();
+    setupActivityWidgets();
+    setupInteretWidget();
+    
+    // Afficher le widget emploi du temps pour la date sélectionnée par défaut
+    setTimeout(() => showActivityPopup(selectedDate), 100);
 });
 
-// Rendu du calendrier
-function renderCalendar() {
+// Initialiser le calendrier
+function initializeCalendar() {
+    updateCalendar();
+    updateViewTitle();
+    toggleCalendars();
+}
+
+// Mettre à jour le calendrier
+function updateCalendar() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    if (!calendarGrid) return;
+    
+    calendarGrid.innerHTML = '';
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
-    // Mise à jour des textes mois/année
-    document.getElementById('monthText').textContent = months[month];
-    document.getElementById('yearText').textContent = year;
-    
-    // Calcul du premier jour du mois et nombre de jours
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay(); // 0 = Dimanche
+    const startingDayOfWeek = (firstDay.getDay() + 6) % 7; // 0 = Lundi
     
-    const calendarDates = document.getElementById('calendarDates');
-    calendarDates.innerHTML = '';
-    
-    // Créer les semaines
-    let currentDay = 1;
-    let currentWeek = 0;
-    
-    // Première semaine
-    const firstWeek = document.createElement('div');
-    firstWeek.className = 'calendar-week';
-    
-    // Jours du mois précédent
-    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    const prevMonth = new Date(year, month, 0);
+    const daysInPrevMonth = prevMonth.getDate();
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-        const dateCell = createDateCell(prevMonthLastDay - i, true, year, month - 1);
-        firstWeek.appendChild(dateCell);
+        const prevDay = daysInPrevMonth - i;
+        const prevDayDate = new Date(year, month - 1, prevDay);
+        const isSelected = prevDayDate.toDateString() === selectedDate.toDateString();
+        const day = createDayElement(prevDay, true, isSelected, prevDayDate, year, month - 1);
+        calendarGrid.appendChild(day);
     }
     
-    // Jours du mois actuel
-    const remainingDaysFirstWeek = 7 - startingDayOfWeek;
-    for (let i = 0; i < remainingDaysFirstWeek && currentDay <= daysInMonth; i++) {
-        const dateCell = createDateCell(currentDay, false, year, month);
-        firstWeek.appendChild(dateCell);
-        currentDay++;
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayDate = new Date(year, month, day);
+        const isSelected = dayDate.toDateString() === selectedDate.toDateString();
+        const dayEl = createDayElement(day, false, isSelected, dayDate, year, month);
+        calendarGrid.appendChild(dayEl);
     }
     
-    calendarDates.appendChild(firstWeek);
-    
-    // Semaines suivantes
-    while (currentDay <= daysInMonth) {
-        const week = document.createElement('div');
-        week.className = 'calendar-week';
-        
-        for (let i = 0; i < 7 && currentDay <= daysInMonth; i++) {
-            const dateCell = createDateCell(currentDay, false, year, month);
-            week.appendChild(dateCell);
-            currentDay++;
-        }
-        
-        // Jours du mois suivant pour compléter la semaine
-        if (currentDay > daysInMonth) {
-            let nextMonthDay = 1;
-            while (week.children.length < 7) {
-                const dateCell = createDateCell(nextMonthDay, true, year, month + 1);
-                week.appendChild(dateCell);
-                nextMonthDay++;
-            }
-        }
-        
-        calendarDates.appendChild(week);
+    const totalCells = calendarGrid.children.length;
+    const remainingCells = 42 - totalCells;
+    for (let day = 1; day <= remainingCells; day++) {
+        const nextDayDate = new Date(year, month + 1, day);
+        const isSelected = nextDayDate.toDateString() === selectedDate.toDateString();
+        const dayEl = createDayElement(day, true, isSelected, nextDayDate, year, month + 1);
+        calendarGrid.appendChild(dayEl);
     }
 }
 
-// Créer une cellule de date
-function createDateCell(day, isOtherMonth, year, month) {
-    const dateCell = document.createElement('button');
-    dateCell.className = 'calendar-date';
+// Créer un élément de jour
+function createDayElement(day, isOtherMonth, isSelected, date, year, month) {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'calendar-day';
+    dayElement.textContent = day;
+    dayElement.style.cursor = 'pointer';
     
-    // Créer le contenu avec le numéro et potentiellement un indicateur d'activité
-    const dateContent = document.createElement('div');
-    dateContent.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;';
+    const dateKey = formatDateKey(date);
+    const activity = activitiesData[dateKey];
     
-    const dateNumber = document.createElement('span');
-    dateNumber.className = 'calendar-date-text';
-    dateNumber.textContent = day;
-    dateContent.appendChild(dateNumber);
+    if (isOtherMonth) dayElement.classList.add('other-month');
+    if (isSelected) dayElement.classList.add('selected');
     
-    // Vérifier s'il y a une activité pour cette date
-    if (!isOtherMonth) {
-        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const activity = activitiesData[dateKey];
-        
-        if (activity) {
-            const activityDot = document.createElement('div');
-            activityDot.className = 'activity-dot';
-            activityDot.style.cssText = `width: 6px; height: 6px; border-radius: 50%; background-color: ${activity.categoryColor}; flex-shrink: 0;`;
-            dateContent.appendChild(activityDot);
+    if (activity) {
+        const acts = Array.isArray(activity) ? activity : [activity];
+        const cats = [...new Set(acts.map(a => a.category))];
+        if (cats.length >= 2) dayElement.classList.add('multiple-activities');
+        else if (cats.length === 1) dayElement.classList.add('activity-' + cats[0]);
+    }
+    
+    dayElement.addEventListener('click', function() {
+        const clickedDate = new Date(year, month, day);
+        if (isOtherMonth) {
+            currentDate.setFullYear(year);
+            currentDate.setMonth(month);
+            const ms = document.getElementById('monthSelect');
+            const ys = document.getElementById('yearSelect');
+            if (ms) ms.value = month;
+            if (ys) ys.value = year;
         }
-    }
-    
-    dateCell.appendChild(dateContent);
-    
-    if (isOtherMonth) {
-        dateCell.classList.add('other-month');
-    }
-    
-    // Vérifier si c'est la date sélectionnée
-    const cellDate = new Date(year, month, day);
-    if (!isOtherMonth && 
-        cellDate.getDate() === selectedDate.getDate() &&
-        cellDate.getMonth() === selectedDate.getMonth() &&
-        cellDate.getFullYear() === selectedDate.getFullYear()) {
-        dateCell.classList.add('selected');
-    }
-    
-    // Ajouter l'événement de clic
-    dateCell.addEventListener('click', function() {
-        selectDate(cellDate);
+        selectDate(clickedDate);
     });
     
-    return dateCell;
+    return dayElement;
+}
+
+function updateViewTitle() {
+    const title = document.getElementById('viewTitle');
+    if (title) title.textContent = currentView === 'activites' ? 'ACTIVITÉS' : 'SALLES OCCUPÉES';
+}
+
+function toggleCalendars() {
+    const calActivites = document.getElementById('calendarActivites');
+    const calSalles = document.getElementById('calendarSalles');
+    const sallesLegend = document.getElementById('sallesLegend');
+    const searchContainer = document.getElementById('searchContainer');
+    if (currentView === 'activites') {
+        if (calActivites) calActivites.style.display = 'block';
+        if (calSalles) calSalles.style.display = 'none';
+        if (sallesLegend) sallesLegend.style.display = 'none';
+        if (searchContainer) searchContainer.style.display = 'block';
+    } else {
+        if (calActivites) calActivites.style.display = 'none';
+        if (calSalles) calSalles.style.display = 'block';
+        if (sallesLegend) sallesLegend.style.display = 'block';
+        if (searchContainer) searchContainer.style.display = 'none';
+    }
+}
+
+function updateSelectors() {
+    const ms = document.getElementById('monthSelect');
+    const ys = document.getElementById('yearSelect');
+    if (ms) ms.value = currentDate.getMonth();
+    if (ys) ys.value = currentDate.getFullYear();
+}
+
+function updateCalendarSalles() {
+    const grid = document.getElementById('calendarGridSalles');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const year = currentDateSalles.getFullYear();
+    const month = currentDateSalles.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = (firstDay.getDay() + 6) % 7;
+    const prevMonth = new Date(year, month, 0);
+    const daysInPrevMonth = prevMonth.getDate();
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+        const prevDay = daysInPrevMonth - i;
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day other-month';
+        dayEl.textContent = prevDay;
+        dayEl.style.cursor = 'pointer';
+        grid.appendChild(dayEl);
+    }
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day';
+        dayEl.textContent = day;
+        dayEl.style.cursor = 'pointer';
+        if (selectedDate.getDate() === day && selectedDate.getMonth() === month && selectedDate.getFullYear() === year) {
+            dayEl.classList.add('selected');
+        }
+        grid.appendChild(dayEl);
+    }
+    const total = grid.children.length;
+    for (let day = 1; day <= 42 - total; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day other-month';
+        dayEl.textContent = day;
+        dayEl.style.cursor = 'pointer';
+        grid.appendChild(dayEl);
+    }
 }
 
 // Sélectionner une date
 function selectDate(date) {
+    if (!date || isNaN(date.getTime())) return;
     selectedDate = new Date(date);
     
-    // Si la date sélectionnée est dans un autre mois, changer de mois
-    if (date.getMonth() !== currentDate.getMonth() || date.getFullYear() !== currentDate.getFullYear()) {
-        currentDate = new Date(date);
-        renderCalendar();
+    if (currentView === 'activites') {
+        const clickedMonth = date.getMonth();
+        const clickedYear = date.getFullYear();
+        if (clickedMonth !== currentDate.getMonth() || clickedYear !== currentDate.getFullYear()) {
+            currentDate.setFullYear(clickedYear);
+            currentDate.setMonth(clickedMonth);
+            updateCalendar();
+        } else {
+            updateCalendar();
+        }
+        setTimeout(() => showActivityPopup(date), 0);
     } else {
-        // Mettre à jour visuellement la sélection
-        document.querySelectorAll('.calendar-date').forEach(cell => {
-            cell.classList.remove('selected');
-        });
-        
-        // Trouver et sélectionner la bonne cellule
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-        
-        document.querySelectorAll('.calendar-date').forEach(cell => {
-            if (!cell.classList.contains('other-month')) {
-                const dateText = cell.querySelector('.calendar-date-text');
-                if (dateText && parseInt(dateText.textContent) === day) {
-                    // Vérifier que c'est le bon mois en vérifiant la position dans la grille
-                    const cellIndex = Array.from(cell.parentElement.children).indexOf(cell);
-                    const firstDay = new Date(year, month, 1).getDay();
-                    const weekIndex = Array.from(cell.parentElement.parentElement.children).indexOf(cell.parentElement);
-                    
-                    if (weekIndex === 0 && cellIndex >= firstDay) {
-                        cell.classList.add('selected');
-                    } else if (weekIndex > 0) {
-                        cell.classList.add('selected');
-                    }
-                }
-            }
-        });
+        if (date.getMonth() !== currentDateSalles.getMonth() || date.getFullYear() !== currentDateSalles.getFullYear()) {
+            currentDateSalles.setFullYear(date.getFullYear());
+            currentDateSalles.setMonth(date.getMonth());
+        }
+        setTimeout(() => showSallesPopup(date), 0);
     }
-    
-    // Afficher la pop-up d'activité si disponible
-    showActivityPopup(date);
 }
 
 // Afficher le widget d'emploi du temps
@@ -344,25 +391,43 @@ function showActivityPopup(date) {
     const dateText = document.getElementById('scheduleDateText');
     const timeline = document.getElementById('scheduleTimeline');
     
-    // Mettre à jour la date affichée
+    if (!widget || !dateText || !timeline) return;
+    
     dateText.textContent = formatDateShort(date);
     
-    // Nettoyer les activités existantes (sauf les marqueurs d'heure et l'indicateur de temps)
     const existingActivities = timeline.querySelectorAll('.schedule-activity');
-    existingActivities.forEach(activity => activity.remove());
+    existingActivities.forEach(a => a.remove());
+    const noMsgs = timeline.querySelectorAll('.no-activity-message');
+    noMsgs.forEach(m => m.remove());
     
-    // Ajouter les activités au timeline
-    activities.forEach(activity => {
-        const activityBlock = createActivityBlock(activity);
-        if (activityBlock) { // Vérifier que le bloc a été créé (pas null)
-            timeline.appendChild(activityBlock);
-        }
-    });
+    if (activities.length > 0) {
+        activities.forEach((act) => {
+            const block = createActivityBlock(act, 0, 1);
+            if (block) timeline.appendChild(block);
+        });
+    } else {
+        const noMsg = document.createElement('div');
+        noMsg.className = 'schedule-activity no-activity-message';
+        noMsg.style.cssText = 'position:relative;top:50%;left:50%;transform:translate(-50%,-50%);color:#6e6f75;';
+        noMsg.textContent = 'Aucune activité prévue pour cette date';
+        timeline.appendChild(noMsg);
+    }
     
-    // Mettre à jour l'heure actuelle
-    updateCurrentTimeIndicator();
+    const today = new Date();
+    const isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+    if (isToday) updateCurrentTimeIndicator(date);
+    else {
+        const ind = document.getElementById('currentTimeIndicator');
+        if (ind) ind.style.display = 'none';
+    }
     
     widget.classList.add('active');
+}
+
+function showSallesPopup(date) {
+    // Vue salles : afficher le calendrier salles (lecture seule)
+    const calSalles = document.getElementById('calendarSalles');
+    if (calSalles) calSalles.style.display = 'block';
 }
 
 // Obtenir toutes les activités pour une date donnée
@@ -370,35 +435,39 @@ function getActivitiesForDate(date) {
     const dateKey = formatDateKey(date);
     const activity = activitiesData[dateKey];
     
-    if (!activity) {
-        return [];
-    }
+    if (!activity) return [];
     
-    // Retourner l'activité avec toutes les propriétés nécessaires
-    return [{
-        ...activity,
+    const list = Array.isArray(activity) ? activity : [activity];
+    return list.map(act => ({
+        ...act,
         date: date,
         dateKey: dateKey,
-        categoryName: activity.categoryName || activityCategories[activity.category]?.name || 'Activité',
-        categoryColor: activity.categoryColor || activityCategories[activity.category]?.color || '#649d50',
-        location: activity.location || '',
-        description: activity.description || ''
-    }];
+        categoryName: act.categoryName || activityCategories[act.category]?.name || 'Activité',
+        categoryColor: act.categoryColor || activityCategories[act.category]?.color || '#649d50',
+        location: act.location || '',
+        description: act.description || '',
+        responsible: act.responsible || ''
+    }));
 }
 
-// Créer un bloc d'activité pour le timeline
-function createActivityBlock(activity) {
+// Créer un bloc d'activité pour le timeline (sans bouton supprimer - adhérent)
+function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
     const block = document.createElement('div');
     block.className = 'schedule-activity';
     block.style.cursor = 'pointer';
+    block.setAttribute('data-column', columnIndex);
+    block.setAttribute('data-total-columns', totalColumns);
+    block.style.setProperty('--activity-col', columnIndex);
+    block.style.setProperty('--activity-total', totalColumns);
     
-    // Stocker les données de l'activité pour le clic
     block.dataset.activityTitle = activity.title || '';
     block.dataset.activityTime = activity.time || '';
     block.dataset.activityLocation = activity.location || '';
     block.dataset.activityDescription = activity.description || '';
     block.dataset.activityCategory = activity.categoryName || '';
     block.dataset.activityColor = activity.categoryColor || '#649d50';
+    block.dataset.activityResponsible = activity.responsible || '';
+    block.dataset.activityDateKey = activity.dateKey || formatDateKey(selectedDate);
     
     // Parser l'heure pour positionner le bloc
     // Format attendu: "14h00 - 15h30" ou "14h - 15h30"
@@ -498,21 +567,21 @@ function createActivityBlock(activity) {
         return null;
     }
     
-    // Ajouter l'événement de clic pour afficher le widget de détail d'activité
     block.addEventListener('click', function(e) {
         e.stopPropagation();
-        const activity = {
+        const activityData = {
             title: block.dataset.activityTitle,
             time: block.dataset.activityTime,
             location: block.dataset.activityLocation,
             description: block.dataset.activityDescription,
-            category: block.dataset.activityCategory,
-            color: block.dataset.activityColor
+            categoryName: block.dataset.activityCategory,
+            categoryColor: block.dataset.activityColor,
+            responsible: block.dataset.activityResponsible || '',
+            date: selectedDate,
+            dateKey: block.dataset.activityDateKey || formatDateKey(selectedDate)
         };
-        
-        // Obtenir toutes les activités de la date pour la navigation
         const activities = getActivitiesForDate(selectedDate);
-        showActivityDetail(activity, 'schedule', activities);
+        showActivityDetail(activityData, 'schedule', activities);
     });
     
     return block;
@@ -542,29 +611,35 @@ function formatDuration(hours) {
     }
 }
 
-// Formater la date courte
+// Formater la date courte (ex: 10 Février 2026)
 function formatDateShort(date) {
     const day = date.getDate();
-    const month = months[date.getMonth()];
+    const month = monthsFull[date.getMonth()];
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
 }
 
 // Mettre à jour l'indicateur de l'heure actuelle
-function updateCurrentTimeIndicator() {
+function updateCurrentTimeIndicator(date) {
+    const targetDate = date || new Date();
     const now = new Date();
+    const isToday = targetDate.getDate() === now.getDate() && targetDate.getMonth() === now.getMonth() && targetDate.getFullYear() === now.getFullYear();
+    if (!isToday) {
+        const ind = document.getElementById('currentTimeIndicator');
+        if (ind) ind.style.display = 'none';
+        return;
+    }
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
-    
-    // Positionner l'indicateur (chaque heure = 20px avec padding de 10px)
     const paddingTop = 10;
     const pixelsPerHour = 20;
     const topPosition = paddingTop + (currentHour - 6) * pixelsPerHour + (currentMinute / 60) * pixelsPerHour;
-    
     const indicator = document.getElementById('currentTimeIndicator');
     const timeText = document.getElementById('currentTimeText');
-    
-    if (currentHour >= 6 && currentHour <= 20) {
+    const timeline = document.getElementById('scheduleTimeline');
+    if (!indicator || !timeText) return;
+    const timelineHeight = timeline?.offsetHeight || 300;
+    if (currentHour >= 6 && currentHour <= 20 && topPosition >= 0 && topPosition <= timelineHeight) {
         indicator.style.top = `${topPosition}px`;
         timeText.textContent = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
         indicator.style.display = 'flex';
@@ -594,225 +669,186 @@ function formatDateFull(date) {
     return `${day} ${month} ${year}`;
 }
 
-// Configuration des événements
-function setupEventListeners() {
-    // Navigation mois précédent/suivant
-    document.getElementById('prevMonth').addEventListener('click', function() {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-    });
+// Configuration du menu déroulant recherche et widgets (sans appel, sans ajout activité)
+function setupActivityWidgets() {
+    const customSelect = document.getElementById('customSelect');
+    const customDropdown = document.getElementById('customDropdown');
+    const selectText = document.getElementById('selectText');
+    const searchBar = document.getElementById('searchBar');
+    const activitySelect = document.getElementById('activitySelect');
+    const activitiesGroup = document.getElementById('activitiesGroup');
     
-    document.getElementById('nextMonth').addEventListener('click', function() {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    });
+    function populateCustomDropdown() {
+        if (!activitiesGroup || !allActivitiesList) return;
+        const existing = activitiesGroup.querySelectorAll('.dropdown-item:not(.dropdown-group-label)');
+        existing.forEach(i => i.remove());
+        allActivitiesList.forEach(act => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.setAttribute('data-value', `activity:${act.title}`);
+            item.innerHTML = `<span>${act.title}</span>`;
+            activitiesGroup.appendChild(item);
+        });
+        attachDropdownListeners();
+    }
     
-    // Dropdown mois
-    document.getElementById('monthDropdown').addEventListener('click', function() {
-        // Pour l'instant, on peut juste changer le mois avec les flèches
-        // Plus tard, on pourra ajouter un vrai dropdown
-    });
+    function attachDropdownListeners() {
+        if (!customDropdown) return;
+        customDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.onclick = function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const text = this.querySelector('span')?.textContent || '';
+                selectText.textContent = text;
+                selectText.classList.remove('placeholder');
+                if (activitySelect) { activitySelect.value = value; activitySelect.dispatchEvent(new Event('change', { bubbles: true })); }
+                customDropdown.classList.remove('active');
+                if (searchBar) searchBar.classList.remove('active');
+            };
+        });
+    }
     
-    // Dropdown année
-    document.getElementById('yearDropdown').addEventListener('click', function() {
-        // Pour l'instant, on peut juste changer l'année avec les flèches
-        // Plus tard, on pourra ajouter un vrai dropdown
-    });
+    populateCustomDropdown();
     
-    // Fermer le widget
-    document.getElementById('closeScheduleWidget').addEventListener('click', closeActivityPopup);
-    document.getElementById('scheduleWidget').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeActivityPopup();
+    if (customSelect && customDropdown) {
+        customSelect.addEventListener('click', function(e) {
+            e.stopPropagation();
+            customDropdown.classList.toggle('active');
+            if (searchBar) searchBar.classList.toggle('active', customDropdown.classList.contains('active'));
+        });
+    }
+    
+    document.addEventListener('click', function(e) {
+        if (customDropdown?.classList.contains('active') && !customSelect?.contains(e.target) && !customDropdown.contains(e.target)) {
+            setTimeout(() => { if (customDropdown.classList.contains('active')) customDropdown.classList.remove('active'); if (searchBar) searchBar.classList.remove('active'); }, 100);
         }
     });
     
-    // Navigation jour précédent/suivant
-    document.getElementById('prevDay').addEventListener('click', function() {
-        const newDate = new Date(selectedDate);
-        newDate.setDate(newDate.getDate() - 1);
-        selectDate(newDate);
-    });
+    const closeScheduleWidget = document.getElementById('closeScheduleWidget');
+    const scheduleWidget = document.getElementById('scheduleWidget');
+    const prevDay = document.getElementById('prevDay');
+    const nextDay = document.getElementById('nextDay');
     
-    document.getElementById('nextDay').addEventListener('click', function() {
-        const newDate = new Date(selectedDate);
-        newDate.setDate(newDate.getDate() + 1);
-        selectDate(newDate);
-    });
+    if (closeScheduleWidget) closeScheduleWidget.addEventListener('click', closeActivityPopup);
+    if (scheduleWidget) scheduleWidget.addEventListener('click', function(e) { if (e.target === this) closeActivityPopup(); });
+    if (prevDay) prevDay.addEventListener('click', () => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); selectDate(d); });
+    if (nextDay) nextDay.addEventListener('click', () => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); selectDate(d); });
     
-    // Menu déroulant de recherche
-    const activitySelect = document.getElementById('activitySelect');
-    const activitiesListGroup = document.getElementById('activitiesList');
-    
-    // Remplir la liste des activités dans le menu déroulant
-    function populateActivitySelect() {
-        if (!activitiesListGroup || !allActivitiesList) return;
-        
-        // Vider la liste existante (sauf les catégories)
-        activitiesListGroup.innerHTML = '';
-        
-        // Ajouter toutes les activités disponibles
-        allActivitiesList.forEach(activity => {
-            const option = document.createElement('option');
-            option.value = `activity:${activity.title}`;
-            option.textContent = activity.title;
-            activitiesListGroup.appendChild(option);
-        });
-    }
-    
-    // Remplir la liste au chargement
-    populateActivitySelect();
-    
-    // Obtenir toutes les activités d'une catégorie
-    function getAllActivitiesByCategory(category) {
-        if (!allActivitiesList) return [];
-        
-        const categoryActivities = [];
-        allActivitiesList.forEach(activity => {
-            if (activity.category === category) {
-                // Ajouter toutes les dates de cette activité
-                activity.dates.forEach(dateInfo => {
-                    categoryActivities.push({
-                        title: activity.title,
-                        time: dateInfo.time,
-                        location: dateInfo.location,
-                        description: dateInfo.description,
-                        category: activity.category,
-                        categoryName: activity.categoryName,
-                        categoryColor: activity.categoryColor,
-                        date: dateInfo.date,
-                        dateKey: dateInfo.dateKey
-                    });
-                });
-            }
-        });
-        
-        return categoryActivities;
-    }
-    
-    // Gérer la sélection dans le menu déroulant
     if (activitySelect) {
-        activitySelect.addEventListener('change', function(e) {
-            const value = e.target.value;
+        activitySelect.addEventListener('change', function() {
+            const value = this.value;
             const cardsContainer = document.getElementById('activityCardsContainer');
-            
-            // Cacher les cards si aucune sélection
             if (!value) {
-                if (cardsContainer) {
-                    cardsContainer.classList.remove('active');
-                    cardsContainer.innerHTML = '';
-                }
+                if (selectText) { selectText.textContent = 'Rechercher une activité'; selectText.classList.add('placeholder'); }
+                if (cardsContainer) { cardsContainer.classList.remove('active'); cardsContainer.innerHTML = ''; }
                 return;
             }
-            
             if (value.startsWith('category:')) {
-                // Catégorie sélectionnée - afficher toutes les activités de la catégorie
-                const category = value.split(':')[1];
-                const categoryActivities = getAllActivitiesByCategory(category);
-                
-                if (categoryActivities.length > 0 && cardsContainer) {
-                    displayActivityCards(categoryActivities);
-                }
+                const cat = value.split(':')[1];
+                const list = allActivitiesList.filter(a => a.category === cat).flatMap(a =>
+                    a.dates.map(d => ({
+                        title: a.title, category: a.category, categoryName: a.categoryName, categoryColor: a.categoryColor,
+                        time: d.time, location: d.location, description: d.description, date: d.date, dateKey: d.dateKey, isComplete: d.isComplete
+                    }))
+                );
+                if (list.length && cardsContainer) displayActivityCards(list);
             } else if (value.startsWith('activity:')) {
-                // Activité spécifique sélectionnée - afficher toutes les dates de cette activité
-                const activityTitle = value.split(':')[1];
-                const activity = allActivitiesList.find(a => a.title === activityTitle);
-                
-                if (activity && cardsContainer) {
-                    const activitiesList = activity.dates.map(dateInfo => ({
-                        title: activity.title,
-                        time: dateInfo.time,
-                        location: dateInfo.location,
-                        description: dateInfo.description,
-                        category: activity.category,
-                        categoryName: activity.categoryName,
-                        categoryColor: activity.categoryColor,
-                        date: dateInfo.date,
-                        dateKey: dateInfo.dateKey,
-                        isComplete: dateInfo.isComplete
-                    }));
-                    
-                    displayActivityCards(activitiesList);
-                }
+                const title = value.split(':')[1];
+                const act = allActivitiesList.find(a => a.title === title);
+                if (act && cardsContainer) displayActivityCards(act.dates.map(d => ({
+                    title: act.title, category: act.category, categoryName: act.categoryName, categoryColor: act.categoryColor,
+                    time: d.time, location: d.location, description: d.description, date: d.date, dateKey: d.dateKey, isComplete: d.isComplete
+                })));
             }
         });
     }
     
-    // Afficher les cards d'activités
-    function displayActivityCards(activities) {
-        const cardsContainer = document.getElementById('activityCardsContainer');
-        if (!cardsContainer) return;
-        
-        cardsContainer.innerHTML = '';
-        cardsContainer.classList.add('active');
-        
-        activities.forEach(activity => {
-            const card = createActivityCard(activity, activities);
-            cardsContainer.appendChild(card);
-        });
-    }
+    setInterval(() => { if (selectedDate) updateCurrentTimeIndicator(selectedDate); }, 60000);
+    if (selectedDate) updateCurrentTimeIndicator(selectedDate);
+}
+
+function displayActivityCards(activities) {
+    const container = document.getElementById('activityCardsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    container.classList.add('active');
+    activities.forEach(act => {
+        const card = createActivityCard(act, activities);
+        container.appendChild(card);
+    });
+}
+
+function createActivityCard(activity, activitiesList) {
+    const card = document.createElement('div');
+    card.className = 'activity-card';
+    card.style.position = 'relative';
+    card.style.paddingLeft = '12px';
+    const colorIndicator = document.createElement('div');
+    colorIndicator.className = 'activity-card-color-indicator';
+    colorIndicator.style.backgroundColor = activity.categoryColor || '#649d50';
+    card.appendChild(colorIndicator);
+    const header = document.createElement('div');
+    header.className = 'activity-card-header';
+    const title = document.createElement('div');
+    title.className = 'activity-card-title';
+    title.textContent = activity.title;
+    header.appendChild(title);
+    const badge = document.createElement('div');
+    badge.className = `activity-card-badge ${activity.isComplete ? 'complet' : 'disponible'}`;
+    badge.textContent = activity.isComplete ? 'Complet' : 'Disponible';
+    header.appendChild(badge);
+    card.appendChild(header);
+    const dateDiv = document.createElement('div');
+    dateDiv.className = 'activity-card-date';
+    const ad = activity.date || (activity.dateKey ? new Date(activity.dateKey) : null);
+    if (ad) dateDiv.textContent = `${ad.getDate()} ${monthsFull[ad.getMonth()]} ${ad.getFullYear()}`;
+    card.appendChild(dateDiv);
+    const timeDiv = document.createElement('div');
+    timeDiv.className = 'activity-card-time';
+    timeDiv.textContent = activity.time || '';
+    card.appendChild(timeDiv);
+    if (activity.location) { const loc = document.createElement('div'); loc.className = 'activity-card-location'; loc.textContent = activity.location; card.appendChild(loc); }
+    if (activity.responsible) { const resp = document.createElement('div'); resp.className = 'activity-card-responsible'; resp.textContent = activity.responsible; card.appendChild(resp); }
+    card.addEventListener('click', () => showActivityDetail(activity, 'search', activitiesList));
+    return card;
+}
+
+// Configuration des événements
+function setupEventListeners() {
+    const prevMonth = document.getElementById('prevMonth');
+    const nextMonth = document.getElementById('nextMonth');
+    const monthSelect = document.getElementById('monthSelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const prevView = document.getElementById('prevView');
+    const nextView = document.getElementById('nextView');
     
-    // Créer une card d'activité
-    function createActivityCard(activity, activitiesList) {
-        const card = document.createElement('div');
-        card.className = 'activity-card';
-        card.style.position = 'relative';
-        card.style.paddingLeft = '12px';
-        
-        // Indicateur de couleur
-        const colorIndicator = document.createElement('div');
-        colorIndicator.className = 'activity-card-color-indicator';
-        colorIndicator.style.backgroundColor = activity.categoryColor || '#649d50';
-        card.appendChild(colorIndicator);
-        
-        // Header avec titre et badge
-        const header = document.createElement('div');
-        header.className = 'activity-card-header';
-        
-        const title = document.createElement('div');
-        title.className = 'activity-card-title';
-        title.textContent = activity.title;
-        header.appendChild(title);
-        
-        const badge = document.createElement('div');
-        badge.className = `activity-card-badge ${activity.isComplete ? 'complet' : 'disponible'}`;
-        badge.textContent = activity.isComplete ? 'Complet' : 'Disponible';
-        header.appendChild(badge);
-        
-        card.appendChild(header);
-        
-        // Date
-        const dateDiv = document.createElement('div');
-        dateDiv.className = 'activity-card-date';
-        const activityDate = activity.date || (activity.dateKey ? new Date(activity.dateKey) : null);
-        if (activityDate) {
-            const day = activityDate.getDate();
-            const monthIndex = activityDate.getMonth();
-            const year = activityDate.getFullYear();
-            dateDiv.textContent = `${day} ${monthsFull[monthIndex]} ${year}`;
-        }
-        card.appendChild(dateDiv);
-        
-        // Heure
-        const timeDiv = document.createElement('div');
-        timeDiv.className = 'activity-card-time';
-        timeDiv.textContent = activity.time || '';
-        card.appendChild(timeDiv);
-        
-        // Lieu
-        if (activity.location) {
-            const locationDiv = document.createElement('div');
-            locationDiv.className = 'activity-card-location';
-            locationDiv.textContent = activity.location;
-            card.appendChild(locationDiv);
-        }
-        
-        // Événement de clic
-        card.addEventListener('click', function() {
-            showActivityDetail(activity, 'search', activitiesList);
+    if (prevMonth) prevMonth.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); updateCalendar(); updateSelectors(); });
+    if (nextMonth) nextMonth.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); updateCalendar(); updateSelectors(); });
+    
+    if (monthSelect) monthSelect.addEventListener('change', (e) => { currentDate.setMonth(parseInt(e.target.value)); updateCalendar(); });
+    if (yearSelect) yearSelect.addEventListener('change', (e) => { currentDate.setFullYear(parseInt(e.target.value)); updateCalendar(); });
+    
+    if (prevView) prevView.addEventListener('click', () => { if (currentView === 'salles') { currentView = 'activites'; updateViewTitle(); updateCalendar(); toggleCalendars(); } });
+    if (nextView) nextView.addEventListener('click', () => { if (currentView === 'activites') { currentView = 'salles'; updateViewTitle(); toggleCalendars(); updateCalendarSalles(); } });
+    
+    const prevMonthSalles = document.getElementById('prevMonthSalles');
+    const nextMonthSalles = document.getElementById('nextMonthSalles');
+    const monthSelectSalles = document.getElementById('monthSelectSalles');
+    const yearSelectSalles = document.getElementById('yearSelectSalles');
+    if (prevMonthSalles) prevMonthSalles.addEventListener('click', () => { currentDateSalles.setMonth(currentDateSalles.getMonth() - 1); updateCalendarSalles(); });
+    if (nextMonthSalles) nextMonthSalles.addEventListener('click', () => { currentDateSalles.setMonth(currentDateSalles.getMonth() + 1); updateCalendarSalles(); });
+    if (monthSelectSalles) monthSelectSalles.addEventListener('change', (e) => { currentDateSalles.setMonth(parseInt(e.target.value)); updateCalendarSalles(); });
+    if (yearSelectSalles) yearSelectSalles.addEventListener('change', (e) => { currentDateSalles.setFullYear(parseInt(e.target.value)); updateCalendarSalles(); });
+    
+    // Remplir le select natif caché (activitiesList)
+    const activitiesListGroup = document.getElementById('activitiesList');
+    if (activitiesListGroup && allActivitiesList) {
+        allActivitiesList.forEach(act => {
+            const opt = document.createElement('option');
+            opt.value = `activity:${act.title}`;
+            opt.textContent = act.title;
+            activitiesListGroup.appendChild(opt);
         });
-        
-        return card;
     }
     
     // Fermer le widget avec Escape
@@ -855,21 +891,23 @@ function showActivityDetail(activity, context = 'schedule', activityList = []) {
     overlay.classList.add('active');
 }
 
-// Afficher une activité dans le widget de détail
+// Afficher une activité dans le widget de détail (salle en lecture seule)
 function displayActivityInDetail(activity) {
     const name = document.getElementById('activityDetailName');
     const description = document.getElementById('activityDetailDescription');
     const dateElement = document.getElementById('activityDetailDate');
     const timeElement = document.getElementById('activityDetailTimeDetail');
+    const salleDisplay = document.getElementById('activityDetailSalleDisplay');
+    const salleBadge = document.getElementById('activityDetailSalleBadge');
+    const benevoleName = document.getElementById('activityDetailBenevoleName');
+    const benevoleBadge = document.getElementById('activityDetailBenevoleBadge');
+    const card = document.querySelector('.activity-detail-card');
     
-    if (!name || !description) {
-        return;
-    }
+    if (!name || !description) return;
     
     name.textContent = activity.title || 'Activité';
     description.textContent = activity.description || 'Aucune description disponible.';
     
-    // Afficher la date et l'heure
     if (dateElement) {
         const activityDate = activity.date || (activity.dateKey ? new Date(activity.dateKey) : selectedDate);
         if (activityDate) {
@@ -882,8 +920,19 @@ function displayActivityInDetail(activity) {
         }
     }
     
-    if (timeElement) {
-        timeElement.textContent = activity.time || '';
+    if (timeElement) timeElement.textContent = activity.time || '';
+    
+    const salle = activity.location?.trim() || '';
+    const salleColor = salleToColor[salle] || '#6e6f75';
+    if (card) card.style.setProperty('--salle-color', salleColor);
+    if (salleDisplay && salleBadge) {
+        salleDisplay.textContent = salle || '—';
+        salleBadge.style.display = '';
+    }
+    
+    if (benevoleName && benevoleBadge) {
+        benevoleName.textContent = activity.responsible?.trim() || '—';
+        benevoleBadge.style.display = '';
     }
     
     currentActivityDetail = activity;
@@ -910,9 +959,58 @@ function navigateToNextActivity() {
 // Fermer le widget de détail d'activité
 function closeActivityDetail() {
     const overlay = document.getElementById('activityDetailOverlay');
-    if (overlay) {
-        overlay.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// --- Widget Je suis intéressé ---
+function openInteretWidget(activity) {
+    const overlay = document.getElementById('interetOverlay');
+    const nameEl = document.getElementById('interetActivityName');
+    const dateEl = document.getElementById('interetActivityDate');
+    if (!overlay || !nameEl || !dateEl) return;
+    
+    nameEl.textContent = activity.title || 'Activité';
+    const activityDate = activity.date || (activity.dateKey ? new Date(activity.dateKey) : selectedDate);
+    if (activityDate) {
+        const day = activityDate.getDate();
+        const monthIndex = activityDate.getMonth();
+        const year = activityDate.getFullYear();
+        dateEl.textContent = `${day} ${monthsFull[monthIndex]} ${year} • ${activity.time || ''}`;
+    } else {
+        dateEl.textContent = formatDateShort(selectedDate) + (activity.time ? ' • ' + activity.time : '');
     }
+    overlay.classList.add('active');
+}
+
+function setupInteretWidget() {
+    const overlay = document.getElementById('interetOverlay');
+    const closeBtn = document.getElementById('closeInteretWidget');
+    const confirmBtn = document.getElementById('interetConfirmBtn');
+    
+    if (closeBtn) closeBtn.addEventListener('click', () => overlay?.classList.remove('active'));
+    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+    
+    if (confirmBtn) confirmBtn.addEventListener('click', function() {
+        if (!currentActivityDetail) return;
+        const email = (typeof CONFIG !== 'undefined' && CONFIG.EMAIL_CONTACT) ? CONFIG.EMAIL_CONTACT : 'contact@vill-age-jeunes.fr';
+        const subject = encodeURIComponent(`Intérêt pour l'activité : ${currentActivityDetail.title || 'Activité'}`);
+        const activityDate = currentActivityDetail.date || (currentActivityDetail.dateKey ? new Date(currentActivityDetail.dateKey) : selectedDate);
+        const dateStr = activityDate ? formatDateShort(activityDate) : formatDateShort(selectedDate);
+        const body = encodeURIComponent(
+            `Bonjour,\n\nJe souhaite participer à l'activité suivante :\n\n` +
+            `- Activité : ${currentActivityDetail.title || 'Activité'}\n` +
+            `- Date : ${dateStr}\n` +
+            `- Horaire : ${currentActivityDetail.time || ''}\n\n` +
+            `Numéro adhérent : {adherent_numero}\n` +
+            `Nom : {adherent_nom}\n` +
+            `Prénom : {adherent_prenom}\n\n` +
+            `(Ces informations seront remplacées par les données de session/API)`
+        );
+        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        overlay?.classList.remove('active');
+        document.getElementById('activityDetailOverlay')?.classList.remove('active');
+        alert('Votre demande a été envoyée. Le responsable d\'activité vous recontactera.');
+    });
 }
 
 // Variable pour stocker l'activité actuellement affichée
@@ -927,207 +1025,462 @@ document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('activityDetailOverlay');
     const prevButton = document.getElementById('prevActivity');
     const nextButton = document.getElementById('nextActivity');
-    const registerButton = document.getElementById('registerActivityButton');
+    const interetBtn = document.getElementById('interetActivityButton');
     
-    if (closeButton) {
-        closeButton.addEventListener('click', closeActivityDetail);
+    if (closeButton) closeButton.addEventListener('click', closeActivityDetail);
+    
+    if (overlay) overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeActivityDetail();
+    });
+    
+    if (prevButton) prevButton.addEventListener('click', function(e) { e.stopPropagation(); navigateToPreviousActivity(); });
+    if (nextButton) nextButton.addEventListener('click', function(e) { e.stopPropagation(); navigateToNextActivity(); });
+    
+    if (interetBtn) interetBtn.addEventListener('click', function() {
+        if (currentActivityDetail) openInteretWidget(currentActivityDetail);
+    });
+
+    // ----- Widget "Faire une demande" (réservation salle / RDV) -----
+    const demandesOverlayEl = document.getElementById('demandesAdherentOverlay');
+    const demandesChoiceStep = document.getElementById('demandesChoiceStep');
+    const demandesFormStep = document.getElementById('demandesFormStep');
+    const demandesFormTitle = document.getElementById('demandesFormTitle');
+    const demandesTypeInput = document.getElementById('demandesType');
+    const demandesForm = document.getElementById('demandesAdherentForm');
+    const demandesContactGroup = document.getElementById('demandesContactGroup');
+    const demandesCategorieGroup = document.getElementById('demandesCategorieGroup');
+    const demandesContactSelect = document.getElementById('demandesContact');
+    const demandesCategorieSelect = document.getElementById('demandesCategorie');
+    const demandesDateInput = document.getElementById('demandesDate');
+    const demandesTimeInput = document.getElementById('demandesTime');
+    const demandesMotifInput = document.getElementById('demandesMotif');
+
+    // Liste des bénévoles (alignée avec accueil-staff)
+    const demandesBenevoles = [
+        'Animateur 1', 'Animateur 2', 'Animateur 3', 'Animateur 4', 'Animateur 5',
+        'Animateur 6', 'Animateur 7', 'Animateur 8', 'Animateur 9', 'Animateur 10'
+    ];
+    if (demandesContactSelect) {
+        demandesBenevoles.forEach(function(name) {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            demandesContactSelect.appendChild(opt);
+        });
     }
-    
-    if (overlay) {
-        overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) {
-                closeActivityDetail();
+    if (demandesCategorieSelect && typeof activityCategories !== 'undefined') {
+        Object.keys(activityCategories).forEach(function(key) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = activityCategories[key].name;
+            demandesCategorieSelect.appendChild(opt);
+        });
+    }
+
+    function openDemandesWidget() {
+        if (!demandesOverlayEl) return;
+        demandesChoiceStep?.removeAttribute('hidden');
+        demandesFormStep?.setAttribute('hidden', '');
+        demandesOverlayEl.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDemandesWidget() {
+        if (!demandesOverlayEl) return;
+        demandesOverlayEl.classList.remove('active');
+        document.body.style.overflow = '';
+        demandesChoiceStep?.removeAttribute('hidden');
+        demandesFormStep?.setAttribute('hidden', '');
+        if (demandesForm) demandesForm.reset();
+    }
+
+    function showDemandesForm(type) {
+        const isSalle = type === 'salle';
+        if (demandesTypeInput) demandesTypeInput.value = type;
+        if (demandesFormTitle) demandesFormTitle.textContent = isSalle ? 'Réserver une salle' : 'Prendre rendez-vous';
+        // Prendre RDV : afficher uniquement "Membre à contacter", pas de Catégorie
+        if (demandesContactGroup) {
+            demandesContactGroup.hidden = isSalle;
+            demandesContactGroup.style.display = isSalle ? 'none' : '';
+            if (demandesContactSelect) {
+                demandesContactSelect.required = !isSalle;
+                if (isSalle) demandesContactSelect.value = '';
             }
+        }
+        // Réserver une salle : afficher uniquement "Catégorie", pas de Bénévole
+        if (demandesCategorieGroup) {
+            demandesCategorieGroup.hidden = !isSalle;
+            demandesCategorieGroup.style.display = !isSalle ? 'none' : '';
+            if (demandesCategorieSelect) {
+                demandesCategorieSelect.required = isSalle;
+                if (!isSalle) demandesCategorieSelect.value = '';
+            }
+        }
+        if (demandesChoiceStep) demandesChoiceStep.setAttribute('hidden', '');
+        if (demandesFormStep) demandesFormStep.removeAttribute('hidden');
+    }
+
+    function backToDemandesChoice() {
+        if (demandesFormStep) demandesFormStep.setAttribute('hidden', '');
+        if (demandesChoiceStep) demandesChoiceStep.removeAttribute('hidden');
+        if (demandesForm) demandesForm.reset();
+    }
+
+    document.getElementById('demandesAdherentButton')?.addEventListener('click', openDemandesWidget);
+    document.getElementById('closeDemandesAdherent')?.addEventListener('click', closeDemandesWidget);
+    demandesOverlayEl?.addEventListener('click', function(e) {
+        if (e.target === demandesOverlayEl) closeDemandesWidget();
+    });
+
+    document.getElementById('demandesOptionSalle')?.addEventListener('click', function() { showDemandesForm('salle'); });
+    document.getElementById('demandesOptionRdv')?.addEventListener('click', function() { showDemandesForm('rdv'); });
+    document.getElementById('demandesAdherentBack')?.addEventListener('click', backToDemandesChoice);
+    document.getElementById('demandesFormCancel')?.addEventListener('click', closeDemandesWidget);
+
+    if (demandesForm) {
+        demandesForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const type = (demandesTypeInput?.value || '').trim();
+            const dateVal = (demandesDateInput?.value || '').trim();
+            const timeVal = (demandesTimeInput?.value || '').trim();
+            const motif = (demandesMotifInput?.value || '').trim();
+            if (!type || !dateVal || !timeVal || !motif) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+            if (type === 'rdv') {
+                const contact = (demandesContactSelect?.value || '').trim();
+                if (!contact) {
+                    alert('Veuillez sélectionner le membre de l\'équipe à contacter.');
+                    return;
+                }
+            }
+            if (type === 'salle') {
+                const categorie = (demandesCategorieSelect?.value || '').trim();
+                if (!categorie) {
+                    alert('Veuillez sélectionner une catégorie.');
+                    return;
+                }
+            }
+            const email = (typeof CONFIG !== 'undefined' && CONFIG.EMAIL_CONTACT) ? CONFIG.EMAIL_CONTACT : 'contact@vill-age-jeunes.fr';
+            const typeLabel = type === 'salle' ? 'Réservation de salle' : 'Demande de rendez-vous';
+            const subject = encodeURIComponent(`[Adhérent] ${typeLabel} - ${dateVal} ${timeVal}`);
+            const memberNumber = profileData.memberNumber || (document.getElementById('profileMemberNumber')?.textContent || '').replace(/^N°\s*/, '').trim() || '—';
+            let bodyLines = [
+                'Bonjour,',
+                '',
+                'Demande : ' + typeLabel,
+                'Date : ' + dateVal,
+                'Heure : ' + timeVal,
+                'Numéro adhérent : ' + memberNumber
+            ];
+            if (type === 'rdv' && demandesContactSelect?.value) {
+                bodyLines.push('Bénévole à contacter : ' + demandesContactSelect.value);
+            }
+            if (type === 'salle' && demandesCategorieSelect?.value) {
+                const catName = (typeof activityCategories !== 'undefined' && activityCategories[demandesCategorieSelect.value])
+                    ? activityCategories[demandesCategorieSelect.value].name
+                    : demandesCategorieSelect.value;
+                bodyLines.push('Catégorie : ' + catName);
+            }
+            bodyLines.push('', 'Motif détaillé :', motif);
+            const body = encodeURIComponent(bodyLines.join('\n'));
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            closeDemandesWidget();
+            alert('Votre demande a bien été préparée. Ouvrez votre logiciel de messagerie pour l\'envoyer.');
         });
     }
-    
-    if (prevButton) {
-        prevButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navigateToPreviousActivity();
-        });
-    }
-    
-    if (nextButton) {
-        nextButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navigateToNextActivity();
-        });
-    }
-    
-    if (registerButton) {
-        registerButton.addEventListener('click', function() {
-            // Action d'inscription (à implémenter)
-            console.log('Inscription à l\'activité');
-            alert('Inscription à l\'activité (fonctionnalité à implémenter)');
-        });
-    }
-    
-    // Fermer avec Escape
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            closeActivityDetail();
-            closeProfile();
+            const interetOverlay = document.getElementById('interetOverlay');
+            const profileOverlay = document.getElementById('profileOverlay');
+            const activityDetailOverlay = document.getElementById('activityDetailOverlay');
+            const scheduleWidget = document.getElementById('scheduleWidget');
+            const demandesOverlay = document.getElementById('demandesAdherentOverlay');
+            if (interetOverlay?.classList.contains('active')) {
+                interetOverlay.classList.remove('active');
+            } else if (demandesOverlay?.classList.contains('active')) {
+                closeDemandesWidget();
+            } else if (profileOverlay?.classList.contains('active')) {
+                closeProfile();
+            } else if (activityDetailOverlay?.classList.contains('active')) {
+                closeActivityDetail();
+            } else if (scheduleWidget?.classList.contains('active')) {
+                closeActivityPopup();
+            }
         }
     });
 
-    // Gestion du widget de profil
+    // Gestion du widget de profil adhérent (fiche complète, menus = inscription)
     const profileOverlay = document.getElementById('profileOverlay');
     const closeProfileButton = document.getElementById('closeProfile');
     const profileIcon = document.getElementById('profileIcon');
     
-    // Données factices du profil (seront remplacées par des données de la base)
+    function closeProfile() { if (profileOverlay) { profileOverlay.classList.remove('active'); document.body.style.overflow = ''; } }
+    
     const profileData = {
-        name: 'Martin',
+        lastName: 'Martin',
         firstName: 'Jean',
         nickname: 'Jéjé',
         memberNumber: 'VJ-2026-001',
+        dateNaissance: '15/03/2008',
+        genre: 'M',
+        telephone: '87 12 34 56',
         email: 'jean.martin@email.com',
-        medicalInfo: ''
+        province: 'Province Sud',
+        commune: 'Nouméa',
+        quartier: 'Centre-Ville',
+        district: '',
+        medicalInfo: '',
+        estEtudiant: 'Oui',
+        typeEtablissement: 'Lycee',
+        etablissement: 'Mont-Dore - Lycée polyvalent du Mont-Dore',
+        etudesSup: '',
+        rechercheEmploi: 'Non',
+        activitePayee: '',
+        asso: '',
+        autreActivite: '',
+        mobilite: ['velo', 'bus'],
+        permis: ['voiture'],
+        autorisationImage: 'Oui',
+        autorisationUrgence: 'Oui',
+        parentNom: '',
+        parentTelephone: '',
+        parentEmail: '',
+        parentAdresse: ''
     };
 
-    function updateMedicalTextarea() {
-        const medicalTextarea = document.getElementById('profileMedicalInfo');
-        const validateBtn = document.getElementById('validateMedicalInfo');
-        if (!medicalTextarea) return;
-        
-        if (profileData.medicalInfo && profileData.medicalInfo.trim() !== '') {
-            medicalTextarea.value = profileData.medicalInfo;
-            medicalTextarea.classList.remove('empty');
-            medicalTextarea.style.color = '#0a0a0a';
-            medicalTextarea.style.fontStyle = 'normal';
-            if (validateBtn) validateBtn.style.display = 'block';
-        } else {
-            medicalTextarea.value = '';
-            medicalTextarea.classList.remove('empty');
-            medicalTextarea.style.color = '#0a0a0a';
-            medicalTextarea.style.fontStyle = 'normal';
-            medicalTextarea.setAttribute('placeholder', 'Avez-vous un problème de santé ?');
-            if (validateBtn) validateBtn.style.display = 'none';
+    function setProfileValue(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === 'SELECT') el.value = value || '';
+        else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = value || '';
+        else el.textContent = value || '—';
+    }
+
+    function getProfileInputValue(id) {
+        const el = document.getElementById(id);
+        return el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') ? (el.value || '').trim() : '';
+    }
+
+    function getProfilePermisValues() {
+        return Array.from(document.querySelectorAll('input[name="profilePermis"]:checked')).map(cb => cb.value);
+    }
+
+    function setProfilePermis(values) {
+        document.querySelectorAll('input[name="profilePermis"]').forEach(cb => { cb.checked = values && values.includes(cb.value); });
+    }
+
+    function getProfileMobiliteValues() {
+        return Array.from(document.querySelectorAll('input[name="profileMobilite"]:checked')).map(cb => cb.value);
+    }
+
+    function setProfileMobilite(values) {
+        document.querySelectorAll('input[name="profileMobilite"]').forEach(cb => { cb.checked = values && values.includes(cb.value); });
+    }
+
+    // Initialiser les menus déroulants (données form-data.js)
+    function initProfileSelects() {
+        const provinces = ['Province Sud', 'Province Nord', 'Îles Loyauté'];
+        const prov = document.getElementById('profileProvince');
+        if (prov && typeof communesSud !== 'undefined') {
+            prov.innerHTML = '<option value="">Sélectionnez une province</option>' + provinces.map(p => `<option value="${p}">${p}</option>`).join('');
         }
-        
-        // Ajuster la hauteur automatiquement
-        medicalTextarea.style.height = 'auto';
-        medicalTextarea.style.height = Math.max(100, medicalTextarea.scrollHeight) + 'px';
     }
 
-    function toggleValidateButton() {
-        const medicalTextarea = document.getElementById('profileMedicalInfo');
-        const validateBtn = document.getElementById('validateMedicalInfo');
-        if (!medicalTextarea || !validateBtn) return;
-        
-        const hasText = medicalTextarea.value.trim() !== '';
-        validateBtn.style.display = hasText ? 'block' : 'none';
-        
-        // Ajuster la hauteur automatiquement
-        autoResizeTextarea(medicalTextarea);
+    function loadProfileCommunes(province) {
+        const comm = document.getElementById('profileCommune');
+        const quartierCont = document.getElementById('profileQuartierContainer');
+        const districtCont = document.getElementById('profileDistrictContainer');
+        const quartierSel = document.getElementById('profileQuartier');
+        const quartierInp = document.getElementById('profileQuartierInput');
+        const districtSel = document.getElementById('profileDistrict');
+        const districtInp = document.getElementById('profileDistrictInput');
+        if (!comm || typeof communesSud === 'undefined') return;
+        comm.innerHTML = '<option value="">Sélectionnez une commune</option>';
+        quartierCont.style.display = 'none';
+        districtCont.style.display = 'none';
+        if (quartierSel) quartierSel.style.display = 'none';
+        if (quartierInp) quartierInp.style.display = 'none';
+        if (districtSel) districtSel.style.display = 'none';
+        if (districtInp) districtInp.style.display = 'none';
+        if (!province) return;
+        let communes = [];
+        if (province === 'Province Sud') {
+            communes = Object.keys(communesSud).sort((a, b) => (a === 'Nouméa' ? -1 : b === 'Nouméa' ? 1 : a.localeCompare(b)));
+            quartierCont.style.display = 'block';
+        } else if (province === 'Province Nord') {
+            communes = Object.keys(communesNord).sort();
+            quartierCont.style.display = 'block';
+        } else if (province === 'Îles Loyauté') {
+            communes = Object.keys(communesIles);
+            quartierCont.style.display = 'none';
+            districtCont.style.display = 'block';
+        }
+        communes.forEach(c => { comm.innerHTML += `<option value="${c}">${c}</option>`; });
     }
 
-    function validateMedicalInfo() {
-        const medicalTextarea = document.getElementById('profileMedicalInfo');
-        if (!medicalTextarea) return;
-        
-        const medicalInfo = medicalTextarea.value.trim();
-        profileData.medicalInfo = medicalInfo;
-        
-        // Ici vous pouvez ajouter l'appel à l'API pour sauvegarder les données
-        // Par exemple : saveMedicalInfoToDatabase(medicalInfo);
-        
-        // Mettre à jour l'affichage
-        updateMedicalTextarea();
-        
-        // Masquer le bouton après validation
-        const validateBtn = document.getElementById('validateMedicalInfo');
-        if (validateBtn) validateBtn.style.display = 'none';
-        
-        // Optionnel : afficher un message de confirmation
-        console.log('Informations médicales enregistrées:', medicalInfo);
+    function loadProfileQuartiers(province, commune) {
+        const quartierSel = document.getElementById('profileQuartier');
+        const quartierInp = document.getElementById('profileQuartierInput');
+        const districtSel = document.getElementById('profileDistrict');
+        const districtInp = document.getElementById('profileDistrictInput');
+        if (!quartierSel || !quartierInp) return;
+        quartierSel.innerHTML = '<option value="">Sélectionnez un quartier</option>';
+        quartierSel.style.display = 'none';
+        quartierInp.style.display = 'none';
+        quartierInp.value = '';
+        if (province === 'Îles Loyauté' && commune && communesIles[commune]) {
+            const districts = communesIles[commune];
+            districtSel.innerHTML = '<option value="">Sélectionnez un district</option>';
+            districts.forEach(d => { districtSel.innerHTML += `<option value="${d}">${d}</option>`; });
+            districtSel.style.display = 'block';
+            if (districtInp) districtInp.style.display = 'none';
+        } else if ((province === 'Province Sud' && communesSud[commune]) || (province === 'Province Nord' && communesNord[commune])) {
+            const data = province === 'Province Sud' ? communesSud : communesNord;
+            const quartiers = data[commune];
+            if (quartiers && quartiers.length > 0) {
+                quartiers.forEach(q => { quartierSel.innerHTML += `<option value="${q}">${q}</option>`; });
+                quartierSel.style.display = 'block';
+            } else {
+                quartierInp.style.display = 'block';
+            }
+        }
     }
-    
-    // Ajuster la hauteur du textarea lors du chargement et si le contenu change
-    function autoResizeTextarea(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.max(100, textarea.scrollHeight) + 'px';
+
+    function loadProfileEtablissements(type) {
+        const sel = document.getElementById('profileEtablissement');
+        const wrap = document.getElementById('profileEtablissementSelectWrap');
+        const etudesWrap = document.getElementById('profileEtudesSupWrap');
+        const etudesInp = document.getElementById('profileEtudesSup');
+        if (!sel || typeof collegesPublics === 'undefined') return;
+        if (type === 'EtudesSup') {
+            wrap.style.display = 'none';
+            etudesWrap.style.display = 'block';
+            if (etudesInp) etudesInp.value = profileData.etudesSup || '';
+            return;
+        }
+        wrap.style.display = 'block';
+        etudesWrap.style.display = 'none';
+        if (etudesInp) etudesInp.value = '';
+        sel.innerHTML = '<option value="">Sélectionnez un établissement</option>';
+        let list = [];
+        if (type === 'College') list = [...collegesPublics, ...collegesPrives].sort();
+        else if (type === 'Lycee') list = [...lyceesPublics, ...lyceesPrives].sort();
+        list.forEach(e => { sel.innerHTML += `<option value="${e}">${e}</option>`; });
     }
 
     function showProfile() {
         if (!profileOverlay) return;
-        
-        // Mettre à jour les informations du profil
-        document.getElementById('profileName').textContent = profileData.name;
-        document.getElementById('profileFirstName').textContent = profileData.firstName;
-        document.getElementById('profileNickname').textContent = profileData.nickname || '';
-        document.getElementById('profileMemberNumber').textContent = profileData.memberNumber || '';
-        document.getElementById('profileEmail').textContent = profileData.email;
-        
-        // Gérer les informations médicales
-        updateMedicalTextarea();
-        
+        initProfileSelects();
+        loadProfileCommunes(profileData.province);
+        setTimeout(() => {
+            const comm = document.getElementById('profileCommune');
+            if (comm) comm.value = profileData.commune;
+            loadProfileQuartiers(profileData.province, profileData.commune);
+            setTimeout(() => {
+                const qs = document.getElementById('profileQuartier');
+                const qi = document.getElementById('profileQuartierInput');
+                const ds = document.getElementById('profileDistrict');
+                const di = document.getElementById('profileDistrictInput');
+                if (profileData.province === 'Îles Loyauté' && ds) ds.value = profileData.district || '';
+                else if (qs && profileData.quartier) { qs.value = profileData.quartier; qs.style.display = 'block'; }
+                else if (qi && profileData.quartier) { qi.value = profileData.quartier; qi.style.display = 'block'; }
+            }, 0);
+        }, 0);
+        loadProfileEtablissements(profileData.typeEtablissement);
+        if (profileData.typeEtablissement === 'EtudesSup') {
+            const ei = document.getElementById('profileEtudesSup');
+            if (ei) ei.value = profileData.etudesSup || '';
+        } else {
+            const es = document.getElementById('profileEtablissement');
+            if (es) es.value = profileData.etablissement || '';
+        }
+        setProfileValue('profileProvince', profileData.province);
+        setProfileValue('profileDisplayName', profileData.lastName + ' ' + profileData.firstName);
+        setProfileValue('profileMemberNumber', profileData.memberNumber);
+        setProfileValue('profileLastName', profileData.lastName);
+        setProfileValue('profileFirstName', profileData.firstName);
+        setProfileValue('profileDateNaissance', profileData.dateNaissance);
+        setProfileValue('profileNickname', profileData.nickname);
+        setProfileValue('profileGenre', profileData.genre);
+        setProfileValue('profileTelephone', profileData.telephone);
+        setProfileValue('profileEmail', profileData.email);
+        setProfileValue('profileMedicalInfo', profileData.medicalInfo);
+        setProfileValue('profileEstEtudiant', profileData.estEtudiant);
+        setProfileValue('profileTypeEtablissement', profileData.typeEtablissement);
+        setProfileValue('profileRechercheEmploi', profileData.rechercheEmploi);
+        setProfileValue('profileActivitePayee', profileData.activitePayee);
+        setProfileValue('profileAsso', profileData.asso);
+        setProfileValue('profileAutreActivite', profileData.autreActivite);
+        setProfileValue('profileAutorisationImage', profileData.autorisationImage);
+        setProfileValue('profileAutorisationUrgence', profileData.autorisationUrgence);
+        setProfileValue('profileParentNom', profileData.parentNom);
+        setProfileValue('profileParentTelephone', profileData.parentTelephone);
+        setProfileValue('profileParentEmail', profileData.parentEmail);
+        setProfileValue('profileParentAdresse', profileData.parentAdresse);
+        setProfilePermis(profileData.permis);
+        setProfileMobilite(profileData.mobilite);
+        const mineurSection = document.getElementById('profileMineurSection');
+        if (mineurSection) mineurSection.style.display = profileData.parentNom ? 'block' : 'none';
         profileOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-        
-        // Ajuster la taille du textarea après l'affichage
-        setTimeout(() => {
-            const medicalTextarea = document.getElementById('profileMedicalInfo');
-            if (medicalTextarea) {
-                autoResizeTextarea(medicalTextarea);
-            }
-        }, 100);
     }
 
-    function closeProfile() {
-        if (!profileOverlay) return;
-        profileOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+    function saveProfile() {
+        profileData.nickname = getProfileInputValue('profileNickname');
+        profileData.medicalInfo = getProfileInputValue('profileMedicalInfo');
+        profileData.province = getProfileInputValue('profileProvince');
+        profileData.commune = getProfileInputValue('profileCommune');
+        const qs = document.getElementById('profileQuartier');
+        const qi = document.getElementById('profileQuartierInput');
+        const ds = document.getElementById('profileDistrict');
+        const di = document.getElementById('profileDistrictInput');
+        profileData.quartier = (qs && qs.style.display !== 'none' ? qs.value : (qi ? qi.value : '')) || '';
+        profileData.district = (ds && ds.style.display !== 'none' ? ds.value : (di ? di.value : '')) || '';
+        profileData.estEtudiant = getProfileInputValue('profileEstEtudiant');
+        profileData.typeEtablissement = getProfileInputValue('profileTypeEtablissement');
+        if (profileData.typeEtablissement === 'EtudesSup') {
+            profileData.etablissement = '';
+            profileData.etudesSup = getProfileInputValue('profileEtudesSup');
+        } else {
+            profileData.etablissement = getProfileInputValue('profileEtablissement');
+            profileData.etudesSup = '';
+        }
+        profileData.rechercheEmploi = getProfileInputValue('profileRechercheEmploi');
+        profileData.activitePayee = getProfileInputValue('profileActivitePayee');
+        profileData.asso = getProfileInputValue('profileAsso');
+        profileData.autreActivite = getProfileInputValue('profileAutreActivite');
+        profileData.mobilite = getProfileMobiliteValues();
+        profileData.permis = getProfilePermisValues();
+        console.log('Profil enregistré:', profileData);
+        alert('Modifications enregistrées.');
     }
 
-    // Ouvrir le profil au clic sur l'icône
-    if (profileIcon) {
-        profileIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            showProfile();
-        });
-    }
+    document.getElementById('profileProvince')?.addEventListener('change', function() {
+        profileData.province = this.value;
+        loadProfileCommunes(this.value);
+        document.getElementById('profileCommune').value = '';
+        document.getElementById('profileQuartier').value = '';
+        document.getElementById('profileQuartierInput').value = '';
+        document.getElementById('profileDistrict').value = '';
+        document.getElementById('profileDistrictInput').value = '';
+    });
+    document.getElementById('profileCommune')?.addEventListener('change', function() {
+        const prov = document.getElementById('profileProvince')?.value;
+        loadProfileQuartiers(prov, this.value);
+    });
+    document.getElementById('profileTypeEtablissement')?.addEventListener('change', function() {
+        loadProfileEtablissements(this.value);
+    });
 
-    // Fermer le profil
-    if (closeProfileButton) {
-        closeProfileButton.addEventListener('click', closeProfile);
-    }
-
-    // Fermer en cliquant sur l'overlay
-    if (profileOverlay) {
-        profileOverlay.addEventListener('click', function(e) {
-            if (e.target === profileOverlay) {
-                closeProfile();
-            }
-        });
-    }
+    if (profileIcon) profileIcon.addEventListener('click', function(e) { e.stopPropagation(); showProfile(); });
+    if (closeProfileButton) closeProfileButton.addEventListener('click', closeProfile);
+    if (profileOverlay) profileOverlay.addEventListener('click', function(e) { if (e.target === profileOverlay) closeProfile(); });
     
-    // Gérer le champ médical éditable
-    const medicalTextarea = document.getElementById('profileMedicalInfo');
-    const validateBtn = document.getElementById('validateMedicalInfo');
-    
-    if (medicalTextarea) {
-        // Ajuster au chargement
-        setTimeout(() => {
-            autoResizeTextarea(medicalTextarea);
-            toggleValidateButton();
-        }, 100);
-        
-        // Ajuster si le contenu change et afficher/masquer le bouton
-        medicalTextarea.addEventListener('input', function() {
-            autoResizeTextarea(this);
-            toggleValidateButton();
-        });
-    }
-    
-    // Gérer le clic sur le bouton Valider
-    if (validateBtn) {
-        validateBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            validateMedicalInfo();
-        });
-    }
+    const profileSaveBtn = document.getElementById('profileSaveBtn');
+    if (profileSaveBtn) profileSaveBtn.addEventListener('click', saveProfile);
     
     // Gestion du widget de messagerie
     const messageOverlay = document.getElementById('messageOverlay');

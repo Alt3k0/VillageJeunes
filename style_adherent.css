@@ -1,0 +1,898 @@
+/**
+ * Style Adhérent / Bénévole / Partenaire
+ * Basé sur style_staff.css - mêmes fonctionnalités, couleurs personnalisables
+ */
+@import url('style_staff.css');
+
+/* Salle en lecture seule (adhérent) */
+.activity-detail-salle-badge span {
+    color: #fff;
+    font-family: 'Rubik', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 500;
+}
+
+/* Widget Je suis intéressé (confirmation) */
+.interet-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem);
+}
+
+.interet-overlay.active {
+    display: flex;
+}
+
+.interet-widget {
+    background: #F7F7F7;
+    border-radius: clamp(12px, 1.5vw, 24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 450px);
+    padding: clamp(20px, 2.5vw, 35px);
+    position: relative;
+}
+
+.interet-close {
+    position: absolute;
+    top: clamp(8px, 1vw, 15px);
+    right: clamp(8px, 1vw, 15px);
+    width: clamp(28px, 3.5vw, 40px);
+    height: clamp(28px, 3.5vw, 40px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.interet-close svg {
+    width: 100%;
+    height: 100%;
+}
+
+.interet-title {
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 700;
+    color: #1e1e1d;
+    margin-bottom: clamp(12px, 1.5vw, 20px);
+}
+
+.interet-activity-info {
+    margin-bottom: clamp(12px, 1.5vw, 18px);
+}
+
+.interet-activity-name {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 600;
+    color: #1f658e;
+}
+
+.interet-activity-date {
+    font-size: clamp(14px, 1.5vw, 16px);
+    color: #6e6f75;
+    margin-top: 4px;
+}
+
+.interet-text {
+    font-size: clamp(14px, 1.5vw, 16px);
+    color: #1e1e1d;
+    line-height: 1.5;
+    margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.interet-confirm-btn {
+    width: 100%;
+    padding: clamp(14px, 1.8vw, 20px);
+    background: linear-gradient(135deg, #1f658e 0%, #3d7b9a 100%);
+    border: none;
+    border-radius: clamp(10px, 1.2vw, 14px);
+    color: #F7F7F7;
+    font-size: clamp(14px, 1.6vw, 18px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(31, 101, 142, 0.3);
+}
+
+.interet-confirm-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 101, 142, 0.4);
+}
+
+/* ========== Bouton & widget "Faire une demande" (adhérent) ========== */
+.demandes-adherent-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 2.5vw, 1.75rem);
+    background: linear-gradient(135deg, #1f658e 0%, #2d5a7b 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(31, 101, 142, 0.3);
+    margin-bottom: clamp(3vh, 4vw, 5vh);
+    margin-top: clamp(3vh, 4vw, 5vh);
+    width: fit-content;
+    max-width: clamp(250px, 35vw, 400px);
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    left: 0;
+    right: 0;
+    font-family: 'Rubik', sans-serif;
+}
+
+.demandes-adherent-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(31, 101, 142, 0.4);
+    background: linear-gradient(135deg, #2d5a7b 0%, #1f658e 100%);
+}
+
+.demandes-adherent-button:active {
+    transform: translateY(0);
+}
+
+.demandes-adherent-icon {
+    width: clamp(1rem, 1.5vw, 1.25rem);
+    height: clamp(1rem, 1.5vw, 1.25rem);
+    stroke-width: 3;
+}
+
+.demandes-adherent-text {
+    white-space: nowrap;
+}
+
+/* Overlay & widget */
+.demandes-adherent-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem);
+    overflow-y: auto;
+}
+
+.demandes-adherent-overlay.active {
+    display: flex;
+}
+
+.demandes-adherent-widget {
+    background: #FFFFFF;
+    border-radius: clamp(12px, 1.5vw, 24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 480px);
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    position: relative;
+    margin: auto;
+}
+
+.demandes-adherent-close {
+    position: absolute;
+    top: clamp(0.75rem, 1.5vw, 1.25rem);
+    right: clamp(0.75rem, 1.5vw, 1.25rem);
+    width: clamp(2rem, 3vw, 2.5rem);
+    height: clamp(2rem, 3vw, 2.5rem);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    z-index: 10;
+}
+
+.demandes-adherent-close:hover {
+    transform: scale(1.1);
+}
+
+.demandes-adherent-close svg {
+    width: 100%;
+    height: 100%;
+}
+
+.demandes-adherent-step {
+    padding-right: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+.demandes-adherent-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    font-weight: 400;
+    color: #1e1e1d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.demandes-adherent-subtitle {
+    font-size: clamp(0.9rem, 1.4vw, 1rem);
+    color: #6e6f75;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.demandes-adherent-options {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.demandes-adherent-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: clamp(1rem, 2vw, 1.25rem);
+    border: 2px solid #e5e5e5;
+    border-radius: clamp(10px, 1.2vw, 14px);
+    background: #F7F7F7;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: 'Rubik', sans-serif;
+}
+
+.demandes-adherent-option:hover {
+    border-color: #1f658e;
+    background: rgba(31, 101, 142, 0.06);
+}
+
+.demandes-adherent-option:focus-visible {
+    outline: 2px solid #1f658e;
+    outline-offset: 2px;
+}
+
+.demandes-adherent-option-icon {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+.demandes-adherent-option-label {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-weight: 600;
+    color: #1e1e1d;
+}
+
+.demandes-adherent-option-desc {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    color: #6e6f75;
+    line-height: 1.4;
+}
+
+.demandes-adherent-back {
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    color: #1f658e;
+    cursor: pointer;
+    font-family: 'Rubik', sans-serif;
+    text-decoration: none;
+}
+
+.demandes-adherent-back:hover {
+    text-decoration: underline;
+}
+
+.demandes-adherent-form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.demandes-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.demandes-form-group-full {
+    grid-column: 1 / -1;
+}
+
+.demandes-form-label {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    font-weight: 600;
+    color: #1e1e1d;
+}
+
+.demandes-form-label abbr {
+    text-decoration: none;
+}
+
+.demandes-form-input,
+.demandes-form-textarea {
+    padding: clamp(0.6rem, 1.2vw, 0.85rem);
+    border: 2px solid #e5e5e5;
+    border-radius: clamp(0.4rem, 0.8vw, 0.6rem);
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    font-family: 'Rubik', sans-serif;
+    color: #1e1e1d;
+    background: #FFFFFF;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.demandes-form-input:focus,
+.demandes-form-textarea:focus {
+    outline: none;
+    border-color: #1f658e;
+}
+
+.demandes-form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.demandes-form-actions {
+    display: flex;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    justify-content: flex-end;
+    margin-top: clamp(0.5rem, 1vw, 0.75rem);
+    padding-top: clamp(0.75rem, 1.5vw, 1rem);
+    border-top: 1px solid #e5e5e5;
+}
+
+.demandes-form-btn {
+    padding: clamp(0.65rem, 1.2vw, 0.85rem) clamp(1.25rem, 2.5vw, 1.5rem);
+    border: none;
+    border-radius: clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.875rem, 1.2vw, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Rubik', sans-serif;
+    transition: all 0.2s ease;
+}
+
+.demandes-form-cancel {
+    background: #F7F7F7;
+    color: #6e6f75;
+}
+
+.demandes-form-cancel:hover {
+    background: #e5e5e5;
+}
+
+.demandes-form-submit {
+    background: linear-gradient(135deg, #1f658e 0%, #2d5a7b 100%);
+    color: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(31, 101, 142, 0.3);
+}
+
+.demandes-form-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(31, 101, 142, 0.4);
+}
+
+/* Adhérent : pas de sidebar, contenu centré */
+@media (min-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* Tablette portrait (à partir de 1024px) – esthétique dédiée */
+@media (min-width: 1024px) and (orientation: portrait) {
+    /* À compléter : header, bouton Faire une demande, etc. */
+    .demandes-adherent-button {
+        min-width: 10rem;
+        min-height: 5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(31, 101, 142, 0.3);
+    }
+    header {
+        min-height: 10rem;
+    }
+    .logo-adherent {
+        min-width: 10rem;
+        min-height: 10rem;
+    }
+    .logo-adherent img {
+        min-width: 10rem;
+        min-height: 10rem;
+    }
+
+    .profile-overlay {
+        min-height: 10rem;
+    }
+    .profile-widget {
+        min-width: 5rem;
+        min-height: 5rem;
+    }
+    .profile-close {
+        min-width: 3rem;
+        min-height: 3rem;
+    }
+    .header-profile {
+        min-width: 4rem;
+        min-height: 4rem;
+    }
+    .header-profile-icon {
+        min-width: 3rem;
+        min-height: 3rem;
+    }
+    footer {
+        min-height: 5rem;
+    }
+}
+
+/* Footer adhérent : icônes réseaux en bleu (charte adhérent) */
+.footer-social-link:hover {
+    color: #1f658e;
+}
+.footer-social-link:focus-visible {
+    outline-color: #1f658e;
+}
+
+/* Pas de bordure sur le wrapper du bouton Je suis intéressé */
+.activity-detail-register-wrapper {
+    border: none;
+}
+
+/* Widget Profil adhérent (fiche complète) */
+.profile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem);
+    overflow-y: auto;
+}
+
+.profile-overlay::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+.profile-overlay.active {
+    display: flex;
+}
+
+.profile-widget {
+    background: #F7F7F7;
+    border-radius: clamp(12px, 1.5vw, 24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 520px);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: clamp(24px, 3vw, 40px);
+    position: relative;
+    margin: auto;
+}
+
+.profile-close {
+    position: absolute;
+    top: clamp(8px, 1vw, 15px);
+    right: clamp(8px, 1vw, 15px);
+    width: clamp(28px, 3.5vw, 40px);
+    height: clamp(28px, 3.5vw, 40px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-close svg {
+    width: 100%;
+    height: 100%;
+}
+
+.profile-title {
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 700;
+    color: #1e1e1d;
+    margin-bottom: clamp(16px, 2vw, 24px);
+}
+
+.profile-header {
+    display: flex;
+    gap: clamp(12px, 2vw, 20px);
+    margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.profile-photo {
+    width: clamp(60px, 10vw, 80px);
+    height: clamp(60px, 10vw, 80px);
+    background: #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6e6f75;
+    flex-shrink: 0;
+}
+
+.profile-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.profile-name {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 700;
+    color: #1e1e1d;
+}
+
+.profile-number {
+    font-size: clamp(14px, 1.5vw, 16px);
+    color: #6e6f75;
+}
+
+.profile-section {
+    margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.profile-section-title {
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 600;
+    color: #1f658e;
+    margin-bottom: clamp(8px, 1vw, 12px);
+}
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(8px, 1vw, 12px);
+}
+
+.profile-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.profile-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6e6f75;
+}
+
+.profile-value {
+    color: #1e1e1d;
+    font-size: 14px;
+}
+
+.profile-readonly {
+    background: #eee;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+
+.profile-input,
+.profile-select {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.profile-select {
+    width: 100%;
+    cursor: pointer;
+}
+
+.profile-address-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-address-group .profile-select,
+.profile-address-group .profile-input {
+    width: 100%;
+}
+
+.profile-mobilite-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.profile-editable {
+    border-color: #1f658e;
+    background: #fff;
+}
+
+.profile-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border: 1px solid #1f658e;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.profile-validate-btn {
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: #6e6f75;
+    border: none;
+    border-radius: 6px;
+    color: #F7F7F7;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-permis-group {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+}
+
+.profile-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.profile-checkbox {
+    cursor: pointer;
+}
+
+.profile-save-btn {
+    width: 100%;
+    padding: clamp(12px, 1.5vw, 16px);
+    background: linear-gradient(135deg, #1f658e 0%, #3d7b9a 100%);
+    border: none;
+    border-radius: clamp(8px, 1vw, 12px);
+    color: #F7F7F7;
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.profile-save-btn:hover {
+    opacity: 0.95;
+}
+
+/* ========== Responsive : Tablette et Mobile (esthétique widget info staff) ========== */
+@media (max-width: 768px) {
+    .profile-overlay {
+        padding: clamp(1rem, 3vw, 1.5rem);
+        align-items: center;
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .profile-overlay.active {
+        display: flex;
+    }
+
+    .profile-widget {
+        width: 100%;
+        max-width: min(calc(100% - 2rem), 480px);
+        max-height: calc(100vh - clamp(2rem, 4vw, 3rem));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: clamp(20px, 4vw, 28px);
+        margin: 0 auto clamp(2rem, 4vw, 3rem);
+        border-radius: clamp(12px, 2vw, 20px);
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: clamp(16px, 3vw, 24px);
+    }
+
+    .profile-photo {
+        width: clamp(70px, 18vw, 90px);
+        height: clamp(70px, 18vw, 90px);
+    }
+
+    .profile-header-info {
+        align-items: center;
+    }
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+        gap: clamp(10px, 2vw, 14px);
+    }
+
+    .profile-info-item {
+        width: 100%;
+    }
+
+    .profile-section {
+        margin-bottom: clamp(16px, 3vw, 24px);
+    }
+
+    .profile-section-title {
+        text-align: center;
+    }
+
+    .profile-permis-group {
+        align-items: center;
+    }
+
+    .profile-checkbox-group {
+        justify-content: center;
+    }
+
+    /* Widget Je suis intéressé - tablette */
+    .interet-overlay {
+        padding: clamp(1rem, 3vw, 1.5rem);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .interet-widget {
+        width: 100%;
+        max-width: min(90vw, 400px);
+        padding: clamp(18px, 4vw, 24px);
+    }
+
+    .interet-title {
+        text-align: center;
+    }
+
+    .interet-activity-info {
+        text-align: center;
+    }
+
+    .interet-text {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-overlay {
+        padding: clamp(0.75rem, 2vw, 1rem);
+        padding-bottom: clamp(60px, 12vw, 80px);
+    }
+
+    .profile-widget {
+        max-width: min(calc(100% - 1.5rem), 420px);
+        padding: clamp(16px, 3vw, 22px);
+        max-height: calc(100vh - clamp(18vh, 26vw, 32vh));
+    }
+
+    .profile-close {
+        top: clamp(6px, 1.5vw, 10px);
+        right: clamp(6px, 1.5vw, 10px);
+        width: clamp(32px, 8vw, 40px);
+        height: clamp(32px, 8vw, 40px);
+    }
+
+    .profile-title {
+        font-size: clamp(16px, 4vw, 20px);
+        text-align: center;
+        padding-right: clamp(36px, 10vw, 48px);
+        margin-bottom: clamp(12px, 2vw, 18px);
+    }
+
+    .profile-header {
+        gap: clamp(10px, 2vw, 14px);
+    }
+
+    .profile-name {
+        font-size: clamp(15px, 3.5vw, 18px);
+    }
+
+    .profile-number {
+        font-size: clamp(13px, 3vw, 15px);
+    }
+
+    .profile-section-title {
+        font-size: clamp(13px, 3vw, 15px);
+    }
+
+    .profile-input,
+    .profile-textarea {
+        font-size: 16px; /* Évite le zoom iOS sur focus */
+    }
+
+    .profile-save-btn {
+        padding: clamp(14px, 3vw, 18px);
+        font-size: clamp(14px, 3.5vw, 16px);
+    }
+
+    /* Widget Je suis intéressé - mobile */
+    .interet-overlay {
+        padding: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .interet-widget {
+        max-width: calc(100% - clamp(1rem, 4vw, 1.5rem));
+        padding: clamp(16px, 3vw, 22px);
+    }
+
+    .interet-close {
+        top: clamp(6px, 1.5vw, 10px);
+        right: clamp(6px, 1.5vw, 10px);
+    }
+
+    .interet-title {
+        font-size: clamp(16px, 4vw, 20px);
+        padding-right: clamp(36px, 10vw, 48px);
+    }
+
+    .interet-confirm-btn {
+        padding: clamp(14px, 3vw, 18px);
+        font-size: 16px;
+    }
+}
+
+/* Activity detail overlay - responsive adhérent (aligné staff) */
+@media (max-width: 768px) {
+    .activity-detail-overlay {
+        padding: clamp(1rem, 3vw, 1.5rem);
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .activity-detail-card {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100vh - clamp(16vh, 24vw, 30vh));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 480px) {
+    .activity-detail-overlay {
+        padding: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .activity-detail-card {
+        max-height: calc(100vh - clamp(20vh, 28vw, 35vh));
+        padding: clamp(18px, 4vw, 24px);
+    }
+}

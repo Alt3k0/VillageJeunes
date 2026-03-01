@@ -1,12 +1,34 @@
-# 📋 Documentation des Variables Backend - Partie Staff
+# 📋 Documentation des Variables Backend - Staff & Adhérent
 
 ## 📌 Introduction
 
-Ce document répertorie **uniquement les variables nécessaires et suffisantes** pour la partie **Staff** du frontend. Les variables sont représentées par des placeholders au format `{nom_variable}` qui devront être remplacés par les vraies variables du backend.
+Ce document répertorie les variables nécessaires pour les parties **Staff** et **Adhérent** (et futures : Bénévole, Partenaire) du frontend. Les variables sont représentées par des placeholders au format `{nom_variable}` qui devront être remplacés par les vraies variables du backend.
 
 **Format des placeholders :** `{nom_variable}` (exemple: `{member_id}`, `{activity_title}`)
 
 **Principe :** Simple, clair, sécurisé, conforme aux bonnes pratiques modernes.
+
+---
+
+## ⚙️ Configuration – Adresse mail de contact
+
+**Emplacement à modifier :** Fichier `config.js` (à la racine du projet ou dans un dossier `js/`)
+
+**Variable :** `EMAIL_CONTACT` (ou équivalent)
+
+Cette adresse est utilisée pour l'envoi de mails depuis la partie adhérent/bénévole/partenaire, notamment :
+- **« Je suis intéressé »** (adhérent) : demande de participation à une activité
+- Autres fonctionnalités futures (bénévole, partenaire)
+
+**Exemple :**
+```javascript
+// config.js
+const CONFIG = {
+    EMAIL_CONTACT: 'contact@vill-age-jeunes.fr'  // ← Modifier ici pour changer partout
+};
+```
+
+**Note :** En modifiant cette variable, toutes les fonctionnalités qui envoient un mail utiliseront la nouvelle adresse.
 
 ---
 
@@ -495,6 +517,95 @@ Enregistre le pointage d'un bénévole (staff)
 
 ---
 
+## 👤 Partie Adhérent
+
+### **Page unique :** `accueil-adherent.html`
+
+L'adhérent n'a accès qu'à une seule page : l'accueil (équivalent de `accueil-staff.html` sans le menu nav). Interface en lecture seule : calendrier activités, calendrier salles, emploi du temps. Pas de bouton « Ajouter une activité », pas de boutons « Supprimer ».
+
+**Données activités/salles :** Les variables et structures sont identiques à la section **Variables Activités** (voir ci-dessus). L'adhérent consomme les mêmes données (GET activités, salles) que le staff.
+
+### **Adhérent identifié – Variables fournies par le backend**
+
+L'adhérent est identifié individuellement après connexion. Le backend doit fournir les données du membre connecté (session, token, ou injection dans la page).
+
+| Placeholder | Type | Description | Utilisation |
+|------------|------|-------------|-------------|
+| `{adherent_numero}` | String | Numéro d'adhérent | Envoi mail « Je suis intéressé » |
+| `{adherent_nom}` | String | Nom de famille | Envoi mail « Je suis intéressé » |
+| `{adherent_prenom}` | String | Prénom | Envoi mail « Je suis intéressé » |
+| `{adherent_id}` | String/Number | Identifiant unique (optionnel) | Référence pour les requêtes API |
+
+**Structure JSON attendue (session / réponse API membre connecté) :**
+```json
+{
+  "id": "{adherent_id}",
+  "numero": "{adherent_numero}",
+  "nom": "{adherent_nom}",
+  "prenom": "{adherent_prenom}"
+}
+```
+
+### **« Je suis intéressé » – Demande de participation**
+
+**Contexte :** L'adhérent clique sur « Je suis intéressé » dans le détail d'une activité, puis confirme dans un second widget. Un mail est envoyé au responsable (adresse définie dans `config.js`).
+
+**Données du mail (contenu envoyé) :**
+```json
+{
+  "numero": "{adherent_numero}",
+  "nom": "{adherent_nom}",
+  "prenom": "{adherent_prenom}",
+  "activite": "{activity_title}",
+  "date": "{activity_date}"
+}
+```
+
+| Champ | Type | Source |
+|-------|------|--------|
+| `numero` | String | Session / membre connecté |
+| `nom` | String | Session / membre connecté |
+| `prenom` | String | Session / membre connecté |
+| `activite` | String | Activité sur laquelle l'adhérent a cliqué |
+| `date` | String | Date de l'activité (format `YYYY-MM-DD`) |
+
+**Comportement :**
+1. Bouton « Je suis intéressé » dans le détail d'activité → ouvre un widget de confirmation
+2. Texte affiché : « Vous souhaitez participer à cette activité ? Appuyez sur Je suis intéressé et le responsable d'activité vous recontactera. »
+3. Clic sur « Je suis intéressé » dans le widget → envoi du mail (ou appel API)
+
+### **Endpoint API attendu (optionnel)**
+
+Le frontend peut ouvrir un `mailto:` ou appeler un endpoint backend qui envoie le mail côté serveur.
+
+#### POST `/api/adherent/interet-activite`
+Enregistre la demande d'intérêt et/ou envoie le mail au responsable
+
+**Body attendu :**
+```json
+{
+  "adherent": {
+    "id": "{adherent_id}",
+    "numero": "{adherent_numero}",
+    "nom": "{adherent_nom}",
+    "prenom": "{adherent_prenom}"
+  },
+  "activite": "{activity_title}",
+  "activityId": "{activity_id}",
+  "date": "{activity_date}"
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Votre demande a été envoyée au responsable"
+}
+```
+
+---
+
 ## 🔄 Endpoints API Attendus (suite)
 
 ### **Validation Inscription**
@@ -621,6 +732,9 @@ Avant de considérer l'intégration comme complète :
 - [ ] Validation appel : appel POST avec animateur et adherentsPresents
 - [ ] Pointage adhérent : appel POST `/api/pointage/adherent` depuis `index.html`
 - [ ] Pointage bénévole : appel POST `/api/staff/pointage/benevole` depuis `informations.html`
+- [ ] Adresse mail : configurée dans `config.js` (voir section Configuration)
+- [ ] Partie adhérent : session/membre connecté fournit `{adherent_numero}`, `{adherent_nom}`, `{adherent_prenom}`
+- [ ] « Je suis intéressé » : envoi mail ou appel POST `/api/adherent/interet-activite`
 - [ ] La gestion des erreurs est en place
 - [ ] Les réponses API correspondent aux formats attendus
 - [ ] Les données sont correctement affichées dans le frontend
@@ -628,7 +742,11 @@ Avant de considérer l'intégration comme complète :
 ---
 
 **Dernière mise à jour :** 17 Février 2026  
-**Version :** 2.2
+**Version :** 2.3
+
+**Changelog v2.3 (17/02/2026) :**
+- Ajout section **Configuration** : emplacement pour modifier l'adresse mail (`config.js`)
+- Ajout section **Partie Adhérent** : variables, « Je suis intéressé », endpoint API
 
 **Changelog v2.2 (17/02/2026) :**
 - Ajout section **Pointage** : données, comportement et endpoints pour le pointage adhérent (borne) et bénévole (staff)

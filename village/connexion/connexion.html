@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/public/styles/style_connexion.css" </head>
+
+<body>
+    <div class="connexion-container">
+        <!-- Logo -->
+        <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="/village/assets/LogoRond.svg" alt="VILL'AGE JEUNES" class="logo-svg"
+                onerror="/village/assets/LogoRond.png">
+            <div class="logo" style="display: none;">
+                <span class="logo-text">VILL'AGE<br>JEUNES</span>
+            </div>
+        </div>
+
+        <!-- Formulaire de connexion -->
+        <div class="connexion-main">
+            <div class="connexion-form">
+                <!-- Champ Identifiant -->
+                <div class="form-field-group">
+                    <label class="form-field-label">Identifiant</label>
+                    <input type="text" class="form-field-input" name="identifiant" placeholder="Numéro Adhérent"
+                        required>
+                </div>
+
+                <!-- Champ Mot de passe -->
+                <div class="password-field-group">
+                    <label class="form-field-label">Mot de passe</label>
+                    <input type="password" class="form-field-input" name="motdepasse" placeholder="Mot de passe"
+                        required>
+                    <a href="#" class="password-forgot-link">Mot de passe oublié?</a>
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="connexion-buttons">
+                <button class="btn-connexion btn-connexion-primary" id="loginBtn">Connexion</button>
+
+                <button class="btn-connexion btn-connexion-secondary" id="goSignupBtn">
+                    Je n'ai pas de compte
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="connexion-footer">
+            <a href="#" class="connexion-footer-link">Politique de confidentialité</a>
+            <div class="connexion-footer-separator"></div>
+            <a href="#" class="connexion-footer-link">Mentions légales</a>
+        </footer>
+    </div>
+    <script src="/public/js/core/api.js"></script>
+    <script src="/public/js/connexion.js"></script>
+</body>
+
+</html>

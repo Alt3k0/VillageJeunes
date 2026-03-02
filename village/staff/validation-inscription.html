@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Inscription - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/public/styles/styles.css">
+    <link rel="stylesheet" href="/public/styles/style_staff.css">
+    <link rel="stylesheet" href="/public/styles/style_info_staff.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: clip;
+            /* clip au lieu de hidden pour ne pas casser position: sticky */
+            display: block !important;
+            justify-content: flex-start !important;
+        }
+
+        body {
+            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F7F7F7;
+            min-height: 100vh;
+            position: relative;
+            display: block !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+        }
+
+        /* Fond décoratif - Orange pour staff */
+        .background-decoration {
+            position: fixed;
+            top: -96px;
+            left: -116px;
+            width: 564px;
+            height: 1071px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .background-decoration::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(31, 101, 142, 0.1) 0%, rgba(100, 157, 80, 0.1) 50%, rgba(240, 141, 53, 0.15) 100%);
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
+        /* Layout header/sidebar/nav : style_staff.css */
+
+        /* Contenu principal - ajustements validation */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding: 0 clamp(2.5vw, 4vw, 6vw);
+            padding-top: clamp(3vh, 4vw, 5vh);
+            padding-bottom: clamp(10vh, 12vw, 15vh);
+            margin-top: calc(clamp(2.5rem, 4vw, 5.5rem) + 2vh);
+        }
+
+        /* Titre de la page */
+        .page-title {
+            text-align: center;
+            margin-bottom: clamp(2rem, 3vw, 3rem);
+            position: relative;
+        }
+
+        .page-title h1 {
+            font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+            font-weight: 700;
+            color: #1e1e1d;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+
+        .page-title-underline {
+            width: clamp(200px, 30vw, 400px);
+            height: 2px;
+            background-color: #1e1e1d;
+            margin: 0 auto;
+        }
+
+        /* Barre de recherche */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: clamp(2rem, 3vw, 3rem);
+        }
+
+        /* Barre de recherche - même style que Planning et salles (accueil-staff) */
+        .search-bar {
+            background-color: #F7F7F7;
+            border: 1px solid #d9d0e3;
+            border-radius: clamp(20px, 2.5vw, 40px);
+            width: 100%;
+            max-width: clamp(280px, 70vw, 500px);
+            min-height: clamp(40px, 5vw, 56px);
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: clamp(8px, 1vw, 16px);
+            padding: clamp(8px, 1vw, 14px) clamp(12px, 1.5vw, 25px);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            border-color: #f08d35;
+            box-shadow: 0 0 0 2px rgba(240, 141, 53, 0.1);
+        }
+
+        .search-icon {
+            width: clamp(16px, 2vw, 24px);
+            height: clamp(16px, 2vw, 24px);
+            flex-shrink: 0;
+            color: #9586a8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            background: transparent;
+            font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+            color: #1e1e1d;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #6e6f75;
+        }
+
+        /* Compteur de caractères - sur la même ligne à droite (comme le chevron Planning) */
+        .search-bar .char-counter {
+            flex-shrink: 0;
+            font-size: clamp(0.75rem, 1vw, 0.85rem);
+            color: #6e6f75;
+            white-space: nowrap;
+            margin-top: 0;
+        }
+
+        /* Navigation avec switch */
+        .view-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1rem, 2vw, 2rem);
+            margin-bottom: clamp(2rem, 3vw, 3rem);
+        }
+
+        .view-arrow {
+            width: clamp(1.5rem, 2.5vw, 3rem);
+            height: clamp(1.5rem, 2.5vw, 3rem);
+            background-color: rgba(31, 101, 142, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #F7F7F7;
+            font-size: clamp(1rem, 1.5vw, 1.5rem);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .view-arrow:hover {
+            background-color: rgba(31, 101, 142, 1);
+            transform: scale(1.1);
+        }
+
+        .view-title {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-weight: 700;
+            color: #1e1e1d;
+            min-width: clamp(150px, 20vw, 250px);
+            text-align: center;
+        }
+
+        /* Grid de cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 25vw, 280px), 1fr));
+            gap: clamp(1rem, 1.5vw, 1.5rem);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 1;
+            background-color: #F7F7F7;
+            padding: clamp(1.5rem, 2vw, 2rem);
+            text-align: center;
+            border-top: 1px solid rgba(110, 111, 117, 0.2);
+            margin-top: clamp(3rem, 4vw, 5rem);
+        }
+
+        .footer-link {
+            color: #1e1e1d;
+            text-decoration: none;
+            font-size: clamp(0.85rem, 1.2vw, 1rem);
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: rgba(31, 101, 142, 0.8);
+        }
+
+        .footer-separator {
+            display: inline-block;
+            margin: 0 clamp(0.5rem, 1vw, 1rem);
+            color: #6e6f75;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 40vw, 200px), 1fr));
+                gap: clamp(0.75rem, 2vw, 1rem);
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .cards-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .cards-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Fond décoratif -->
+    <div class="background-decoration"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="/village/assets/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo"
+                    onclick="window.location.href='/village/accueil/accueil-staff.html'" ;>
+                <div class="header-menu-container">
+                    <div class="header-menu" id="menuToggle">
+                        <div class="header-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-profile" onclick="window.location.href='profil-staff.html'">
+                    <svg class="header-profile-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu déroulant -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-close" id="menuClose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+        <nav class="menu-nav">
+            <a href="/village/accueil/accueil-staff.html" class="menu-item active">
+                <span>Planning et salles</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/informations.html" class="menu-item">
+                <span>Informations</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/validation-inscription.html" class="menu-item">
+                <span>Validation inscription</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="statistiques.html" class="menu-item">
+                <span>Statistiques</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Overlay pour fermer le menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Titre de la page -->
+        <div class="page-title">
+            <h1>Validation inscription</h1>
+            <div class="page-title-underline"></div>
+        </div>
+
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Rechercher">
+            </div>
+        </div>
+
+        <!-- Navigation avec switch -->
+        <div class="view-navigation">
+            <button class="view-arrow" id="prevView">‹</button>
+            <div class="view-title" id="currentViewTitle">Adhérents</div>
+            <button class="view-arrow" id="nextView">›</button>
+        </div>
+
+        <!-- Grid de cards -->
+        <div class="cards-container" id="cardsContainer">
+            <!-- Les cards seront générées par JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal Détails Membre -->
+    <div class="member-detail-overlay" id="memberDetailOverlay">
+        <div class="member-detail-widget">
+            <button class="member-detail-close" id="memberDetailClose">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <h2 class="member-detail-title">Détails du membre</h2>
+
+            <!-- Header avec photo et nom -->
+            <div class="member-detail-header">
+                <div class="member-detail-photo" id="memberDetailPhoto">Photo</div>
+                <div class="member-detail-header-info">
+                    <div class="member-detail-name" id="memberDetailName">{member_nom} {member_prenom}</div>
+                    <div class="member-detail-number" id="memberDetailNumber">N° {member_numero}</div>
+                    <div class="member-detail-role" id="memberDetailRole">{member_role}</div>
+                </div>
+            </div>
+
+            <!-- Informations personnelles -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations personnelles</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Genre :</span>
+                        <span class="member-detail-value" id="memberDetailGenre"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date de naissance :</span>
+                        <span class="member-detail-value" id="memberDetailDateNaissance"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Surnom :</span>
+                        <span class="member-detail-value" id="memberDetailSurnom"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Préférence nom :</span>
+                        <span class="member-detail-value" id="memberDetailPreferenceNom"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailTelephone"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailEmail"></span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Province :</span>
+                        <span id="memberDetailProvince" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Commune :</span>
+                        <span id="memberDetailCommune" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span id="memberDetailQuartierLabel" class="member-detail-label">Quartier ou district coutumier:</span>
+                        <span id="memberDetailQuartier" class="member-detail-value">Non spécifié</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problèmes médicaux -->
+            <div class="member-detail-section member-detail-medical">
+                <h3 class="member-detail-section-title">Problèmes médicaux</h3>
+                <div class="member-detail-medical-content">
+                    <div class="member-detail-medical-info" id="memberDetailProblemesMedicaux">
+                        {member_information_medicale} ou "Pas de problème médical"
+                    </div>
+                    <div class="member-detail-commentaire-staff">
+                        <label class="member-detail-label">Commentaires staff :</label>
+                        <div class="member-detail-commentaires-list" id="memberDetailCommentairesList">
+                            <!-- Les commentaires seront générés par JavaScript -->
+                        </div>
+                        <div class="member-detail-commentaire-add">
+                            <textarea class="member-detail-commentaire-input" id="memberDetailCommentaireInput"
+                                placeholder="Ajouter un commentaire..." rows="3"></textarea>
+                            <button type="button" class="member-detail-btn-commentaire" id="memberDetailAddCommentaire">
+                                Ajouter le commentaire
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ce que je fais dans la vie -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Ce que je fais dans la vie</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Étudiant :</span>
+                        <span class="member-detail-value" id="memberDetailEstEtudiant">{member_est_etudiant}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Type établissement :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailTypeEtablissement">{member_type_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Établissement :</span>
+                        <span class="member-detail-value" id="memberDetailEtablissement">{member_etablissement}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">En recherche d'emploi :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailRechercheEmploi">{member_recherche_emploi_details}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Activité payée :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailActivitePayee">{member_activite_payee_secteur}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Association :</span>
+                        <span class="member-detail-value" id="memberDetailAsso">{member_asso_nom} -
+                            {member_asso_sujet}</span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Autre activité :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailAutreActivite">{member_autre_activite_details}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobilité et Permis -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mobilité et Permis</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Mobilité :</span>
+                        <span class="member-detail-value" id="memberDetailMobilite">{member_mobilites}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Permis :</span>
+                        <span class="member-detail-value" id="memberDetailPermis">{member_permis}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Droit à l'image -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Autorisations</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation image :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailAutorisationImage">{member_autorisation_image}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation urgence médicale :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailAutorisationUrgence">{member_autorisation_urgence}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moins de 18 ans -->
+            <div class="member-detail-section" id="memberDetailMineurSection" style="display: none;">
+                <h3 class="member-detail-section-title">Représentant légal (moins de 18 ans)</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Nom :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailParentNom">{member_nom_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailParentTelephone">{member_telephone_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailParentEmail">{member_email_representant_legal}</span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Province :</span>
+                        <span id="memberDetailProvince" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Commune :</span>
+                        <span id="memberDetailCommune" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span id="memberDetailQuartierLabel" class="member-detail-label">Quartier ou district coutumier:</span>
+                        <span id="memberDetailQuartier" class="member-detail-value">Non spécifié</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations complémentaires</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date d'inscription :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailDateInscription">{member_date_inscription}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Historique</h3>
+                <div class="member-detail-history">
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Dernier pointage :</span>
+                        <span class="member-detail-value"
+                            id="memberDetailDernierPointage">{member_dernier_pointage}</span>
+                    </div>
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Total pointages :</span>
+                        <span class="member-detail-value" id="memberDetailTotalPointage">{member_total_pointage}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion du paiement -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Paiement de l'adhésion</h3>
+                <div class="member-detail-paiement">
+                    <div class="member-detail-paiement-info">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant total :</span>
+                            <span class="member-detail-value"
+                                id="memberDetailMontantTotal">{member_adhesion_montant_total} francs CFP</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant payé :</span>
+                            <span class="member-detail-value"
+                                id="memberDetailMontantPaye">{member_adhesion_montant_paye} francs CFP</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Date d'adhésion :</span>
+                            <span class="member-detail-value"
+                                id="memberDetailDateAdhesion">{member_date_adhesion}</span>
+                        </div>
+                    </div>
+
+                    <div class="member-detail-paiement-options">
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementTotal" name="paiementType"
+                                value="total">
+                            <span>Payé en totalité</span>
+                        </label>
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementPartiel"
+                                name="paiementType" value="partiel">
+                            <span>Paiement partiel</span>
+                        </label>
+                    </div>
+
+                    <div class="member-detail-paiement-commentaire" id="paiementPartielCommentaire"
+                        style="display: none;">
+                        <label class="member-detail-label">Commentaire sur le paiement partiel :</label>
+                        <textarea class="member-detail-commentaire-input" id="paiementPartielCommentaireInput"
+                            placeholder="Ajouter un commentaire sur le paiement partiel..." rows="3"></textarea>
+                        <button type="button" class="member-detail-btn-commentaire" id="savePaiementCommentaire">
+                            Enregistrer le commentaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mot de passe</h3>
+                <div class="member-detail-password-container">
+                    <label class="member-detail-label" for="memberPasswordInput">Mot de passe à attribuer :</label>
+                    <input type="password" id="memberPasswordInput" class="member-detail-password-input"
+                        placeholder="Saisir le mot de passe" autocomplete="new-password" />
+                    <div class="member-detail-password-info">
+                        <small>Le mot de passe sert maintenant de mot de passe de connexion.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Signature</h3>
+                <div class="member-detail-signature-container">
+                    <div class="member-detail-signature-wrapper">
+                        <canvas id="signatureCanvas" class="member-detail-signature-canvas"></canvas>
+                        <div class="member-detail-signature-placeholder" id="signaturePlaceholder">
+                            <span>Signez ici avec votre doigt</span>
+                        </div>
+                    </div>
+                    <div class="member-detail-signature-actions">
+                        <button type="button" class="member-detail-btn-signature-clear" id="signatureClearBtn">
+                            Effacer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="member-detail-actions">
+                <button type="button" class="member-detail-btn member-detail-btn-modify"
+                    id="memberDetailModify">Modifier</button>
+                <button type="button" class="member-detail-btn member-detail-btn-validate"
+                    id="memberDetailValidate">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="#" class="footer-link">Politique de confidentialité</a>
+        <span class="footer-separator">|</span>
+        <a href="#" class="footer-link">Mentions légales</a>
+    </footer>
+
+    <script src="/public/js/form-validation.js"></script>
+    <script src="/public/js/core/api.js"></script>
+    <script src="/public/js/components/cards.js"></script>
+    <script src="/public/js/widgets/member-comments.js"></script>
+    <script src="/public/js/data/form-data.js"></script>
+
+    <!-- ✅ widgets existants -->
+    <script src="/public/js/widgets/member-edit.js"></script>
+    <script src="/public/js/widgets/member-modal.js"></script>
+
+    <!-- ✅ nouveaux widgets/pages pour validation -->
+    <script src="/public/js/widgets/signature-pad.js"></script>
+    <script src="/public/js/pages/validation-inscription.js"></script>
+</body>
+
+</html>

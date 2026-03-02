@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil Staff - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/public/styles/style_staff.css">
+</head>
+
+<body>
+    <!-- Fond décoratif -->
+    <div class="background-decoration"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="/village/assets/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo"
+                    onclick="window.location.href='accueil-staff.html'" onerror="this.src='assets/LogoRond.png';">
+                <div class="header-menu-container">
+                    <div class="header-menu" id="menuToggle">
+                        <div class="header-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-profile" onclick="window.location.href='profil-staff.html'">
+                    <svg class="header-profile-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu déroulant -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-close" id="menuClose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+        <nav class="menu-nav">
+            <a href="/village/accueil/accueil-staff.html" class="menu-item active">
+                <span>Planning et salles</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/informations.html" class="menu-item">
+                <span>Informations</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/validation-inscription.html" class="menu-item">
+                <span>Validation inscription</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="statistiques.html" class="menu-item">
+                <span>Statistiques</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Overlay pour fermer le menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Contenu principal -->
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Bouton Ajouter une activité -->
+        <button class="add-activity-button" id="addActivityButton">
+            <svg class="add-activity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="add-activity-text">Ajouter une activité</span>
+        </button>
+
+        <!-- Navigation titre avec flèches -->
+        <div class="view-navigation">
+            <div class="view-arrow" id="prevView">‹</div>
+            <h1 class="view-title" id="viewTitle">ACTIVITÉS</h1>
+            <div class="view-arrow" id="nextView">›</div>
+        </div>
+
+        <!-- Calendrier Activités -->
+        <div class="calendar-container" id="calendarActivites">
+            <div class="calendar-header">
+                <div class="calendar-nav-arrow" id="prevMonth">‹</div>
+                <div class="calendar-date-selectors">
+                    <select class="calendar-select" id="monthSelect">
+                        <option value="0">Janvier</option>
+                        <option value="1" selected>Février</option>
+                        <option value="2">Mars</option>
+                        <option value="3">Avril</option>
+                        <option value="4">Mai</option>
+                        <option value="5">Juin</option>
+                        <option value="6">Juillet</option>
+                        <option value="7">Août</option>
+                        <option value="8">Septembre</option>
+                        <option value="9">Octobre</option>
+                        <option value="10">Novembre</option>
+                        <option value="11">Décembre</option>
+                    </select>
+                    <select class="calendar-select" id="yearSelect">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="calendar-nav-arrow" id="nextMonth">›</div>
+            </div>
+
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Les jours de la semaine et les dates seront générés par JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de recherche / Menu déroulant -->
+        <div class="search-container" id="searchContainer">
+            <div class="search-wrapper">
+                <div class="search-bar" id="searchBar">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#9586a8" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <div class="search-select-custom" id="customSelect">
+                        <span class="search-select-text" id="selectText">Rechercher une activité</span>
+                        <svg class="search-arrow" viewBox="0 0 12 12" fill="none" stroke="#9586a8" stroke-width="2">
+                            <path d="M3 4.5l3 3 3-3"></path>
+                        </svg>
+                    </div>
+                    <!-- Select natif caché pour la valeur -->
+                    <select class="search-select-hidden" id="activitySelect" style="display: none;">
+                        <option value="">Rechercher une activité</option>
+                        <optgroup label="Catégories">
+                        </optgroup>
+                        <optgroup label="Activités" id="activitiesList">
+                            <!-- Les activités seront ajoutées dynamiquement -->
+                        </optgroup>
+                    </select>
+                </div>
+                <!-- Menu déroulant personnalisé -->
+                <div class="custom-dropdown" id="customDropdown">
+                    <div class="dropdown-content">
+                        <div class="dropdown-item placeholder" data-value="">
+                            <span>Rechercher une activité</span>
+                        </div>
+                        <div class="dropdown-group">
+                            <div class="dropdown-group-label">Catégories</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-group" id="activitiesGroup">
+                        <div class="dropdown-group-label">Activités</div>
+                        <!-- Les activités seront ajoutées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container pour les cards d'activités -->
+        <div class="activity-cards-container" id="activityCardsContainer">
+            <!-- Les cards seront ajoutées dynamiquement -->
+        </div>
+        </div>
+
+        <!-- Calendrier Salles -->
+        <div class="view-navigation" id="sallesNavigation" style="display: none;">
+            <div class="view-arrow" id="prevViewSalles">‹</div>
+            <h1 class="view-title" id="viewTitleSalles">SALLES OCCUPÉES</h1>
+            <div class="view-arrow" id="nextViewSalles">›</div>
+        </div>
+
+        <div class="calendar-container" id="calendarSalles" style="display: none;">
+            <div class="calendar-header">
+                <div class="calendar-nav-arrow" id="prevMonthSalles">‹</div>
+                <div class="calendar-date-selectors">
+                    <select class="calendar-select" id="monthSelectSalles">
+                        <option value="0">Janvier</option>
+                        <option value="1" selected>Février</option>
+                        <option value="2">Mars</option>
+                        <option value="3">Avril</option>
+                        <option value="4">Mai</option>
+                        <option value="5">Juin</option>
+                        <option value="6">Juillet</option>
+                        <option value="7">Août</option>
+                        <option value="8">Septembre</option>
+                        <option value="9">Octobre</option>
+                        <option value="10">Novembre</option>
+                        <option value="11">Décembre</option>
+                    </select>
+                    <select class="calendar-select" id="yearSelectSalles">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="calendar-nav-arrow" id="nextMonthSalles">›</div>
+            </div>
+
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-grid" id="calendarGridSalles">
+                    <!-- Les jours de la semaine et les dates seront générés par JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget d'emploi du temps (placé après le calendrier pour s'afficher en dessous) -->
+        <div class="schedule-widget" id="scheduleWidget">
+            <div class="schedule-widget-card">
+                <button class="schedule-close-button" id="closeScheduleWidget">
+                    <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <h2 class="schedule-title">Activités</h2>
+
+                <div class="schedule-date-navigator">
+                    <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
+                    <span class="schedule-date-text" id="scheduleDateText">10 Fevrier 2026</span>
+                    <div class="schedule-nav-arrow next" id="nextDay">›</div>
+                </div>
+
+                <div class="schedule-timeline" id="scheduleTimeline">
+                    <!-- Marqueurs d'heure -->
+                    <div class="schedule-time-marker" data-hour="6">
+                        <span class="schedule-time-label">6h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="8">
+                        <span class="schedule-time-label">8h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="10">
+                        <span class="schedule-time-label">10h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="12">
+                        <span class="schedule-time-label">12h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="14">
+                        <span class="schedule-time-label">14h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="16">
+                        <span class="schedule-time-label">16h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="18">
+                        <span class="schedule-time-label">18h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="20">
+                        <span class="schedule-time-label">20h</span>
+                    </div>
+
+                    <!-- Indicateur de l'heure actuelle -->
+                    <div class="schedule-current-time" id="currentTimeIndicator">
+                        <span class="schedule-current-time-label" id="currentTimeText">9:48</span>
+                    </div>
+
+                    <!-- Les activités seront ajoutées dynamiquement ici -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Légende des couleurs pour les salles -->
+        <div class="salles-legend" id="sallesLegend" style="display: none;">
+            <h3 class="legend-title">Légende des salles :</h3>
+            <div class="legend-items">
+            </div>
+        </div>
+
+        <!-- Widget de détail d'activité (overlay) -->
+        <div class="activity-detail-overlay" id="activityDetailOverlay">
+            <div class="activity-detail-card">
+                <button class="activity-detail-close" id="closeActivityDetail">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+                <div class="activity-detail-header">
+                    <h2 class="activity-detail-title">Activités</h2>
+                    <div class="activity-detail-navigator">
+                        <div class="activity-detail-navigator-name" id="activityDetailName">Activité 1</div>
+                    </div>
+                </div>
+                <div class="activity-detail-info-box">
+                    <div class="activity-detail-date-time" id="activityDetailDateTime">
+                        <span class="activity-detail-date" id="activityDetailDate">10 Février 2026</span>
+                        <span class="activity-detail-time-separator">•</span>
+                        <span class="activity-detail-time-detail" id="activityDetailTimeDetail">14h00 - 15h30</span>
+                    </div>
+                    <div class="activity-detail-badges">
+                        <div class="activity-detail-salle-badge" id="activityDetailSalleBadge">
+                            <span id="activityDetailSalleName" class="activity-detail-salle-select">—</span>
+                        </div>
+                        <div class="activity-detail-benevole-badge" id="activityDetailBenevoleBadge">
+                            <span id="activityDetailBenevoleName">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-detail-description-box">
+                    <div class="activity-detail-description-label">Description :</div>
+                    <div class="activity-detail-description" id="activityDetailDescription">Pendant 1h nous allons faire
+                        une activité, décrire l'activiter et possiblement ajouter si il y a des contre-indications
+                        médicales ou autres.</div>
+                </div>
+                <div class="activity-detail-register-wrapper" id="activityDetailRegisterWrapper">
+                    <button class="activity-detail-register-button" id="registerActivityButton">
+                        <span class="activity-detail-register-button-text">Faire l'appel</span>
+                    </button>
+                </div>
+                <button type="button" class="activity-detail-edit-button" id="activityDetailEditBtn">
+                    Modifier
+                </button>
+            </div>
+        </div>
+
+        <!-- Widget Faire l'appel -->
+        <div class="appel-overlay" id="appelOverlay">
+            <div class="appel-widget">
+                <button class="appel-close" id="closeAppelWidget">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+                <h2 class="appel-title">Faire l'appel</h2>
+                <p class="appel-activity-name" id="appelActivityName"></p>
+                <div class="appel-animateur-group">
+                    <label for="appelAnimateurSelect">Animateur / Bénévole</label>
+                    <select id="appelAnimateurSelect" class="appel-select"></select>
+                </div>
+                <div class="appel-participants-section">
+                    <div class="appel-participants-header">
+                        <span>Participants</span>
+                        <button type="button" class="appel-add-btn" id="appelAddAdherent">+ Ajouter</button>
+                    </div>
+                    <ul class="appel-participants-list" id="appelParticipantsList"></ul>
+                </div>
+                <button type="button" class="appel-validate-btn" id="appelValidateBtn">Valider l'appel</button>
+            </div>
+        </div>
+
+        <!-- Modal d'ajout d'adhérent à l'appel -->
+        <div class="appel-add-modal" id="appelAddModal">
+            <div class="appel-add-modal-content">
+                <h3>Ajouter un adhérent</h3>
+                <select id="appelAddAdherentSelect" class="appel-select"></select>
+                <div class="appel-add-modal-actions">
+                    <button type="button" class="appel-add-modal-cancel" id="appelAddModalCancel">Annuler</button>
+                    <button type="button" class="appel-add-modal-confirm" id="appelAddModalConfirm">Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget d'ajout d'activité -->
+        <div class="add-activity-overlay" id="addActivityOverlay">
+            <div class="add-activity-widget">
+                <button class="add-activity-close" id="closeAddActivity">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <h2 class="add-activity-widget-title">Ajouter une activité</h2>
+
+                <form class="add-activity-form" id="addActivityForm">
+                    <!-- Nom de l'activité - pleine largeur -->
+                    <div class="form-group full-width">
+                        <label for="activityName" class="form-label">Nom de l'activité *</label>
+                        <input type="text" id="activityName" class="form-input" required
+                            placeholder="Ex: Sortie Nature">
+                    </div>
+
+                    <!-- Date et horaires - Date pleine largeur, heures côte à côte -->
+                    <div class="form-group date-full">
+                        <label for="activityDate" class="form-label">Date *</label>
+                        <input type="date" id="activityDate" class="form-input" required>
+                    </div>
+
+                    <!-- Wrapper pour les heures côte à côte -->
+                    <div class="form-group time-wrapper">
+                        <div class="form-group time-group">
+                            <label for="activityStartTime" class="form-label">Heure de début *</label>
+                            <input type="time" id="activityStartTime" class="form-input" required>
+                        </div>
+
+                        <div class="form-group time-group">
+                            <label for="activityEndTime" class="form-label">Heure de fin *</label>
+                            <input type="time" id="activityEndTime" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <!-- Catégorie et Salle - 2 colonnes -->
+                    <div class="form-group half-width">
+                        <label for="activityCategory" class="form-label">Catégorie *</label>
+                        <select id="activityCategory" class="form-select" required>
+                            <option value="">Sélectionner une catégorie</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="activityRoom" class="form-label">Salle *</label>
+                        <select id="activityRoom" class="form-select" required>
+                            <option value="">Sélectionner une salle</option>
+                        </select>
+                    </div>
+
+                    <!-- Responsable - pleine largeur -->
+                    <div class="form-group responsible">
+                        <label for="activityResponsible" class="form-label">Bénévole/Animateur responsable *</label>
+                        <select id="activityResponsible" class="form-select" required>
+                            <option value="">Sélectionner un animateur</option>
+                        </select>
+                    </div>
+
+                    <!-- Description - pleine largeur -->
+                    <div class="form-group description">
+                        <label for="activityDescription" class="form-label">Description</label>
+                        <textarea id="activityDescription" class="form-textarea" rows="3"
+                            placeholder="Décrivez l'activité..."></textarea>
+                    </div>
+
+                    <!-- Actions - pleine largeur -->
+                    <div class="form-actions">
+                        <button type="button" class="form-button cancel" id="cancelAddActivity">Annuler</button>
+                        <button type="submit" class="form-button submit">Ajouter l'activité</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="#" class="footer-link">Politique de confidentialité</a>
+        <div class="footer-separator"></div>
+        <a href="#" class="footer-link">Mentions légales</a>
+    </footer>
+    <script src="/public/js/core/api.js"></script>
+    <script src="/public/js/core/auth_guard.js"></script>
+    <script src="/public/js/validation.js"></script>
+    <script src="/public/js/form-validation.js"></script>
+    <script src="/public/js/accueil-staff.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/public/styles/style_info_staff.css">
+</head>
+
+<body>
+    <!-- Fond décoratif -->
+    <div class="background-decoration"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="/village/assets/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo"
+                    onclick="window.location.href='/village/accueil/accueil-staff.html'"
+                    onerror="this.src='/village/assets/LogoRond.png';">
+                <div class="header-menu-container">
+                    <div class="header-menu" id="menuToggle">
+                        <div class="header-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-profile" onclick="window.location.href='profil-staff.html'">
+                    <svg class="header-profile-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu déroulant -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-close" id="menuClose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+        <nav class="menu-nav">
+            <a href="/village/accueil/accueil-staff.html" class="menu-item active">
+                <span>Planning et salles</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/informations.html" class="menu-item">
+                <span>Informations</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="/village/staff/validation-inscription.html" class="menu-item">
+                <span>Validation inscription</span>
+            </a>
+            <div class="menu-separator"></div>
+            <a href="statistiques.html" class="menu-item">
+                <span>Statistiques</span>
+            </a>
+        </nav>
+    </div>
+
+
+    <!-- Overlay pour fermer le menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Titre de la page -->
+        <div class="page-title">
+            <h1>Informations</h1>
+            <div class="page-title-underline"></div>
+        </div>
+
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Rechercher">
+            </div>
+        </div>
+
+        <!-- Navigation avec switch -->
+        <div class="view-navigation">
+            <button class="view-arrow" id="prevView">‹</button>
+            <div class="view-title" id="currentViewTitle">Adhérents</div>
+            <button class="view-arrow" id="nextView">›</button>
+        </div>
+
+        <!-- Grid de cards -->
+        <div class="cards-container" id="cardsContainer">
+            <!-- Les cards seront générées par JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal Détails Membre -->
+    <div class="member-detail-overlay" id="memberDetailOverlay">
+        <div class="member-detail-widget">
+            <button class="member-detail-close" id="memberDetailClose">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#d32f2f" />
+                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <h2 class="member-detail-title">Détails du membre</h2>
+
+            <!-- Header avec photo et nom -->
+            <div class="member-detail-header">
+                <div class="member-detail-photo" id="memberDetailPhoto">Photo</div>
+                <div class="member-detail-header-info">
+                    <div class="member-detail-name" id="memberDetailName"></div>
+                    <div class="member-detail-role" id="memberDetailRole"></div>
+                </div>
+            </div>
+
+            <!-- Informations personnelles -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations personnelles</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Genre :</span>
+                        <span class="member-detail-value" id="memberDetailGenre"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date de naissance :</span>
+                        <span class="member-detail-value" id="memberDetailDateNaissance"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Surnom :</span>
+                        <span class="member-detail-value" id="memberDetailSurnom"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Préférence nom :</span>
+                        <span class="member-detail-value" id="memberDetailPreferenceNom"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailTelephone"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailEmail"></span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Province :</span>
+                        <span id="memberDetailProvince" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Commune :</span>
+                        <span id="memberDetailCommune" class="member-detail-value">Non spécifié</span>
+                    </div>
+
+                    <div class="member-detail-info-item">
+                        <span id="memberDetailQuartierLabel" class="member-detail-label">Quartier ou district coutumier:</span>
+                        <span id="memberDetailQuartier" class="member-detail-value">Non spécifié</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problèmes médicaux (juste après les informations personnelles) -->
+            <div class="member-detail-section member-detail-medical">
+                <h3 class="member-detail-section-title">Problèmes médicaux</h3>
+                <div class="member-detail-medical-content">
+                    <div class="member-detail-medical-info" id="memberDetailProblemesMedicaux">
+                        ou "Pas de problème médical"
+                    </div>
+                    <div class="member-detail-commentaire-staff">
+                        <label class="member-detail-label">Commentaires staff :</label>
+                        <div class="member-detail-commentaires-list" id="memberDetailCommentairesList">
+                            <!-- Les commentaires seront générés par JavaScript -->
+                        </div>
+                        <div class="member-detail-commentaire-add">
+                            <textarea class="member-detail-commentaire-input" id="memberDetailCommentaireInput"
+                                placeholder="Ajouter un commentaire..." rows="3"></textarea>
+                            <button type="button" class="member-detail-btn-commentaire" id="memberDetailAddCommentaire">
+                                Ajouter le commentaire
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ce que je fais dans la vie -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Ce que je fais dans la vie</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Étudiant :</span>
+                        <span class="member-detail-value" id="memberDetailEstEtudiant"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Type établissement :</span>
+                        <span class="member-detail-value" id="memberDetailTypeEtablissement"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Établissement :</span>
+                        <span class="member-detail-value" id="memberDetailEtablissement"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">En recherche d'emploi :</span>
+                        <span class="member-detail-value" id="memberDetailRechercheEmploi"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Activité payée :</span>
+                        <span class="member-detail-value" id="memberDetailActivitePayee"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Association :</span>
+                        <span class="member-detail-value" id="memberDetailAsso"></span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Autre activité :</span>
+                        <span class="member-detail-value" id="memberDetailAutreActivite"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobilité et Permis -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Mobilité et Permis</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Mobilité :</span>
+                        <span class="member-detail-value" id="memberDetailMobilite"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Permis :</span>
+                        <span class="member-detail-value" id="memberDetailPermis"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Droit à l'image -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Autorisations</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation image :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationImage"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Autorisation urgence médicale :</span>
+                        <span class="member-detail-value" id="memberDetailAutorisationUrgence"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moins de 18 ans -->
+            <div class="member-detail-section" id="memberDetailMineurSection" style="display: none;">
+                <h3 class="member-detail-section-title">Représentant légal (moins de 18 ans)</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Nom :</span>
+                        <span class="member-detail-value" id="memberDetailParentNom"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Téléphone :</span>
+                        <span class="member-detail-value" id="memberDetailParentTelephone"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Email :</span>
+                        <span class="member-detail-value" id="memberDetailParentEmail"></span>
+                    </div>
+                    <div class="member-detail-info-item full-width">
+                        <span class="member-detail-label">Adresse :</span>
+                        <span class="member-detail-value" id="memberDetailParentAdresse"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Informations complémentaires</h3>
+                <div class="member-detail-info-grid">
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Date d'inscription :</span>
+                        <span class="member-detail-value" id="memberDetailDateInscription"></span>
+                    </div>
+                    <div class="member-detail-info-item">
+                        <span class="member-detail-label">Statut :</span>
+                        <span class="member-detail-value" id="memberDetailStatut"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Historique</h3>
+                <div class="member-detail-history">
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Dernier pointage :</span>
+                        <span class="member-detail-value" id="memberDetailDernierPointage"></span>
+                    </div>
+                    <div class="member-detail-history-item">
+                        <span class="member-detail-label">Total pointages :</span>
+                        <span class="member-detail-value" id="memberDetailTotalPointage"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion du paiement -->
+            <div class="member-detail-section">
+                <h3 class="member-detail-section-title">Paiement de l'adhésion</h3>
+                <div class="member-detail-paiement">
+                    <div class="member-detail-paiement-info">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant total :</span>
+                            <span class="member-detail-value" id="memberDetailMontantTotal"> CFP</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Montant payé :</span>
+                            <span class="member-detail-value" id="memberDetailMontantPaye"> CFP</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Date d'adhésion :</span>
+                            <span class="member-detail-value" id="memberDetailDateAdhesion"></span>
+                        </div>
+                    </div>
+
+                    <div class="member-detail-paiement-options">
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementTotal" name="paiementType"
+                                value="total">
+                            <span>Payé en totalité</span>
+                        </label>
+                        <label class="member-detail-checkbox-label">
+                            <input type="checkbox" class="member-detail-checkbox" id="paiementPartiel"
+                                name="paiementType" value="partiel">
+                            <span>Paiement partiel</span>
+                        </label>
+                    </div>
+
+                    <div class="member-detail-paiement-commentaire" id="paiementPartielCommentaire"
+                        style="display: none;">
+                        <label class="member-detail-label">Commentaire sur le paiement partiel :</label>
+                        <textarea class="member-detail-commentaire-input" id="paiementPartielCommentaireInput"
+                            placeholder="Ajouter un commentaire sur le paiement partiel..." rows="3"></textarea>
+                        <button type="button" class="member-detail-btn-commentaire" id="savePaiementCommentaire">
+                            Enregistrer le commentaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="member-detail-actions">
+                <button type="button" class="member-detail-btn member-detail-btn-modify"
+                    id="memberDetailModify">Modifier</button>
+                <button type="button" class="member-detail-btn member-detail-btn-delete"
+                    id="memberDetailDelete">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="#" class="footer-link">Politique de confidentialité</a>
+        <span class="footer-separator">|</span>
+        <a href="#" class="footer-link">Mentions légales</a>
+    </footer>
+
+    <script src="/public/js/form-validation.js"></script>
+
+    <script src="/public/js/core/api.js"></script>
+    <script src="/public/js/components/cards.js"></script>
+    <script src="/public/js/widgets/member-comments.js"></script>
+    <script src="/public/js/data/form-data.js"></script>
+    <script src="/public/js/widgets/member-edit.js"></script>
+    <script src="/public/js/widgets/member-modal.js"></script>
+    <script src="/public/js/pages/informations.js"></script>
+    <script>
+        // transforme l'objet API (nom/prenom/roles/numeroAdherent...) en objet UI (nom/prenom/role/numero/isPending)
+        function mapApiMemberToUi(m) {
+            const roles = m.roles || [];
+            const roleLabel =
+                roles.includes("ADMIN") || roles.includes("STAFF")
+                    ? "Staff"
+                    : roles.includes("BENEVOLE")
+                        ? "Bénévole"
+                        : "Adhérent";
+
+            return {
+                // utilisé pour PUT/DELETE
+                id: String(m.id),
+
+                // carte
+                nom: m.nom || "",
+                prenom: m.prenom || "",
+                role: roleLabel,
+                numero: m.numeroAdherent ? String(m.numeroAdherent).padStart(4, "0") : "",
+                isPending: m.statut !== "ACTIF",
+
+                // ✅ champs modal (on garde tout)
+                genre: m.genre ?? null,
+                dateNaissance: m.dateNaissance ?? null,
+                surnom: m.surnom ?? null,
+                prefNomSurnom: m.prefNomSurnom ?? null,
+                telephone: m.telephone ?? null,
+
+                // email affiché dans le modal
+                email: m.email ?? null,
+                emailContact: m.emailContact ?? null,
+
+                // adresse
+                province: m.province ?? null,
+                commune: m.commune ?? null,
+                quartier: m.quartier ?? null,
+
+                // autres si tu veux
+                statut: m.statut,
+            };
+        }
+
+        // Mettre à jour le titre de la vue
+        function updateViewTitle() {
+            const titles = {
+                'adherents': 'Adhérents',
+                'benevoles': 'Bénévoles',
+                'partenaires': 'Partenaires'
+            };
+            document.getElementById('currentViewTitle').textContent = titles[currentViewType];
+        }
+
+        // Changer de vue
+        function switchView(direction) {
+            const views = ['adherents', 'benevoles', 'partenaires'];
+            const currentIndex = views.indexOf(currentViewType);
+            let newIndex;
+
+            if (direction === 'next') {
+                newIndex = (currentIndex + 1) % views.length;
+            } else {
+                newIndex = (currentIndex - 1 + views.length) % views.length;
+            }
+
+            currentViewType = views[newIndex];
+            updateViewTitle();
+            renderCards();
+        }
+
+        // Supprimer un membre
+        function deleteMember(member) {
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer ${member.nom} ${member.prenom} ?`)) {
+                return;
+            }
+
+            // Retirer de la liste
+            const index = allMembers[currentViewType].findIndex(m => m.id === member.id);
+            if (index !== -1) {
+                allMembers[currentViewType].splice(index, 1);
+                renderCards();
+            }
+        }
+
+        // Menu toggle
+        function setupMenuToggle() {
+            const menuToggle = document.getElementById('menuToggle');
+            const menuClose = document.getElementById('menuClose');
+            const sidebarMenu = document.getElementById('sidebarMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+
+            function openMenu() {
+                sidebarMenu.classList.add('open');
+                menuOverlay.classList.add('active');
+            }
+
+            function closeMenu() {
+                sidebarMenu.classList.remove('open');
+                menuOverlay.classList.remove('active');
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', openMenu);
+            }
+
+            if (menuClose) {
+                menuClose.addEventListener('click', closeMenu);
+            }
+
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', closeMenu);
+            }
+        }
+
+        // État du mode édition
+        let isEditMode = false;
+        let originalMemberData = null;
+
+        // Activer le mode édition
+        function enableEditMode() {
+            if (isEditMode) return;
+            isEditMode = true;
+
+            const overlay = document.getElementById('memberDetailOverlay');
+            if (!overlay) return;
+
+            const memberId = overlay.dataset.currentMemberId;
+            if (!memberId) return;
+
+            // Sauvegarder les données originales
+            originalMemberData = collectMemberDataFromDisplay();
+
+            // Transformer les champs en inputs
+            convertFieldsToInputs();
+
+            // Changer les boutons
+            const modifyBtn = document.getElementById('memberDetailModify');
+            const deleteBtn = document.getElementById('memberDetailDelete');
+
+            if (modifyBtn) {
+                modifyBtn.textContent = 'Annuler';
+                modifyBtn.classList.remove('member-detail-btn-modify');
+                modifyBtn.classList.add('member-detail-btn-cancel');
+            }
+
+            if (deleteBtn) {
+                deleteBtn.textContent = 'Enregistrer';
+                deleteBtn.classList.remove('member-detail-btn-delete');
+                deleteBtn.classList.add('member-detail-btn-save');
+            }
+        }
+
+        // Désactiver le mode édition
+        function disableEditMode() {
+            if (!isEditMode) return;
+            isEditMode = false;
+
+            // Toujours convertir d'abord tous les inputs en spans
+            convertInputsToFields();
+
+            // Ensuite restaurer les valeurs depuis les données originales si disponibles
+            if (originalMemberData) {
+                restoreFieldsFromData(originalMemberData);
+            }
+
+            // Restaurer les boutons
+            const modifyBtn = document.getElementById('memberDetailModify');
+            const deleteBtn = document.getElementById('memberDetailDelete');
+
+            if (modifyBtn) {
+                modifyBtn.textContent = 'Modifier';
+                modifyBtn.classList.remove('member-detail-btn-cancel');
+                modifyBtn.classList.add('member-detail-btn-modify');
+            }
+
+            if (deleteBtn) {
+                deleteBtn.textContent = 'Supprimer';
+                deleteBtn.classList.remove('member-detail-btn-save');
+                deleteBtn.classList.add('member-detail-btn-delete');
+            }
+
+            originalMemberData = null;
+        }
+
+        const MEMBER_DATA_TEXT_FIELDS = ['member_information_medicale', 'member_recherche_emploi_details', 'member_autre_activite_details', 'member_adresse_representant_legal'];
+
+        function safeTruncate(value, maxLen = 255) {
+            if (value === undefined || value === null) return null;
+            const s = String(value).trim();
+            if (!s) return null;
+            return s.length > maxLen ? s.slice(0, maxLen) : s;
+        }
+
+        function sanitizeMemberData(data) {
+            if (!data || typeof data !== 'object') return data;
+            const out = {};
+            for (const [key, val] of Object.entries(data)) {
+                if (typeof val === 'string') {
+                    const max = MEMBER_DATA_TEXT_FIELDS.includes(key) ? VALIDATION.MAX_LENGTH_TEXT : VALIDATION.MAX_LENGTH_SHORT;
+                    out[key] = safeTruncate(val, max);
+                } else {
+                    out[key] = val;
+                }
+            }
+            return out;
+        }
+
+        // Collecter les données depuis l'affichage actuel
+        function collectMemberDataFromDisplay() {
+            const overlay = document.getElementById('memberDetailOverlay');
+            if (!overlay) return null;
+
+            const memberId = overlay.dataset.currentMemberId;
+            if (!memberId) return null;
+
+            const nameEl = document.getElementById('memberDetailName');
+            const nameParts = nameEl ? nameEl.textContent.trim().split(' ') : ['', ''];
+
+            const raw = {
+                member_id: memberId,
+                member_nom: nameParts[0] || '',
+                member_prenom: nameParts.slice(1).join(' ') || '',
+                member_numero: getTextContent('memberDetailNumber').replace('N° ', '') || '',
+                member_role: getTextContent('memberDetailRole') || '',
+                member_genre: getTextContent('memberDetailGenre') || '',
+                member_date_naissance: getTextContent('memberDetailDateNaissance') || '',
+                member_surnom: getTextContent('memberDetailSurnom') || '',
+                member_pref_nom_surnom: getTextContent('memberDetailPreferenceNom') || '',
+                member_telephone: getTextContent('memberDetailTelephone') || '',
+                member_email: getTextContent('memberDetailEmail') || '',
+                member_province: extractAddressPart('memberDetailAdresse', 0) || '',
+                member_commune: extractAddressPart('memberDetailAdresse', 1) || '',
+                member_quartier: extractAddressPart('memberDetailAdresse', 2) || '',
+                member_information_medicale: getTextContent('memberDetailProblemesMedicaux') || '',
+                member_est_etudiant: getTextContent('memberDetailEstEtudiant') === 'Oui',
+                member_type_etablissement: getTextContent('memberDetailTypeEtablissement') || '',
+                member_etablissement: getTextContent('memberDetailEtablissement') || '',
+                member_recherche_emploi_details: getTextContent('memberDetailRechercheEmploi') || '',
+                member_activite_payee_secteur: getTextContent('memberDetailActivitePayee') || '',
+                member_asso_nom: extractAssoPart('memberDetailAsso', 0) || '',
+                member_asso_sujet: extractAssoPart('memberDetailAsso', 1) || '',
+                member_autre_activite_details: getTextContent('memberDetailAutreActivite') || '',
+                member_mobilites: getTextContent('memberDetailMobilite') || '',
+                member_permis: getTextContent('memberDetailPermis') || '',
+                member_autorisation_image: getTextContent('memberDetailAutorisationImage') === 'Oui',
+                member_autorisation_urgence: getTextContent('memberDetailAutorisationUrgence') === 'Oui',
+                member_nom_representant_legal: getTextContent('memberDetailParentNom') || '',
+                member_telephone_representant_legal: getTextContent('memberDetailParentTelephone') || '',
+                member_email_representant_legal: getTextContent('memberDetailParentEmail') || '',
+                member_adresse_representant_legal: getTextContent('memberDetailParentAdresse') || '',
+                member_date_inscription: getTextContent('memberDetailDateInscription') || '',
+                member_est_actif: getTextContent('memberDetailStatut') === 'Actif'
+            };
+            return sanitizeMemberData(raw);
+        }
+
+        // Fonction utilitaire pour obtenir le texte d'un élément
+        function getTextContent(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return '';
+            const text = el.textContent || el.value || '';
+            return text.trim();
+        }
+
+        // Extraire une partie de l'adresse
+        function extractAddressPart(elementId, index) {
+            const el = document.getElementById(elementId);
+            if (!el) return '';
+            const text = el.textContent || el.value || '';
+            const parts = text.split(',').map(p => p.trim());
+            return parts[index] || '';
+        }
+
+        // Extraire une partie de l'association
+        function extractAssoPart(elementId, index) {
+            const el = document.getElementById(elementId);
+            if (!el) return '';
+            const text = el.textContent || el.value || '';
+            const parts = text.split(' - ').map(p => p.trim());
+            return parts[index] || '';
+        }
+
+        // Convertir les champs en inputs éditables
+        function convertFieldsToInputs() {
+            // Nom et prénom (dans le header)
+            convertNameToInputs();
+
+            // Informations personnelles
+            convertToInput('memberDetailGenre', 'text');
+            convertToInput('memberDetailDateNaissance', 'date');
+            convertToInput('memberDetailSurnom', 'text');
+            convertToSelect('memberDetailPreferenceNom', ['Prénom', 'Surnom', 'Non renseigné']);
+            convertToInput('memberDetailTelephone', 'tel');
+            convertToInput('memberDetailEmail', 'email');
+            convertAddressToInputs();
+
+            // Problèmes médicaux
+            convertToTextarea('memberDetailProblemesMedicaux');
+
+            // Ce que je fais dans la vie
+            convertToSelect('memberDetailEstEtudiant', ['Oui', 'Non']);
+            convertToInput('memberDetailTypeEtablissement', 'text');
+            convertToInput('memberDetailEtablissement', 'text');
+            convertToInput('memberDetailRechercheEmploi', 'text');
+            convertToInput('memberDetailActivitePayee', 'text');
+            convertAssoToInputs();
+            convertToInput('memberDetailAutreActivite', 'text');
+
+            // Mobilité et Permis
+            convertToInput('memberDetailMobilite', 'text');
+            convertToInput('memberDetailPermis', 'text');
+
+            // Autorisations
+            convertToSelect('memberDetailAutorisationImage', ['Oui', 'Non']);
+            convertToSelect('memberDetailAutorisationUrgence', ['Oui', 'Non']);
+
+            // Représentant légal
+            convertToInput('memberDetailParentNom', 'text');
+            convertToInput('memberDetailParentTelephone', 'tel');
+            convertToInput('memberDetailParentEmail', 'email');
+            convertToInput('memberDetailParentAdresse', 'text');
+
+            // Informations complémentaires
+            convertToInput('memberDetailDateInscription', 'date');
+            convertToSelect('memberDetailStatut', ['Actif', 'Inactif']);
+        }
+
+        // Convertir nom/prénom en inputs séparés
+        function convertNameToInputs() {
+            const nameEl = document.getElementById('memberDetailName');
+            if (!nameEl || nameEl.tagName === 'INPUT') return;
+
+            const currentText = nameEl.textContent.trim();
+            const parts = currentText.split(' ');
+            const nom = parts[0] || '';
+            const prenom = parts.slice(1).join(' ') || '';
+
+            const parent = nameEl.parentElement;
+            nameEl.remove();
+
+            const nomInput = document.createElement('input');
+            nomInput.type = 'text';
+            nomInput.id = 'memberDetailNomInput';
+            nomInput.className = 'member-detail-edit-input';
+            nomInput.value = nom;
+            nomInput.placeholder = 'Nom';
+            parent.appendChild(nomInput);
+
+            const prenomInput = document.createElement('input');
+            prenomInput.type = 'text';
+            prenomInput.id = 'memberDetailPrenomInput';
+            prenomInput.className = 'member-detail-edit-input';
+            prenomInput.value = prenom;
+            prenomInput.placeholder = 'Prénom';
+            parent.appendChild(prenomInput);
+        }
+
+        // Restaurer nom/prénom depuis les inputs
+        function restoreNameFromInputs() {
+            const nomInput = document.getElementById('memberDetailNomInput');
+            const prenomInput = document.getElementById('memberDetailPrenomInput');
+
+            if (!nomInput || !prenomInput) return;
+
+            const nom = nomInput.value.trim();
+            const prenom = prenomInput.value.trim();
+            const fullName = (nom + ' ' + prenom).trim();
+
+            const parent = nomInput.parentElement;
+            nomInput.remove();
+            prenomInput.remove();
+
+            const nameEl = document.createElement('div');
+            nameEl.id = 'memberDetailName';
+            nameEl.className = 'member-detail-name';
+            nameEl.textContent = fullName || '{member_nom} {member_prenom}';
+            parent.appendChild(nameEl);
+        }
+
+        // Convertir un champ en input
+        function convertToInput(elementId, inputType) {
+            const el = document.getElementById(elementId);
+            if (!el || el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return;
+
+            const value = el.textContent.trim();
+            const input = document.createElement('input');
+            input.type = inputType;
+            input.id = elementId;
+            input.className = 'member-detail-edit-input';
+            input.value = value === 'Non renseigné' ? '' : value;
+
+            if (inputType === 'date' && value && value !== 'Non renseigné') {
+                try {
+                    const date = new Date(value);
+                    if (!isNaN(date.getTime())) {
+                        input.value = date.toISOString().split('T')[0];
+                    }
+                } catch (e) {
+                    // Garder la valeur originale
+                }
+            }
+
+            el.parentElement.replaceChild(input, el);
+        }
+
+        // Convertir un champ en select
+        function convertToSelect(elementId, options) {
+            const el = document.getElementById(elementId);
+            if (!el || el.tagName === 'SELECT') return;
+
+            const currentValue = el.textContent.trim();
+            const select = document.createElement('select');
+            select.id = elementId;
+            select.className = 'member-detail-edit-select';
+
+            options.forEach(option => {
+                const optionEl = document.createElement('option');
+                optionEl.value = option;
+                optionEl.textContent = option;
+                if (option === currentValue || (currentValue === 'Non renseigné' && option === options[options.length - 1])) {
+                    optionEl.selected = true;
+                }
+                select.appendChild(optionEl);
+            });
+
+            el.parentElement.replaceChild(select, el);
+        }
+
+        // Convertir un champ en textarea
+        function convertToTextarea(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el || el.tagName === 'TEXTAREA') return;
+
+            const value = el.textContent.trim();
+            const textarea = document.createElement('textarea');
+            textarea.id = elementId;
+            textarea.className = 'member-detail-edit-textarea';
+            textarea.value = value === 'Pas de problème médical' ? '' : value;
+            textarea.rows = 3;
+
+            el.parentElement.replaceChild(textarea, el);
+        }
+
+        // Convertir l'adresse en inputs séparés
+        function convertAddressToInputs() {
+            const adresseEl = document.getElementById('memberDetailAdresse');
+            if (!adresseEl || adresseEl.tagName === 'INPUT') return;
+
+            const currentText = adresseEl.textContent.trim();
+            const parts = currentText.split(',').map(p => p.trim());
+            const province = parts[0] || '';
+            const commune = parts[1] || '';
+            const quartier = parts[2] || '';
+
+            const parent = adresseEl.parentElement;
+            adresseEl.remove();
+
+            ['Province', 'Commune', 'Quartier'].forEach((label, index) => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `memberDetailAdresse${label}Input`;
+                input.className = 'member-detail-edit-input';
+                input.placeholder = label;
+                const values = [province, commune, quartier];
+                input.value = values[index] === 'Non renseigné' ? '' : values[index];
+                parent.appendChild(input);
+            });
+        }
+
+        // Restaurer l'adresse depuis les inputs
+        function restoreAddressFromInputs() {
+            const provinceInput = document.getElementById('memberDetailAdresseProvinceInput');
+            const communeInput = document.getElementById('memberDetailAdresseCommuneInput');
+            const quartierInput = document.getElementById('memberDetailAdresseQuartierInput');
+
+            if (!provinceInput || !communeInput || !quartierInput) return;
+
+            const province = provinceInput.value.trim();
+            const commune = communeInput.value.trim();
+            const quartier = quartierInput.value.trim();
+            const adresse = [province, commune, quartier].filter(p => p).join(', ') || 'Non renseigné';
+
+            const parent = provinceInput.parentElement;
+            provinceInput.remove();
+            communeInput.remove();
+            quartierInput.remove();
+
+            const adresseEl = document.createElement('span');
+            adresseEl.id = 'memberDetailAdresse';
+            adresseEl.className = 'member-detail-value';
+            adresseEl.textContent = adresse;
+            parent.appendChild(adresseEl);
+        }
+
+        // Convertir l'association en inputs séparés
+        function convertAssoToInputs() {
+            const assoEl = document.getElementById('memberDetailAsso');
+            if (!assoEl || assoEl.tagName === 'INPUT') return;
+
+            const currentText = assoEl.textContent.trim();
+            const parts = currentText.split(' - ').map(p => p.trim());
+            const nom = parts[0] || '';
+            const sujet = parts[1] || '';
+
+            const parent = assoEl.parentElement;
+            assoEl.remove();
+
+            const nomInput = document.createElement('input');
+            nomInput.type = 'text';
+            nomInput.id = 'memberDetailAssoNomInput';
+            nomInput.className = 'member-detail-edit-input';
+            nomInput.value = nom === 'Non renseigné' ? '' : nom;
+            nomInput.placeholder = 'Nom association';
+            parent.appendChild(nomInput);
+
+            const sujetInput = document.createElement('input');
+            sujetInput.type = 'text';
+            sujetInput.id = 'memberDetailAssoSujetInput';
+            sujetInput.className = 'member-detail-edit-input';
+            sujetInput.value = sujet === 'Non renseigné' ? '' : sujet;
+            sujetInput.placeholder = 'Sujet';
+            parent.appendChild(sujetInput);
+        }
+
+        // Restaurer l'association depuis les inputs
+        function restoreAssoFromInputs() {
+            const nomInput = document.getElementById('memberDetailAssoNomInput');
+            const sujetInput = document.getElementById('memberDetailAssoSujetInput');
+
+            if (!nomInput || !sujetInput) return;
+
+            const nom = nomInput.value.trim();
+            const sujet = sujetInput.value.trim();
+            const asso = (nom && sujet) ? `${nom} - ${sujet}` : 'Non renseigné';
+
+            const parent = nomInput.parentElement;
+            nomInput.remove();
+            sujetInput.remove();
+
+            const assoEl = document.createElement('span');
+            assoEl.id = 'memberDetailAsso';
+            assoEl.className = 'member-detail-value';
+            assoEl.textContent = asso;
+            parent.appendChild(assoEl);
+        }
+
+        // Convertir les inputs en champs texte
+        function convertInputsToFields() {
+            restoreNameFromInputs();
+            restoreAddressFromInputs();
+            restoreAssoFromInputs();
+
+            // Convertir tous les inputs/selects/textarea en spans
+            const editInputs = document.querySelectorAll('.member-detail-edit-input, .member-detail-edit-select, .member-detail-edit-textarea');
+            editInputs.forEach(input => {
+                const value = input.value.trim() || 'Non renseigné';
+                const span = document.createElement('span');
+                span.id = input.id.replace('Input', '').replace('Select', '').replace('Textarea', '');
+                span.className = 'member-detail-value';
+                span.textContent = value;
+                input.parentElement.replaceChild(span, input);
+            });
+        }
+
+        // Restaurer les champs depuis les données
+        // Utilise les variables selon README-BACKEND-VARIABLES.md avec placeholders {member_*}
+        function restoreFieldsFromData(data) {
+            if (!data) return;
+
+            // S'assurer que tous les inputs spéciaux sont restaurés d'abord
+            // Vérifier et restaurer nom/prénom si nécessaire
+            const nomInput = document.getElementById('memberDetailNomInput');
+            const prenomInput = document.getElementById('memberDetailPrenomInput');
+            if (nomInput || prenomInput) {
+                restoreNameFromInputs();
+            }
+
+            // Vérifier et restaurer adresse si nécessaire
+            const provinceInput = document.getElementById('memberDetailAdresseProvinceInput');
+            const communeInput = document.getElementById('memberDetailAdresseCommuneInput');
+            const quartierInput = document.getElementById('memberDetailAdresseQuartierInput');
+            if (provinceInput || communeInput || quartierInput) {
+                restoreAddressFromInputs();
+            }
+
+            // Vérifier et restaurer association si nécessaire
+            const assoNomInput = document.getElementById('memberDetailAssoNomInput');
+            const assoSujetInput = document.getElementById('memberDetailAssoSujetInput');
+            if (assoNomInput || assoSujetInput) {
+                restoreAssoFromInputs();
+            }
+
+            // Restaurer les valeurs depuis l'objet data (correspondance avec {member_*} du README)
+            // Nom/prénom (doit être un div, pas des inputs)
+            const nameEl = document.getElementById('memberDetailName');
+            if (nameEl && nameEl.tagName !== 'INPUT') {
+                nameEl.textContent = (data.member_nom || '') + ' ' + (data.member_prenom || '');
+            }
+
+            setValue('memberDetailNumber', 'N° ' + (data.member_numero || ''));
+            setValue('memberDetailRole', data.member_role || '');
+            setValue('memberDetailGenre', data.member_genre || 'Non renseigné');
+            setValue('memberDetailDateNaissance', data.member_date_naissance || 'Non renseigné');
+            setValue('memberDetailSurnom', data.member_surnom || 'Non renseigné');
+            setValue('memberDetailPreferenceNom', data.member_pref_nom_surnom || 'Non renseigné');
+            setValue('memberDetailTelephone', data.member_telephone || 'Non renseigné');
+            setValue('memberDetailEmail', data.member_email || 'Non renseigné');
+
+            // Adresse (doit être un span, pas des inputs)
+            const adresseEl = document.getElementById('memberDetailAdresse');
+            if (adresseEl && adresseEl.tagName !== 'INPUT') {
+                const adresse = [
+                    data.member_province || '',
+                    data.member_commune || '',
+                    data.member_quartier || ''
+                ].filter(p => p).join(', ') || 'Non renseigné';
+                adresseEl.textContent = adresse;
+            }
+
+            setValue('memberDetailProblemesMedicaux', data.member_information_medicale || 'Pas de problème médical');
+            setValue('memberDetailEstEtudiant', data.member_est_etudiant ? 'Oui' : 'Non');
+            setValue('memberDetailTypeEtablissement', data.member_type_etablissement || 'Non renseigné');
+            setValue('memberDetailEtablissement', data.member_etablissement || 'Non renseigné');
+            setValue('memberDetailRechercheEmploi', data.member_recherche_emploi_details || 'Non');
+            setValue('memberDetailActivitePayee', data.member_activite_payee_secteur || 'Non');
+
+            // Association (doit être un span, pas des inputs)
+            const assoEl = document.getElementById('memberDetailAsso');
+            if (assoEl && assoEl.tagName !== 'INPUT') {
+                const asso = (data.member_asso_nom && data.member_asso_sujet)
+                    ? `${data.member_asso_nom} - ${data.member_asso_sujet}`
+                    : 'Non renseigné';
+                assoEl.textContent = asso;
+            }
+
+            setValue('memberDetailAutreActivite', data.member_autre_activite_details || 'Non renseigné');
+            setValue('memberDetailMobilite', data.member_mobilites || 'Non renseigné');
+            setValue('memberDetailPermis', data.member_permis || 'Non renseigné');
+            setValue('memberDetailAutorisationImage', data.member_autorisation_image ? 'Oui' : 'Non');
+            setValue('memberDetailAutorisationUrgence', data.member_autorisation_urgence ? 'Oui' : 'Non');
+            setValue('memberDetailParentNom', data.member_nom_representant_legal || 'Non renseigné');
+            setValue('memberDetailParentTelephone', data.member_telephone_representant_legal || 'Non renseigné');
+            setValue('memberDetailParentEmail', data.member_email_representant_legal || 'Non renseigné');
+            setValue('memberDetailParentAdresse', data.member_adresse_representant_legal || 'Non renseigné');
+            setValue('memberDetailDateInscription', data.member_date_inscription || 'Non renseigné');
+            setValue('memberDetailStatut', data.member_est_actif ? 'Actif' : 'Inactif');
+        }
+
+        // Fonction utilitaire pour définir une valeur
+        function setValue(elementId, value) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+                    el.value = value;
+                } else {
+                    el.textContent = value;
+                }
+            }
+        }
+
+        // Collecter les données depuis les inputs pour sauvegarde (sanitisées avant envoi)
+        function collectMemberDataFromInputs() {
+            const overlay = document.getElementById("memberDetailOverlay");
+            if (!overlay) return null;
+
+            const memberId = overlay.dataset.currentMemberId;
+            if (!memberId) return null;
+
+            const nomInput = document.getElementById("memberDetailNomInput");
+            const prenomInput = document.getElementById("memberDetailPrenomInput");
+            const provinceInput = document.getElementById("memberDetailAdresseProvinceInput");
+            const communeInput = document.getElementById("memberDetailAdresseCommuneInput");
+            const quartierInput = document.getElementById("memberDetailAdresseQuartierInput");
+            const assoNomInput = document.getElementById("memberDetailAssoNomInput");
+            const assoSujetInput = document.getElementById("memberDetailAssoSujetInput");
+
+            // Helpers
+            const txt = (v) => {
+                const s = (v ?? "").toString().trim();
+                if (!s || s === "Non spécifié" || s === "Non renseigné") return null;
+                return s;
+            };
+
+            const boolFromOuiNon = (v) => {
+                const s = txt(v);
+                if (s === null) return null;
+                if (s === "Oui") return true;
+                if (s === "Non") return false;
+                return null;
+            };
+
+            const dateToIso = (v) => {
+                const s = txt(v);
+                if (!s) return null;
+                // accepte déjà YYYY-MM-DD
+                if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+                const d = new Date(s);
+                if (Number.isNaN(d.getTime())) return null;
+                return d.toISOString().slice(0, 10);
+            };
+
+            const genreToCode = (v) => {
+                const s = txt(v);
+                if (!s) return null;
+                if (s === "Homme") return "M";
+                if (s === "Femme") return "F";
+                if (s === "Autre") return "X";
+                if (["M", "F", "X"].includes(s)) return s;
+                return null;
+            };
+
+            const etabToCode = (v) => {
+                const s = txt(v);
+                if (!s) return null;
+                if (s === "Études supérieures") return "EtudesSup";
+                if (s === "Lycée") return "Lycee";
+                if (s === "Collège") return "College";
+                if (["EtudesSup", "Lycee", "College"].includes(s)) return s;
+                return null;
+            };
+
+            // ✅ Payload au format API/Prisma (pas de member_*)
+            const payload = {
+                // identifiant (utile si tu veux le log côté serveur, sinon tu peux l’enlever)
+                id: memberId,
+
+                nom: txt(nomInput?.value),
+                prenom: txt(prenomInput?.value),
+
+                genre: genreToCode(getInputValue("memberDetailGenre")),
+                dateNaissance: dateToIso(getInputValue("memberDetailDateNaissance")),
+
+                surnom: txt(getInputValue("memberDetailSurnom")),
+                // prefNomSurnom : ton UI est ambigu (texte vs bool). Si c’est bien un bool :
+                // prefNomSurnom: boolFromOuiNon(getInputValue("memberDetailPreferenceNom")),
+
+                telephone: txt(getInputValue("memberDetailTelephone")),
+
+                // ✅ email du modal = emailContact (pas email de login)
+                emailContact: txt(getInputValue("memberDetailEmail")),
+
+                province: txt(provinceInput?.value),
+                commune: txt(communeInput?.value),
+                quartier: txt(quartierInput?.value),
+
+                informationMedicale: txt(getInputValue("memberDetailProblemesMedicaux")),
+
+                estEtudiant: boolFromOuiNon(getInputValue("memberDetailEstEtudiant")),
+                typeEtablissement: etabToCode(getInputValue("memberDetailTypeEtablissement")),
+                etablissement: txt(getInputValue("memberDetailEtablissement")),
+
+                rechercheEmploiDetails: txt(getInputValue("memberDetailRechercheEmploi")),
+                activitePayeeSecteur: txt(getInputValue("memberDetailActivitePayee")),
+
+                assoNom: txt(assoNomInput?.value),
+                assoSujet: txt(assoSujetInput?.value),
+
+                autreActiviteDetails: txt(getInputValue("memberDetailAutreActivite")),
+
+                autorisationImage: boolFromOuiNon(getInputValue("memberDetailAutorisationImage")),
+                autorisationUrgence: boolFromOuiNon(getInputValue("memberDetailAutorisationUrgence")),
+
+                // Représentant légal (si ton modèle Prisma les a)
+                nomRepresentantLegal: txt(getInputValue("memberDetailParentNom")),
+                telephoneRepresentantLegal: txt(getInputValue("memberDetailParentTelephone")),
+                emailRepresentantLegal: txt(getInputValue("memberDetailParentEmail")),
+                // adresseRepresentantLegal: txt(getInputValue("memberDetailParentAdresse")), // seulement si champ existe en Prisma
+            };
+
+            // IMPORTANT : sanitizeMemberData() actuellement s’attend à des clés member_*
+            // Donc:
+            // - soit tu la supprimes ici
+            // - soit tu la refactors pour accepter ces nouvelles clés.
+            // Pour éviter de casser, on retourne directement payload.
+            return payload;
+        }
+
+        // Fonction utilitaire pour obtenir la valeur d'un input/select/textarea
+        function getInputValue(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return '';
+            if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+                return el.value.trim();
+            }
+            return el.textContent.trim();
+        }
+
+
+        // Convertir les données au format membre pour openMemberModal
+        // Convertit depuis le format backend ({member_*}) vers le format interne
+        function convertDataToMemberObject(data) {
+            return {
+                id: data.member_id, // {member_id}
+                nom: data.member_nom, // {member_nom}
+                prenom: data.member_prenom, // {member_prenom}
+                numero: data.member_numero, // {member_numero}
+                role: data.member_role, // {member_role}
+                genre: data.member_genre, // {member_genre}
+                dateNaissance: data.member_date_naissance, // {member_date_naissance}
+                surnom: data.member_surnom, // {member_surnom}
+                preferenceNom: data.member_pref_nom_surnom, // {member_pref_nom_surnom}
+                telephone: data.member_telephone, // {member_telephone}
+                email: data.member_email, // {member_email}
+                province: data.member_province, // {member_province}
+                commune: data.member_commune, // {member_commune}
+                quartier: data.member_quartier, // {member_quartier}
+                informationMedicale: data.member_information_medicale, // {member_information_medicale}
+                estEtudiant: data.member_est_etudiant, // {member_est_etudiant}
+                typeEtablissement: data.member_type_etablissement, // {member_type_etablissement}
+                etablissement: data.member_etablissement, // {member_etablissement}
+                rechercheEmploiDetails: data.member_recherche_emploi_details, // {member_recherche_emploi_details}
+                activitePayeeSecteur: data.member_activite_payee_secteur, // {member_activite_payee_secteur}
+                assoNom: data.member_asso_nom, // {member_asso_nom}
+                assoSujet: data.member_asso_sujet, // {member_asso_sujet}
+                autreActiviteDetails: data.member_autre_activite_details, // {member_autre_activite_details}
+                mobilites: data.member_mobilites, // {member_mobilites}
+                permis: data.member_permis, // {member_permis}
+                autorisationImage: data.member_autorisation_image, // {member_autorisation_image}
+                autorisationUrgence: data.member_autorisation_urgence, // {member_autorisation_urgence}
+                nomRepresentantLegal: data.member_nom_representant_legal, // {member_nom_representant_legal}
+                telephoneRepresentantLegal: data.member_telephone_representant_legal, // {member_telephone_representant_legal}
+                emailRepresentantLegal: data.member_email_representant_legal, // {member_email_representant_legal}
+                adresseRepresentantLegal: data.member_adresse_representant_legal, // {member_adresse_representant_legal}
+                dateInscription: data.member_date_inscription, // {member_date_inscription}
+                estActif: data.member_est_actif // {member_est_actif}
+            };
+        }
+
+        // Mettre à jour les données locales
+        function updateLocalMemberData(memberId, updatedData) {
+            // Mettre à jour dans allMembers si le membre existe
+            if (typeof allMembers !== 'undefined') {
+                if (Array.isArray(allMembers)) {
+                    const index = allMembers.findIndex(m => m.id === memberId);
+                    if (index !== -1) {
+                        allMembers[index] = convertDataToMemberObject(updatedData);
+                    }
+                } else if (typeof currentViewType !== 'undefined') {
+                    const list = allMembers[currentViewType] || [];
+                    const index = list.findIndex(m => m.id === memberId);
+                    if (index !== -1) {
+                        list[index] = convertDataToMemberObject(updatedData);
+                    }
+                }
+            }
+        }
+
+        // Intercepter l'ouverture du modal (version propre avec MemberModal)
+        function interceptModalOpen() {
+            if (!window.MemberModal || typeof window.MemberModal.openMemberModal !== "function") {
+                console.warn("MemberModal.openMemberModal introuvable (member-modal.js pas chargé ?)");
+                return;
+            }
+
+            const original = window.MemberModal.openMemberModal;
+
+            // Eviter de wrapper plusieurs fois
+            if (original.__isWrapped) return;
+
+            const wrapped = async function (member) {
+                // Toujours s'assurer que le mode édition est désactivé
+                if (window.MemberEdit && typeof window.MemberEdit.isEditMode === "function" && window.MemberEdit.isEditMode()) {
+                    window.MemberEdit.disableEditMode();
+                } else if (typeof ensureFieldsAreInReadMode === "function") {
+                    ensureFieldsAreInReadMode();
+                }
+
+                // Appel du vrai open (async)
+                return await original(member);
+            };
+
+            wrapped.__isWrapped = true;
+            window.MemberModal.openMemberModal = wrapped;
+        }
+        // S'assurer que tous les champs sont en mode lecture
+        function ensureFieldsAreInReadMode() {
+            // Vérifier s'il y a des inputs/selects/textarea qui ne devraient pas être là
+            const editInputs = document.querySelectorAll('.member-detail-edit-input, .member-detail-edit-select, .member-detail-edit-textarea');
+            if (editInputs.length > 0) {
+                // Convertir tous les inputs en spans
+                convertInputsToFields();
+            }
+
+            // Vérifier les inputs nom/prénom
+            const nomInput = document.getElementById('memberDetailNomInput');
+            const prenomInput = document.getElementById('memberDetailPrenomInput');
+            if (nomInput || prenomInput) {
+                restoreNameFromInputs();
+            }
+
+            // Vérifier les inputs d'adresse
+            const provinceInput = document.getElementById('memberDetailAdresseProvinceInput');
+            const communeInput = document.getElementById('memberDetailAdresseCommuneInput');
+            const quartierInput = document.getElementById('memberDetailAdresseQuartierInput');
+            if (provinceInput || communeInput || quartierInput) {
+                restoreAddressFromInputs();
+            }
+
+            // Vérifier les inputs d'association
+            const assoNomInput = document.getElementById('memberDetailAssoNomInput');
+            const assoSujetInput = document.getElementById('memberDetailAssoSujetInput');
+            if (assoNomInput || assoSujetInput) {
+                restoreAssoFromInputs();
+            }
+        }
+
+        // Initialisation
+        function setupMemberEditActions() {
+            const modifyBtn = document.getElementById('memberDetailModify');
+            const deleteBtn = document.getElementById('memberDetailDelete');
+
+            if (modifyBtn) {
+                modifyBtn.addEventListener('click', () => {
+                    if (!window.MemberEdit) {
+                        console.error("window.MemberEdit introuvable");
+                        return;
+                    }
+                    if (typeof window.MemberEdit.isEditMode === "function" && !window.MemberEdit.isEditMode()) {
+                        window.MemberEdit.enableEditMode();
+                    } else {
+                        window.MemberEdit.disableEditMode(); // "Annuler"
+                    }
+                });
+            }
+
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    if (window.MemberEdit && typeof window.MemberEdit.isEditMode === "function" && window.MemberEdit.isEditMode()) {
+                        // "Enregistrer"
+                        window.MemberEdit.saveMemberModifications();
+                    } else {
+                        // "Supprimer" (à toi de brancher ton DELETE API ici)
+                        // deleteMember(currentMember) -> actuellement ton deleteMember enlève juste du tableau local
+                        alert("Suppression: branche ton DELETE API ici.");
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setupMenuToggle();
+            interceptModalOpen();
+            setupMemberEditActions(); // ✅ AJOUT
+        });
+    </script>
+</body>
+
+</html>

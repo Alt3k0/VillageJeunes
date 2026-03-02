@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style_adherent.css">
 </head>
-<body>
+<body data-user-role="adherent">
+    <!-- data-user-role : "adherent" (défaut) | "benevole" (si id_rôle = bénévole en BDD) | "partenaire" (réservé) -->
     <!-- Fond décoratif -->
     <div class="background-decoration"></div>
 
@@ -304,6 +305,10 @@
                             <span class="demandes-adherent-option-label">Prendre rendez-vous</span>
                             <span class="demandes-adherent-option-desc">Demander un rendez-vous avec l’équipe.</span>
                         </button>
+                        <button type="button" class="demandes-adherent-option" id="demandesOptionBenevole" data-type="benevole">
+                            <span class="demandes-adherent-option-label">Devenir Bénévole</span>
+                            <span class="demandes-adherent-option-desc">Pour devenir bénévole, on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.</span>
+                        </button>
                     </div>
                 </div>
 
@@ -345,6 +350,75 @@
                         <div class="demandes-form-actions">
                             <button type="button" class="demandes-form-btn demandes-form-cancel" id="demandesFormCancel">Annuler</button>
                             <button type="submit" class="demandes-form-btn demandes-form-submit" id="demandesFormSubmit">Envoyer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Étape 2b : Formulaire inscription bénévole -->
+                <div class="demandes-adherent-step demandes-benevole-step" id="demandesBenevoleStep" hidden>
+                    <button type="button" class="demandes-adherent-back" id="demandesBenevoleBack" aria-label="Retour au choix">← Retour</button>
+                    <h2 class="demandes-adherent-title">Devenir Bénévole</h2>
+                    <p class="demandes-adherent-subtitle">Remplis ce formulaire pour candidater. Un essai d'au moins 2h sur 5 jours différents est demandé.</p>
+                    <form class="demandes-benevole-form" id="demandesBenevoleForm" novalidate>
+                        <div class="demandes-benevole-scroll">
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Ce que j'aimerais amener (plusieurs options possibles)</label>
+                                <div class="demandes-checkbox-grid">
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="bonne-humeur"> <span>bonne humeur & bienveillance</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="soutien"> <span>soutien technique/moral/matériel à des projets existants/futurs</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="projet-personnel"> <span>un projet personnel en phase avec le Vill'Âge Jeunes</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="aide-espace" id="demandesBenevoleAideEspace"> <span>de l'aide particulière sur un/des espace(s) :</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="reseau" id="demandesBenevoleReseau"> <span>un réseau particulier :</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="autre-idee" id="demandesBenevoleAutreIdee"> <span>autre idée :</span></label>
+                                </div>
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleAideEspaceText" name="aideEspace" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleReseauText" name="reseauParticulier" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleAutreIdeeText" name="autreIdee" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Type(s) de projets qui m'intéressent</label>
+                                <div class="demandes-checkbox-grid">
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="artistique"> <span>artistique</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="culturel"> <span>culturel</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="solidaire"> <span>solidaire</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="numerique"> <span>numérique</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="accompagnement-pro"> <span>accompagnement pro</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="bien-etre"> <span>bien-être (Sport-Santé)</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="autre" id="demandesBenevoleProjetAutre"> <span>autre :</span></label>
+                                </div>
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleProjetAutreText" name="typeProjetAutre" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Bénévolat ici ?</label>
+                                <div class="demandes-checkbox-inline">
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="volontaire"> <span>Je suis Volontaire</span></label>
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="motive"> <span>Motivé·e</span></label>
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="disponible"> <span>Disponible</span></label>
+                                </div>
+                            </div>
+                            <div class="demandes-info-box">
+                                <strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Je sais faire</label>
+                                <textarea class="demandes-form-textarea" name="saisFaire" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">J'aimerais faire</label>
+                                <textarea class="demandes-form-textarea" name="aimeraisFaire" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Je peux transmettre</label>
+                                <textarea class="demandes-form-textarea" name="peuxTransmettre" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">J'aimerais apprendre</label>
+                                <textarea class="demandes-form-textarea" name="aimeraisApprendre" rows="3" placeholder=""></textarea>
+                            </div>
+                        </div>
+                        <div class="demandes-form-actions">
+                            <button type="button" class="demandes-form-btn demandes-form-cancel" id="demandesBenevoleCancel">Annuler</button>
+                            <button type="submit" class="demandes-form-btn demandes-form-submit" id="demandesBenevoleSubmit">Envoyer ma candidature</button>
                         </div>
                     </form>
                 </div>
@@ -563,10 +637,10 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-social" aria-label="Réseaux sociaux Vill'Age Jeunes">
-            <a href="https://www.facebook.com/villagejeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Facebook Vill'Age Jeunes">
+            <a href="https://www.facebook.com/villagejeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--facebook" aria-label="Facebook Vill'Age Jeunes">
                 <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
-            <a href="https://www.instagram.com/VillageJeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram Vill'Age Jeunes">
+            <a href="https://www.instagram.com/VillageJeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--instagram" aria-label="Instagram Vill'Age Jeunes">
                 <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.218 4.771 1.693 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.219-4.771-1.693-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
             </a>
         </div>

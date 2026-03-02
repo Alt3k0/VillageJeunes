@@ -1044,6 +1044,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const demandesOverlayEl = document.getElementById('demandesAdherentOverlay');
     const demandesChoiceStep = document.getElementById('demandesChoiceStep');
     const demandesFormStep = document.getElementById('demandesFormStep');
+    const demandesBenevoleStep = document.getElementById('demandesBenevoleStep');
+    const demandesBenevoleForm = document.getElementById('demandesBenevoleForm');
     const demandesFormTitle = document.getElementById('demandesFormTitle');
     const demandesTypeInput = document.getElementById('demandesType');
     const demandesForm = document.getElementById('demandesAdherentForm');
@@ -1081,6 +1083,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!demandesOverlayEl) return;
         demandesChoiceStep?.removeAttribute('hidden');
         demandesFormStep?.setAttribute('hidden', '');
+        demandesBenevoleStep?.setAttribute('hidden', '');
         demandesOverlayEl.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -1091,10 +1094,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
         demandesChoiceStep?.removeAttribute('hidden');
         demandesFormStep?.setAttribute('hidden', '');
+        demandesBenevoleStep?.setAttribute('hidden', '');
         if (demandesForm) demandesForm.reset();
+        if (demandesBenevoleForm) demandesBenevoleForm.reset();
     }
 
     function showDemandesForm(type) {
+        if (type === 'benevole') {
+            if (demandesChoiceStep) demandesChoiceStep.setAttribute('hidden', '');
+            if (demandesFormStep) demandesFormStep.setAttribute('hidden', '');
+            if (demandesBenevoleStep) demandesBenevoleStep.removeAttribute('hidden');
+            return;
+        }
         const isSalle = type === 'salle';
         if (demandesTypeInput) demandesTypeInput.value = type;
         if (demandesFormTitle) demandesFormTitle.textContent = isSalle ? 'Réserver une salle' : 'Prendre rendez-vous';
@@ -1118,12 +1129,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (demandesChoiceStep) demandesChoiceStep.setAttribute('hidden', '');
         if (demandesFormStep) demandesFormStep.removeAttribute('hidden');
+        if (demandesBenevoleStep) demandesBenevoleStep.setAttribute('hidden', '');
     }
 
     function backToDemandesChoice() {
         if (demandesFormStep) demandesFormStep.setAttribute('hidden', '');
+        if (demandesBenevoleStep) demandesBenevoleStep.setAttribute('hidden', '');
         if (demandesChoiceStep) demandesChoiceStep.removeAttribute('hidden');
         if (demandesForm) demandesForm.reset();
+        if (demandesBenevoleForm) demandesBenevoleForm.reset();
     }
 
     document.getElementById('demandesAdherentButton')?.addEventListener('click', openDemandesWidget);
@@ -1134,8 +1148,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('demandesOptionSalle')?.addEventListener('click', function() { showDemandesForm('salle'); });
     document.getElementById('demandesOptionRdv')?.addEventListener('click', function() { showDemandesForm('rdv'); });
+    document.getElementById('demandesOptionBenevole')?.addEventListener('click', function() { showDemandesForm('benevole'); });
     document.getElementById('demandesAdherentBack')?.addEventListener('click', backToDemandesChoice);
+    document.getElementById('demandesBenevoleBack')?.addEventListener('click', backToDemandesChoice);
     document.getElementById('demandesFormCancel')?.addEventListener('click', closeDemandesWidget);
+    document.getElementById('demandesBenevoleCancel')?.addEventListener('click', closeDemandesWidget);
+
+    // Champs conditionnels formulaire bénévole
+    (function() {
+        var cbAide = document.getElementById('demandesBenevoleAideEspace');
+        var cbReseau = document.getElementById('demandesBenevoleReseau');
+        var cbAutre = document.getElementById('demandesBenevoleAutreIdee');
+        var cbProjetAutre = document.getElementById('demandesBenevoleProjetAutre');
+        if (cbAide) cbAide.addEventListener('change', function() { document.getElementById('demandesBenevoleAideEspaceText').style.display = this.checked ? 'block' : 'none'; });
+        if (cbReseau) cbReseau.addEventListener('change', function() { document.getElementById('demandesBenevoleReseauText').style.display = this.checked ? 'block' : 'none'; });
+        if (cbAutre) cbAutre.addEventListener('change', function() { document.getElementById('demandesBenevoleAutreIdeeText').style.display = this.checked ? 'block' : 'none'; });
+        if (cbProjetAutre) cbProjetAutre.addEventListener('change', function() { document.getElementById('demandesBenevoleProjetAutreText').style.display = this.checked ? 'block' : 'none'; });
+    })();
 
     if (demandesForm) {
         demandesForm.addEventListener('submit', function(e) {
@@ -1188,6 +1217,39 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
             closeDemandesWidget();
             alert('Votre demande a bien été préparée. Ouvrez votre logiciel de messagerie pour l\'envoyer.');
+        });
+    }
+
+    if (demandesBenevoleForm) {
+        demandesBenevoleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            var memberNumber = (typeof profileData !== 'undefined' && profileData.memberNumber) ? profileData.memberNumber : (document.getElementById('profileMemberNumber')?.textContent || '').replace(/^N°\s*/, '').trim() || '—';
+            var lines = ['Bonjour,', '', 'Candidature bénévole', 'Numéro adhérent : ' + memberNumber, ''];
+            function addLine(label, value) {
+                if (value !== undefined && value !== null && (value + '').trim() !== '') lines.push(label + ' : ' + (value + '').trim());
+            }
+            function getCheckboxes(name) {
+                var nodes = form.querySelectorAll('input[name="' + name + '"]:checked');
+                return Array.prototype.map.call(nodes, function(n) { return n.value; }).join(', ');
+            }
+            addLine('Ce que j\'aimerais amener', getCheckboxes('amener'));
+            addLine('Aide espace', form.querySelector('[name="aideEspace"]')?.value);
+            addLine('Réseau particulier', form.querySelector('[name="reseauParticulier"]')?.value);
+            addLine('Autre idée', form.querySelector('[name="autreIdee"]')?.value);
+            addLine('Types de projets', getCheckboxes('typeProjet'));
+            addLine('Type projet autre', form.querySelector('[name="typeProjetAutre"]')?.value);
+            addLine('Bénévolat', getCheckboxes('benevolat'));
+            addLine('Je sais faire', form.querySelector('[name="saisFaire"]')?.value);
+            addLine('J\'aimerais faire', form.querySelector('[name="aimeraisFaire"]')?.value);
+            addLine('Je peux transmettre', form.querySelector('[name="peuxTransmettre"]')?.value);
+            addLine('J\'aimerais apprendre', form.querySelector('[name="aimeraisApprendre"]')?.value);
+            var email = (typeof CONFIG !== 'undefined' && CONFIG.EMAIL_CONTACT) ? CONFIG.EMAIL_CONTACT : 'contact@vill-age-jeunes.fr';
+            var subject = encodeURIComponent('[Adhérent] Candidature bénévole');
+            var body = encodeURIComponent(lines.join('\n'));
+            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+            closeDemandesWidget();
+            alert('Votre candidature bénévole a bien été préparée. Ouvrez votre logiciel de messagerie pour l\'envoyer.');
         });
     }
 

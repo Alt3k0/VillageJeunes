@@ -18,6 +18,8 @@ Ce document répertorie les variables nécessaires pour les parties **Staff** et
 
 Cette adresse est utilisée pour l'envoi de mails depuis la partie adhérent/bénévole/partenaire, notamment :
 - **« Je suis intéressé »** (adhérent) : demande de participation à une activité
+- **« Faire une demande »** (adhérent) : réservation de salle / prise de rendez-vous
+- **« Devenir bénévole »** (adhérent) : candidature bénévole (formulaire)
 - Autres fonctionnalités futures (bénévole, partenaire)
 
 **Exemple :**
@@ -521,9 +523,21 @@ Enregistre le pointage d'un bénévole (staff)
 
 ### **Page unique :** `accueil-adherent.html`
 
-L'adhérent n'a accès qu'à une seule page : l'accueil (équivalent de `accueil-staff.html` sans le menu nav). Interface en lecture seule : calendrier activités, calendrier salles, emploi du temps. Pas de bouton « Ajouter une activité », pas de boutons « Supprimer ».
+L'adhérent (ou le bénévole) n'a accès qu'à une seule page : l'accueil (même fonctionnalités pour les deux). Interface en lecture seule : calendrier activités, calendrier salles, emploi du temps, Faire une demande, Devenir bénévole, etc. Pas de bouton « Ajouter une activité », pas de boutons « Supprimer ».
 
 **Données activités/salles :** Les variables et structures sont identiques à la section **Variables Activités** (voir ci-dessus). L'adhérent consomme les mêmes données (GET activités, salles) que le staff.
+
+### **Thème couleur selon le rôle (id_rôle)**
+
+La même page `accueil-adherent.html` sert aux **adhérents** et aux **bénévoles**. La couleur d’accent change selon le rôle (table `rôle` en BDD). Le backend doit poser l’attribut **`data-user-role`** sur la balise `<body>` au rendu de la page :
+
+| Valeur | Rôle (id_rôle) | Thème couleur (charte graphique) |
+|--------|----------------|----------------------------------|
+| `adherent` | Adhérent (défaut) | Orange charte (#f38d34, couleurs complémentaires / logo) |
+| `benevole` | Bénévole | Vert (#649d50, charte Solidarité) |
+| `partenaire` | Partenaire (réservé) | À définir plus tard |
+
+**Exemple côté backend :** selon `id_rôle` du membre connecté, générer `<body data-user-role="adherent">` ou `<body data-user-role="benevole">`. Si non renseigné, le frontend utilise par défaut `data-user-role="adherent"` (déjà présent dans le HTML).
 
 ### **Adhérent identifié – Variables fournies par le backend**
 
@@ -605,6 +619,115 @@ Enregistre la demande d'intérêt et/ou envoie le mail au responsable
 ```
 
 ---
+
+### **« Faire une demande » – Réserver une salle / Prendre rendez-vous**
+
+**Contexte :** sur `accueil-adherent.html`, l’adhérent ouvre le widget « Faire une demande » et choisit :
+- **Réserver une salle**
+- **Prendre rendez-vous**
+
+Actuellement, le frontend prépare un **mailto** vers `CONFIG.EMAIL_CONTACT`. Le backend peut (optionnellement) remplacer cela par un endpoint qui envoie/stocke la demande côté serveur.
+
+#### Données (champs) envoyées / attendues
+
+| Champ | Type | Obligatoire | Description |
+|------|------|------------|-------------|
+| `type` | String | Oui | `"salle"` ou `"rdv"` |
+| `date` | String | Oui | `YYYY-MM-DD` |
+| `time` | String | Oui | `HH:mm` |
+| `motif` | String | Oui | Motif détaillé (texte libre) |
+| `contact` | String | Si `type="rdv"` | Nom/identifiant de la personne à contacter |
+| `categorie` | String | Si `type="salle"` | Catégorie de la salle / activité (ex: `numerique`, `arts-vivants`...) |
+| `adherentNumero` | String | Oui | Numéro adhérent (côté frontend : `profileData.memberNumber` / `#profileMemberNumber`) |
+
+#### Endpoint API attendu (optionnel)
+
+##### POST `/api/adherent/demandes`
+
+**Body attendu :**
+```json
+{
+  "type": "salle",
+  "date": "YYYY-MM-DD",
+  "time": "HH:mm",
+  "motif": "Texte libre",
+  "contact": "Nom/ID (si rdv)",
+  "categorie": "numerique (si salle)",
+  "adherent": {
+    "id": "{adherent_id}",
+    "numero": "{adherent_numero}",
+    "nom": "{adherent_nom}",
+    "prenom": "{adherent_prenom}"
+  }
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Votre demande a été envoyée"
+}
+```
+
+---
+
+### **« Devenir bénévole » – Candidature (widget)**
+
+**Contexte :** dans le widget « Faire une demande », l’adhérent peut choisir **Devenir Bénévole**.  
+Le formulaire est un widget (pas une page dédiée) et prépare un **mailto** vers `CONFIG.EMAIL_CONTACT`.
+
+#### Champs du formulaire (inventaire complet)
+
+| Champ | Type | Format | Notes |
+|------|------|--------|------|
+| `amener[]` | Array\<String> | valeurs codées | `bonne-humeur`, `soutien`, `projet-personnel`, `aide-espace`, `reseau`, `autre-idee` |
+| `aideEspace` | String | texte | À remplir si `amener` contient `aide-espace` |
+| `reseauParticulier` | String | texte | À remplir si `amener` contient `reseau` |
+| `autreIdee` | String | texte | À remplir si `amener` contient `autre-idee` |
+| `typeProjet[]` | Array\<String> | valeurs codées | `artistique`, `culturel`, `solidaire`, `numerique`, `accompagnement-pro`, `bien-etre`, `autre` |
+| `typeProjetAutre` | String | texte | À remplir si `typeProjet` contient `autre` |
+| `benevolat[]` | Array\<String> | valeurs codées | `volontaire`, `motive`, `disponible` |
+| `saisFaire` | String | texte | textarea |
+| `aimeraisFaire` | String | texte | textarea |
+| `peuxTransmettre` | String | texte | textarea |
+| `aimeraisApprendre` | String | texte | textarea |
+| `adherentNumero` | String | texte | Numéro adhérent (source idem « Faire une demande ») |
+
+#### Endpoint API attendu (optionnel)
+
+##### POST `/api/adherent/candidature-benevole`
+
+**Body attendu :**
+```json
+{
+  "adherent": {
+    "id": "{adherent_id}",
+    "numero": "{adherent_numero}",
+    "nom": "{adherent_nom}",
+    "prenom": "{adherent_prenom}"
+  },
+  "amener": ["bonne-humeur", "soutien"],
+  "aideEspace": "",
+  "reseauParticulier": "",
+  "autreIdee": "",
+  "typeProjet": ["solidaire", "numerique"],
+  "typeProjetAutre": "",
+  "benevolat": ["motive", "disponible"],
+  "saisFaire": "",
+  "aimeraisFaire": "",
+  "peuxTransmettre": "",
+  "aimeraisApprendre": ""
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Votre candidature bénévole a été envoyée"
+}
+```
 
 ## 🔄 Endpoints API Attendus (suite)
 
@@ -735,14 +858,20 @@ Avant de considérer l'intégration comme complète :
 - [ ] Adresse mail : configurée dans `config.js` (voir section Configuration)
 - [ ] Partie adhérent : session/membre connecté fournit `{adherent_numero}`, `{adherent_nom}`, `{adherent_prenom}`
 - [ ] « Je suis intéressé » : envoi mail ou appel POST `/api/adherent/interet-activite`
+- [ ] « Faire une demande » : mailto ou appel POST `/api/adherent/demandes`
+- [ ] « Devenir bénévole » : mailto ou appel POST `/api/adherent/candidature-benevole`
 - [ ] La gestion des erreurs est en place
 - [ ] Les réponses API correspondent aux formats attendus
 - [ ] Les données sont correctement affichées dans le frontend
 
 ---
 
-**Dernière mise à jour :** 17 Février 2026  
-**Version :** 2.3
+**Dernière mise à jour :** 02 Mars 2026  
+**Version :** 2.4
+
+**Changelog v2.4 (02/03/2026) :**
+- Ajout widget adhérent **« Faire une demande »** (salle / RDV) + inventaire champs + endpoint optionnel
+- Ajout widget adhérent **« Devenir bénévole »** (candidature) + inventaire complet des champs + endpoint optionnel
 
 **Changelog v2.3 (17/02/2026) :**
 - Ajout section **Configuration** : emplacement pour modifier l'adresse mail (`config.js`)

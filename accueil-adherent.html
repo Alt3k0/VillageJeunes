@@ -7,2918 +7,671 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #F7F7F7;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Fond décoratif */
-        .background-decoration {
-            position: fixed;
-            top: -96px;
-            left: -116px;
-            width: 564px;
-            height: 1071px;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .background-decoration::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(31, 101, 142, 0.1) 0%, rgba(100, 157, 80, 0.1) 50%, rgba(240, 141, 53, 0.1) 100%);
-            border-radius: 50%;
-            filter: blur(100px);
-        }
-
-        /* Header sticky */
-        body {
-            padding-top: 0vh;
-            padding-bottom: 0vh;
-            margin: 0;
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        .header {
-            position: sticky;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(217, 217, 217, 0.2);
-            backdrop-filter: blur(10px);
-            height: clamp(8vh, 12vw, 18vh);
-            min-height: clamp(70px, 8.4vw, 180px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: clamp(3vh, 4vw, 6vh) clamp(2.5vw, 3.5vw, 5vw) clamp(1.5vh, 2vw, 3vh);
-            z-index: 100;
-            width: 100vw;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        .header-logo {
-            width: clamp(4rem, 7vw, 8rem);
-            height: clamp(4rem, 7vw, 8rem);
-            cursor: pointer;
-        }
-
-        .header-icons {
-            display: flex;
-            gap: clamp(1.2rem, 2vw, 3rem);
-            align-items: center;
-        }
-
-        .header-icon {
-            width: clamp(2.5rem, 4vw, 5.5rem);
-            height: clamp(2.5rem, 4vw, 5.5rem);
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-            object-fit: contain;
-        }
-
-        .header-icon:hover {
-            opacity: 1;
-        }
-
-        /* Container principal */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(15px, 1.9vw, 30px);
-            padding: clamp(20px, 2.5vw, 50px) clamp(10px, 1.2vw, 20px) clamp(20px, 2.5vw, 50px);
-            min-height: 100vh;
-        }
-
-        /* Body content */
-        .body-content {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(12px, 1.5vw, 25px);
-            align-items: center;
-            padding: clamp(24px, 3vw, 60px) 0;
-            width: 100%;
-            max-width: clamp(280px, 90vw, 600px);
-        }
-
-        /* Titre */
-        .activities-title {
-            font-size: clamp(16px, 2.5vw, 28px);
-            font-weight: 700;
-            color: #1e1e1d;
-            text-align: center;
-            text-transform: uppercase;
-            height: clamp(35px, 4vw, 60px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: clamp(140px, 45vw, 300px);
-        }
-
-        /* Calendrier */
-        .calendar-wrapper {
-            width: clamp(280px, 90vw, 600px);
-            cursor: pointer;
-        }
-
-        .calendar {
-            background-color: #F7F7F7;
-            border: 1px solid #e5e5e5;
-            border-radius: clamp(8px, 1vw, 16px);
-            padding: clamp(10px, 1.5vw, 20px);
-            width: 100%;
-            max-width: clamp(265px, 88vw, 580px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(12px, 1.8vw, 24px);
-        }
-
-        .calendar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .calendar-nav-button {
-            width: clamp(24px, 3vw, 48px);
-            height: clamp(24px, 3vw, 48px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            border: none;
-            background: transparent;
-        }
-
-        .calendar-nav-button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .calendar-nav-icon {
-            width: clamp(12px, 4.2vw, 16px);
-            height: clamp(12px, 4.2vw, 16px);
-        }
-
-        .calendar-month-year {
-            display: flex;
-            gap: clamp(4px, 1.6vw, 6px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .calendar-dropdown {
-            background-color: #F7F7F7;
-            border: 1px solid #e5e5e5;
-            border-radius: clamp(6px, 2.1vw, 8px);
-            height: clamp(24px, 8.3vw, 32px);
-            display: flex;
-            align-items: center;
-            gap: clamp(3px, 1vw, 4px);
-            padding: 0 clamp(3px, 1vw, 4px) 0 clamp(6px, 2.1vw, 8px);
-            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .calendar-dropdown:hover {
-            border-color: #649d50;
-        }
-
-        .calendar-dropdown-text {
-            font-size: clamp(12px, 1.5vw, 18px);
-            font-weight: 500;
-            color: #0a0a0a;
-            line-height: clamp(16px, 2vw, 24px);
-        }
-
-        .calendar-dropdown-arrow {
-            width: clamp(10px, 1.2vw, 16px);
-            height: clamp(10px, 1.2vw, 16px);
-        }
-
-        /* Grille du calendrier */
-        .calendar-grid-wrapper {
-            aspect-ratio: 307 / 221;
-            width: 100%;
-            min-height: clamp(200px, 25vw, 400px);
-        }
-
-        .calendar-days-header {
-            aspect-ratio: 307 / 21;
-            display: flex;
-            gap: clamp(6px, 0.8vw, 12px);
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .calendar-day-header {
-            width: clamp(28px, 3.5vw, 56px);
-            height: clamp(18px, 2.2vw, 35px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: clamp(4px, 0.5vw, 8px);
-        }
-
-        .calendar-day-header-text {
-            font-size: clamp(10px, 1.2vw, 20px);
-            font-weight: 400;
-            color: #737373;
-            line-height: clamp(14px, 1.7vw, 24px);
-        }
-
-        .calendar-dates-grid {
-            aspect-ratio: 307 / 200;
-            display: flex;
-            flex-direction: column;
-            gap: clamp(6px, 0.8vw, 12px);
-            width: 100%;
-            padding-top: clamp(6px, 0.8vw, 12px);
-        }
-
-        .calendar-week {
-            display: flex;
-            gap: clamp(6px, 0.8vw, 12px);
-            align-items: start;
-            justify-content: center;
-        }
-
-        .calendar-date {
-            width: clamp(28px, 3.5vw, 56px);
-            height: clamp(28px, 3.5vw, 56px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: clamp(6px, 0.8vw, 12px);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background-color: transparent;
-            border: none;
-        }
-
-        .calendar-date:hover {
-            background-color: rgba(31, 101, 142, 0.1);
-        }
-
-        .calendar-date.selected {
-            background-color: rgba(31, 101, 142, 0.38);
-        }
-
-        .calendar-date.selected .calendar-date-text {
-            color: #fafafa;
-        }
-
-        .calendar-date.other-month {
-            opacity: 0.5;
-        }
-
-        .calendar-date-text {
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #0a0a0a;
-            line-height: clamp(16px, 2vw, 28px);
-        }
-
-        .activity-dot {
-            width: clamp(4px, 0.5vw, 10px);
-            height: clamp(4px, 0.5vw, 10px);
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        /* Barre de recherche */
-        .search-bar {
-            background-color: #F7F7F7;
-            border: 1px solid #d9d0e3;
-            border-radius: clamp(20px, 2.5vw, 40px);
-            height: clamp(28px, 3.5vw, 50px);
-            width: clamp(200px, 70vw, 500px);
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 1vw, 16px);
-            padding: clamp(7px, 0.9vw, 14px) clamp(12px, 1.5vw, 25px);
-            transition: all 0.3s ease;
-        }
-
-        .search-bar:focus-within {
-            border-color: #649d50;
-            box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.1);
-        }
-
-        .search-icon {
-            width: clamp(13px, 1.6vw, 26px);
-            height: clamp(13px, 1.6vw, 27px);
-            flex-shrink: 0;
-        }
-
-        .search-select {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: clamp(12px, 1.5vw, 24px);
-            color: #1e1e1d;
-            font-family: inherit;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            padding-right: clamp(18px, 2.2vw, 35px);
-        }
-
-        .search-select option {
-            padding: clamp(6px, 0.8vw, 12px);
-        }
-
-        .search-arrow {
-            position: absolute;
-            right: clamp(12px, 1.5vw, 25px);
-            width: clamp(10px, 1.2vw, 18px);
-            height: clamp(10px, 1.2vw, 18px);
-            pointer-events: none;
-            transition: transform 0.3s ease;
-        }
-
-        .search-bar:focus-within .search-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* Cards d'activités */
-        .activity-cards-container {
-            display: none;
-            flex-direction: column;
-            gap: clamp(10px, 1.5vw, 20px);
-            width: 100%;
-            max-width: clamp(280px, 90vw, 600px);
-            margin-top: clamp(15px, 2vw, 30px);
-            max-height: clamp(300px, 50vh, 600px);
-            overflow-y: auto;
-            padding-right: clamp(4px, 0.5vw, 10px);
-        }
-
-        .activity-cards-container.active {
-            display: flex;
-        }
-
-        .activity-card {
-            background-color: #F7F7F7;
-            border: 1px solid #e5e5e5;
-            border-radius: clamp(8px, 1vw, 16px);
-            padding: clamp(12px, 1.8vw, 24px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(6px, 0.8vw, 12px);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .activity-card:hover {
-            border-color: #649d50;
-            box-shadow: 0 2px 8px rgba(100, 157, 80, 0.1);
-        }
-
-        .activity-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .activity-card-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1e1e1d;
-            flex: 1;
-        }
-
-        .activity-card-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .activity-card-badge.complet {
-            background-color: #f08d35;
-            color: #F7F7F7;
-        }
-
-        .activity-card-badge.disponible {
-            background-color: #649d50;
-            color: #F7F7F7;
-        }
-
-        .activity-card-date {
-            font-size: clamp(12px, 1.5vw, 18px);
-            color: #6e6f75;
-            display: flex;
-            align-items: center;
-            gap: clamp(6px, 0.8vw, 12px);
-        }
-
-        .activity-card-time {
-            font-size: clamp(12px, 1.5vw, 18px);
-            color: #6e6f75;
-        }
-
-        .activity-card-location {
-            font-size: clamp(12px, 1.5vw, 18px);
-            color: #6e6f75;
-            font-style: italic;
-        }
-
-        .activity-card-color-indicator {
-            width: 4px;
-            height: 100%;
-            border-radius: 2px;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-
-        /* Footer */
-        .footer {
-            position: fixed;
-            bottom: 0vh;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(217, 217, 217, 0.2);
-            backdrop-filter: blur(10px);
-            height: clamp(40px, 4.8vw, 90px);
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: clamp(12px, 1.4vw, 25px) clamp(20px, 2.4vw, 50px);
-            z-index: 100;
-        }
-
-        .footer-links {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(1rem, 1.5vw, 2.5rem);
-            width: clamp(280px, 33.9vw, 700px);
-            height: 100%;
-            padding: clamp(0.5rem, 0.8vw, 1.5rem) clamp(1rem, 1.5vw, 2.5rem);
-        }
-
-        .footer-link {
-            font-size: clamp(0.9rem, 1.3vw, 2rem);
-            color: #1e1e1d;
-            text-decoration: none;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: clamp(0.3rem, 0.5vw, 0.8rem) clamp(0.5rem, 0.8vw, 1.2rem);
-        }
-
-        .footer-link:first-child {
-            min-width: clamp(140px, 18vw, 350px);
-        }
-
-        .footer-link:last-child {
-            min-width: clamp(90px, 12vw, 220px);
-        }
-
-        .footer-separator {
-            width: 0;
-            height: clamp(2rem, 3vw, 4rem);
-            position: relative;
-        }
-
-        .footer-separator::before {
-            content: '';
-            position: absolute;
-            width: clamp(2rem, 3vw, 4rem);
-            height: 2px;
-            background-color: #6e6f75;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
-        }
-
-        /* Widget d'emploi du temps */
-        .schedule-widget {
-            display: none;
-            position: relative;
-            width: 100%;
-            max-width: clamp(280px, 90vw, 900px);
-            margin-top: clamp(15px, 1.8vw, 30px);
-            margin-bottom: clamp(15px, 1.8vw, 30px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .schedule-widget.active {
-            display: flex;
-        }
-
-        .schedule-widget-card {
-            background-color: #F7F7F7;
-            border: 2px solid rgba(31, 101, 142, 0.5);
-            border-radius: clamp(12px, 1.5vw, 24px);
-            box-shadow: 0px 1px 8px 0px rgba(110, 110, 110, 0.1);
-            width: clamp(220px, 78vw, 700px);
-            height: clamp(330px, 43vw, 650px);
-            padding: clamp(16px, 2vw, 35px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(10px, 1.2vw, 20px);
-            align-items: center;
-            position: relative;
-            animation: slideDown 0.3s ease;
-            overflow: visible;
-        }
-
-        .schedule-title {
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 700;
-            color: #414d55;
-            line-height: clamp(18px, 2.2vw, 35px);
-            letter-spacing: 0.01px;
-        }
-
-        .schedule-date-navigator {
-            position: relative;
-            width: clamp(170px, 56vw, 400px);
-            height: clamp(26px, 3.2vw, 50px);
-            background-color: #fafbfd;
-            border-radius: clamp(6px, 0.8vw, 12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .schedule-date-text {
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 500;
-            color: #3d7b9a;
-            line-height: clamp(16px, 2vw, 30px);
-            text-align: center;
-        }
-
-        .schedule-nav-arrow {
-            position: absolute;
-            width: clamp(6px, 0.7vw, 12px);
-            height: clamp(16px, 2vw, 30px);
-            cursor: pointer;
-            color: #a2c0d4;
-            font-size: clamp(12px, 1.5vw, 24px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .schedule-nav-arrow.prev {
-            left: clamp(18px, 2.2vw, 35px);
-        }
-
-        .schedule-nav-arrow.next {
-            right: clamp(18px, 2.2vw, 35px);
-        }
-
-        .schedule-timeline {
-            position: relative;
-            width: 100%;
-            min-height: clamp(220px, 29vw, 450px);
-            height: auto;
-            margin-top: clamp(10px, 1.2vw, 20px);
-            overflow: visible;
-            padding-top: clamp(8px, 1vw, 15px);
-            padding-bottom: clamp(8px, 1vw, 15px);
-        }
-
-        .schedule-time-marker {
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            display: flex;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .schedule-time-marker::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: #d9d0e3;
-            background-image: linear-gradient(to right, transparent 0%, #d9d0e3 0.18%, #d9d0e3 calc(100% - 0.18%), transparent 100%);
-        }
-
-        .schedule-time-label {
-            position: absolute;
-            left: 23px;
-            background-color: #F7F7F7;
-            height: 20px;
-            padding: 0 4px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            font-size: 10px;
-            font-weight: 500;
-            color: #696d6e;
-            text-transform: uppercase;
-            line-height: 20px;
-            z-index: 11;
-        }
-
-        .schedule-time-marker[data-hour="6"] {
-            top: clamp(8px, 1vw, 15px);
-        }
-
-        .schedule-time-marker[data-hour="8"] {
-            top: clamp(40px, 5vw, 75px);
-        }
-
-        .schedule-time-marker[data-hour="10"] {
-            top: clamp(72px, 9vw, 135px);
-        }
-
-        .schedule-time-marker[data-hour="12"] {
-            top: clamp(104px, 13vw, 195px);
-        }
-
-        .schedule-time-marker[data-hour="14"] {
-            top: clamp(136px, 17vw, 255px);
-        }
-
-        .schedule-time-marker[data-hour="16"] {
-            top: clamp(168px, 21vw, 315px);
-        }
-
-        .schedule-time-marker[data-hour="18"] {
-            top: clamp(200px, 25vw, 375px);
-        }
-
-        .schedule-time-marker[data-hour="20"] {
-            top: clamp(232px, 29vw, 435px);
-        }
-
-        .schedule-activity {
-            position: absolute;
-            left: 0;
-            right: 0;
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .schedule-activity-text {
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #1e1e1d;
-            text-align: center;
-            line-height: normal;
-            position: relative;
-            z-index: 2;
-            padding: 0 clamp(6px, 0.8vw, 12px);
-            opacity: 1;
-        }
-
-        .schedule-current-time {
-            position: absolute;
-            left: clamp(18px, 2.2vw, 35px);
-            width: clamp(33px, 4.1vw, 65px);
-            background: linear-gradient(to top, #1f658e, #3d7b9a);
-            border-radius: clamp(6px, 0.8vw, 12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-            height: clamp(16px, 2vw, 30px);
-        }
-
-        .schedule-current-time::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: clamp(48px, 6vw, 90px);
-            background: linear-gradient(to top, #1f658e, #3d7b9a);
-            border-radius: clamp(6px, 0.8vw, 12px);
-        }
-
-        .schedule-current-time-label {
-            font-size: clamp(8px, 1vw, 16px);
-            font-weight: 500;
-            color: #F7F7F7;
-            text-transform: uppercase;
-            line-height: clamp(12px, 1.5vw, 22px);
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .schedule-close-button {
-            position: absolute;
-            top: clamp(8px, 1vw, 15px);
-            right: clamp(8px, 1vw, 15px);
-            width: clamp(28px, 3.4vw, 55px);
-            height: clamp(28px, 3.4vw, 55px);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 20;
-        }
-
-        .schedule-close-icon {
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Widget de détail d'activité (overlay) */
-        .activity-detail-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .activity-detail-overlay.active {
-            display: flex;
-        }
-
-        .activity-detail-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: clamp(18px, 2.2vw, 36px);
-            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
-                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
-            width: 100%;
-            max-width: clamp(320px, 80vw, 800px);
-            min-height: clamp(400px, 52vw, 800px);
-            padding: clamp(25px, 3vw, 50px) clamp(20px, 2.4vw, 40px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(16px, 2vw, 30px);
-            align-items: center;
-            position: relative;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .activity-detail-close {
-            position: absolute;
-            top: clamp(12px, 1.5vw, 25px);
-            right: clamp(12px, 1.5vw, 25px);
-            width: clamp(28px, 3.4vw, 55px);
-            height: clamp(28px, 3.4vw, 55px);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1001;
-            transition: transform 0.2s ease;
-        }
-
-        .activity-detail-close:hover {
-            transform: scale(1.1);
-        }
-
-        .activity-detail-close svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .activity-detail-header {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-            width: 100%;
-            padding-top: 8px;
-        }
-
-        .activity-detail-title {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: #414d55;
-            text-align: center;
-            line-height: 24px;
-            margin: 0;
-            letter-spacing: 0.01px;
-        }
-
-        .activity-detail-navigator {
-            position: relative;
-            width: 100%;
-            max-width: 280px;
-            height: 40px;
-            background: rgba(250, 251, 253, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
-        }
-
-        .activity-detail-navigator-name {
-            font-family: 'Rubik', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: #3d7b9a;
-            line-height: 20px;
-            text-align: center;
-            width: 100%;
-            padding: 0 40px;
-        }
-
-        .activity-detail-nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-family: 'Rubik', sans-serif;
-            font-size: 18px;
-            font-weight: 300;
-            color: #a2c0d4;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: none;
-            border: none;
-            padding: 0;
-            transition: color 0.2s ease, transform 0.2s ease;
-            border-radius: 8px;
-        }
-
-        .activity-detail-nav-arrow:hover {
-            color: #3d7b9a;
-            background: rgba(61, 123, 154, 0.1);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .activity-detail-nav-arrow.prev {
-            left: 8px;
-        }
-
-        .activity-detail-nav-arrow.next {
-            right: 8px;
-        }
-
-        .activity-detail-info-box {
-            width: 100%;
-            max-width: clamp(260px, 65vw, 640px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(6px, 0.8vw, 12px);
-        }
-
-        .activity-detail-date-time {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(6px, 0.8vw, 12px);
-            font-size: clamp(12px, 1.5vw, 24px);
-            color: #3d7b9a;
-            font-weight: 500;
-            font-family: 'Rubik', sans-serif;
-        }
-
-        .activity-detail-date {
-            font-weight: 500;
-        }
-
-        .activity-detail-time-separator {
-            color: #a2c0d4;
-        }
-
-        .activity-detail-time-detail {
-            font-weight: 500;
-        }
-
-        .activity-detail-description-box {
-            background: rgba(250, 251, 253, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: clamp(12px, 1.5vw, 24px);
-            width: 100%;
-            max-width: clamp(260px, 65vw, 640px);
-            min-height: clamp(180px, 23vw, 350px);
-            padding: clamp(16px, 2vw, 30px);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
-        }
-
-        .activity-detail-description-label {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(13px, 1.6vw, 26px);
-            font-weight: 600;
-            color: #1e1e1d;
-            line-height: clamp(18px, 2.2vw, 35px);
-            margin-bottom: clamp(10px, 1.2vw, 18px);
-        }
-
-        .activity-detail-description {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #414d55;
-            line-height: clamp(18px, 2.2vw, 35px);
-            text-align: left;
-            margin: 0;
-            white-space: pre-wrap;
-        }
-
-        .activity-detail-register-button {
-            background: rgba(31, 101, 142, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: clamp(12px, 1.5vw, 24px);
-            width: 100%;
-            max-width: clamp(220px, 55vw, 560px);
-            height: clamp(45px, 5.6vw, 90px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0px 4px 12px 0px rgba(31, 101, 142, 0.3);
-            margin-top: clamp(6px, 0.8vw, 12px);
-        }
-
-        .activity-detail-register-button:hover {
-            background: rgba(31, 101, 142, 1);
-            transform: translateY(-2px);
-            box-shadow: 0px 6px 16px 0px rgba(31, 101, 142, 0.4);
-        }
-
-        .activity-detail-register-button:active {
-            transform: translateY(0);
-        }
-
-        .activity-detail-register-button-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(13px, 1.6vw, 26px);
-            font-weight: 500;
-            color: #F7F7F7;
-            line-height: normal;
-            text-align: center;
-            letter-spacing: clamp(0.2px, 0.03vw, 0.5px);
-        }
-
-        /* Widget de profil utilisateur */
-        .profile-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .profile-overlay.active {
-            display: flex;
-        }
-
-        .profile-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: clamp(18px, 2.2vw, 36px);
-            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
-                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
-            width: 100%;
-            max-width: clamp(320px, 80vw, 800px);
-            padding: clamp(25px, 3vw, 50px) clamp(20px, 2.4vw, 40px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(18px, 2.2vw, 35px);
-            align-items: flex-start;
-            position: relative;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .profile-close {
-            position: absolute;
-            top: clamp(12px, 1.5vw, 25px);
-            right: clamp(12px, 1.5vw, 25px);
-            width: clamp(28px, 3.4vw, 55px);
-            height: clamp(28px, 3.4vw, 55px);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1001;
-            transition: transform 0.2s ease;
-        }
-
-        .profile-close:hover {
-            transform: scale(1.1);
-        }
-
-        .profile-close svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .profile-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .profile-section-header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .profile-section-title {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 500;
-            color: #0a0a0a;
-            margin: 0;
-            text-align: left;
-        }
-
-        .profile-section-line {
-            width: 100%;
-            height: 1px;
-            background-color: #1e1e1d;
-        }
-
-        .profile-info-content {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            gap: clamp(16px, 2vw, 30px);
-            align-items: flex-start;
-        }
-
-        .profile-info-left {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: clamp(12px, 1.5vw, 24px);
-        }
-
-        .profile-field {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            gap: clamp(6px, 0.8vw, 12px);
-        }
-
-        .profile-field.member-number {
-            flex-wrap: wrap;
-        }
-
-        .profile-field.member-number .profile-field-label {
-            flex-basis: 100%;
-        }
-
-        .profile-field-label {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #0a0a0a;
-            white-space: nowrap;
-        }
-
-        .profile-field-value {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #0a0a0a;
-        }
-
-        .profile-photo-container {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .profile-photo-placeholder {
-            width: clamp(90px, 11vw, 200px);
-            height: clamp(90px, 11vw, 200px);
-            background-color: #ffffff;
-            border: 1px solid #1f658e;
-            border-radius: clamp(6px, 0.8vw, 12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-photo-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #1f658e;
-        }
-
-        .profile-medical-textarea-container {
-            width: 100%;
-            position: relative;
-        }
-
-        .profile-medical-textarea {
-            width: 100%;
-            min-height: clamp(80px, 10vw, 150px);
-            padding: clamp(10px, 1.2vw, 20px) clamp(60px, 7.4vw, 120px) clamp(10px, 1.2vw, 20px) clamp(10px, 1.2vw, 20px);
-            background-color: #f0f0f0;
-            border: 1px solid #f08d35;
-            border-radius: clamp(6px, 0.8vw, 12px);
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #0a0a0a;
-            line-height: clamp(16px, 2vw, 30px);
-            resize: none;
-            outline: none;
-            box-sizing: border-box;
-            overflow: hidden;
-            transition: height 0.2s ease;
-        }
-
-        .profile-medical-textarea::placeholder {
-            color: #737373;
-            font-style: normal;
-            opacity: 1;
-        }
-
-        .profile-medical-textarea:focus {
-            border-color: #f08d35;
-            outline: none;
-        }
-
-        .profile-medical-validate-btn {
-            position: absolute;
-            bottom: clamp(10px, 1.2vw, 20px);
-            right: clamp(10px, 1.2vw, 20px);
-            background-color: #1f658e;
-            color: #ffffff;
-            border: none;
-            border-radius: clamp(5px, 0.6vw, 10px);
-            padding: clamp(5px, 0.6vw, 10px) clamp(10px, 1.2vw, 20px);
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(10px, 1.2vw, 20px);
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            z-index: 10;
-        }
-
-        .profile-medical-validate-btn:hover {
-            background-color: #3d7b9a;
-        }
-
-        .profile-medical-validate-btn:active {
-            background-color: #1a4d6b;
-        }
-
-        .profile-security-content {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .profile-password-field {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            gap: 8px;
-            flex-wrap: nowrap;
-            width: 100%;
-        }
-
-        .profile-password-masked {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 400;
-            color: #0a0a0a;
-            letter-spacing: clamp(1px, 0.2vw, 3px);
-        }
-
-        .profile-password-edit {
-            display: flex;
-            align-items: baseline;
-            gap: clamp(3px, 0.4vw, 6px);
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(10px, 1.2vw, 20px);
-            font-weight: 400;
-            color: #737373;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .profile-password-edit:hover {
-            color: #1f658e;
-        }
-
-        .profile-edit-icon {
-            width: clamp(11px, 1.4vw, 22px);
-            height: clamp(11px, 1.4vw, 22px);
-            stroke: currentColor;
-        }
-
-        /* Widget de messagerie */
-        .message-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: clamp(10px, 2vh, 5vh) clamp(10px, 2vw, 5vw);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .message-overlay.active {
-            display: flex;
-        }
-
-        .message-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: clamp(18px, 2.2vw, 36px);
-            box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.1),
-                        0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
-            width: 100%;
-            max-width: 95vw;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            position: relative;
-            animation: slideUp 0.3s ease;
-            overflow-y: auto;
-            max-height: 90vh;
-        }
-
-        .message-close {
-            position: absolute;
-            top: clamp(12px, 1.5vw, 25px);
-            right: clamp(12px, 1.5vw, 25px);
-            width: clamp(28px, 3.4vw, 55px);
-            height: clamp(28px, 3.4vw, 55px);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1001;
-            transition: transform 0.2s ease;
-        }
-
-        .message-close:hover {
-            transform: scale(1.1);
-        }
-
-        .message-close svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .message-separator {
-            width: 100%;
-            height: 1px;
-            background-color: #1e1e1d;
-            margin-top: clamp(60px, 7.5vw, 120px);
-        }
-
-        .message-title {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(16px, 2vw, 32px);
-            font-weight: 700;
-            color: #0a0a0a;
-            margin: clamp(16px, 2vw, 32px) auto;
-            width: 100%;
-            text-align: center;
-        }
-
-        .message-profiles-grid {
-            width: 100%;
-            padding: 0 clamp(20px, 2.5vw, 40px) clamp(25px, 3vw, 50px);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(24px, 3vw, 48px);
-            justify-items: center;
-        }
-
-        .message-profile-card {
-            width: 100%;
-            max-width: clamp(90px, 11vw, 200px);
-            background-color: #ffffff;
-            border-radius: clamp(8px, 1vw, 16px);
-            padding: clamp(12px, 1.5vw, 24px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: clamp(8px, 1vw, 16px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        .message-profile-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
-        }
-
-        .message-profile-card.selected {
-            border: 2px solid #649d50;
-            box-shadow: 0px 4px 12px rgba(100, 157, 80, 0.3);
-        }
-
-        .message-profile-photo {
-            width: clamp(60px, 7.5vw, 120px);
-            height: clamp(60px, 7.5vw, 120px);
-            border-radius: 50%;
-            background-color: #f08d35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .message-profile-photo-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(10px, 1.2vw, 20px);
-            font-weight: 400;
-            color: #1e1e1d;
-        }
-
-        .message-profile-name {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(12px, 1.5vw, 24px);
-            font-weight: 600;
-            color: #0a0a0a;
-            text-align: center;
-            width: 100%;
-        }
-
-        .message-profile-role {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(10px, 1.2vw, 20px);
-            font-weight: 400;
-            color: #737373;
-            text-align: center;
-            width: 100%;
-        }
-
-        .message-compose-section {
-            width: 100%;
-            padding: clamp(20px, 2.5vw, 40px);
-            display: flex;
-            flex-direction: column;
-            gap: clamp(20px, 2.5vw, 40px);
-            border-top: 1px solid #e5e5e5;
-            margin-top: clamp(16px, 2vw, 32px);
-        }
-
-        .message-compose-title {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(18px, 2.2vw, 36px);
-            font-weight: 600;
-            color: #0a0a0a;
-            text-align: center;
-            margin: 0;
-        }
-
-        .message-compose-separator {
-            width: 100%;
-            height: 1px;
-            background-color: #1e1e1d;
-            margin: 0 auto;
-        }
-
-        .message-profile-details {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: clamp(24px, 3vw, 48px);
-            width: 100%;
-        }
-
-        .message-profile-info {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(12px, 1.5vw, 24px);
-            flex: 0 1 auto;
-            align-items: flex-start;
-            order: 1;
-        }
-
-        .message-profile-info-item {
-            display: flex;
-            align-items: baseline;
-            gap: clamp(8px, 1vw, 16px);
-        }
-
-        .message-profile-info-label {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 400;
-            color: #0a0a0a;
-        }
-
-        .message-profile-info-value {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 700;
-            color: #0a0a0a;
-        }
-
-        .message-profile-photo-square {
-            width: clamp(120px, 15vw, 240px);
-            height: clamp(120px, 15vw, 240px);
-            min-width: clamp(120px, 15vw, 240px);
-            min-height: clamp(120px, 15vw, 240px);
-            border: 2px solid #1f658e;
-            border-radius: clamp(8px, 1vw, 16px);
-            background-color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 auto;
-            flex-shrink: 0;
-            order: 2;
-            margin-left: auto;
-        }
-
-        .message-profile-photo-square-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 400;
-            color: #1f658e;
-        }
-
-        .message-compose-subtitle {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(16px, 2vw, 32px);
-            font-weight: 700;
-            color: #0a0a0a;
-            text-align: center;
-            margin: 0;
-        }
-
-        .message-text-section {
-            width: 100%;
-        }
-
-        .message-text-section {
-            width: 100%;
-        }
-
-        .message-textarea {
-            width: 100%;
-            min-height: clamp(120px, 15vw, 240px);
-            padding: clamp(12px, 1.5vw, 24px) clamp(16px, 2vw, 32px);
-            background-color: #E0E0E0;
-            border: none;
-            border-radius: clamp(8px, 1vw, 16px);
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            color: #1e1e1d;
-            resize: vertical;
-            outline: none;
-            transition: all 0.3s ease;
-            line-height: 1.5;
-        }
-
-        .message-textarea:focus {
-            background-color: #E8E8E8;
-            box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.2);
-        }
-
-        .message-textarea::placeholder {
-            color: #737373;
-        }
-
-        .message-send-button {
-            width: 100%;
-            padding: clamp(12px, 1.5vw, 24px);
-            background: #649d50;
-            border: none;
-            border-radius: clamp(8px, 1vw, 16px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            align-self: center;
-            max-width: fit-content;
-            padding-left: clamp(32px, 4vw, 64px);
-            padding-right: clamp(32px, 4vw, 64px);
-        }
-
-        .message-send-button:hover {
-            background: #5a8d46;
-            transform: translateY(-2px);
-            box-shadow: 0px 4px 12px rgba(100, 157, 80, 0.3);
-        }
-
-        .message-send-button:active {
-            transform: translateY(0);
-        }
-
-        .message-send-button-text {
-            font-family: 'Rubik', sans-serif;
-            font-size: clamp(14px, 1.7vw, 28px);
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        /* Media queries pour responsive */
-        @media (min-width: 1080px) and (max-width: 1920px) {
-            /* Tablette 1080x1920 - Adaptation homothétique depuis 414x896px (ratio 2.61) */
-            .main-container {
-                gap: clamp(1.5rem, 2vw, 2rem);
-                padding: clamp(2rem, 8vh, 10vh) clamp(1.2rem, 1.5vw, 1.8rem) clamp(16vh, 18vh, 20vh);
-                justify-content: flex-start;
-            }
-            
-            .body-content {
-                max-width: clamp(700px, 85vw, 950px);
-                gap: clamp(1.2rem, 1.5vw, 1.8rem);
-                padding: clamp(1rem, 1.5vw, 2rem) 0 clamp(2rem, 3vw, 4rem);
-            }
-            
-            .calendar-wrapper {
-                width: clamp(700px, 85vw, 950px);
-            }
-            
-            .calendar {
-                max-width: clamp(680px, 83vw, 930px);
-                padding: 2.61rem; /* 10px × 2.61 / 16 = 1.63rem, ajusté pour correspondre */
-                gap: 3.13rem; /* 12px × 2.61 / 16 = 1.96rem, ajusté */
-            }
-            
-            .search-bar {
-                width: clamp(500px, 60vw, 700px);
-                height: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
-                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
-                gap: 2.09rem; /* 8px × 2.61 / 16 = 1.305rem, ajusté pour correspondre */
-                padding: 1.83rem clamp(1.2rem, 1.5vw, 1.8rem); /* 7px × 2.61 / 16 = 1.83rem vertical */
-                border-radius: clamp(20px, 2.5vw, 40px);
-                position: relative;
-            }
-            
-            .search-icon {
-                width: 2.12rem; /* 13px × 2.61 / 16 = 2.12rem */
-                height: 2.12rem;
-            }
-            
-            .search-select {
-                font-size: 1.95rem; /* Taille normale : 12px × 2.61 / 16 = 1.95rem */
-                padding-right: clamp(1.8rem, 2.2vw, 2.5rem);
-                line-height: 1.2;
-            }
-            
-            /* Réduire de moitié la taille du menu déroulant (options) */
-            .search-select option {
-                font-size: 0.975rem; /* Réduit de moitié : 1.95rem / 2 */
-                padding: clamp(0.15rem, 0.2vw, 0.25rem) clamp(0.3rem, 0.4vw, 0.5rem); /* Réduit de moitié */
-                line-height: 1.2;
-                height: auto;
-            }
-            
-            .search-select optgroup {
-                font-size: 0.875rem; /* Légèrement plus petit pour les groupes */
-                font-weight: 600;
-                padding: clamp(0.15rem, 0.2vw, 0.25rem) clamp(0.3rem, 0.4vw, 0.5rem);
-            }
-            
-            .search-select:focus {
-                outline: none;
-            }
-            
-            .search-arrow {
-                width: 1.63rem; /* 10px × 2.61 / 16 = 1.63rem */
-                height: 1.63rem;
-                right: clamp(1.2rem, 1.5vw, 1.8rem);
-            }
-            
-            .activity-cards-container {
-                max-width: clamp(700px, 85vw, 950px);
-                gap: clamp(1.33rem, 1.6vw, 2rem); /* Réduit de 1/3 : × 2/3 */
-                margin-top: clamp(1.5rem, 2vw, 2rem);
-            }
-            
-            /* Cartes d'activités réduites de 1/3 */
-            .activity-card {
-                padding: clamp(1.6rem, 2.4vw, 3.2rem); /* Réduit de 1/3 : × 2/3 */
-                gap: clamp(0.8rem, 1.07vw, 1.6rem); /* Réduit de 1/3 : × 2/3 */
-                border-radius: clamp(1.07rem, 1.33vw, 2.13rem); /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            .activity-card-title {
-                font-size: 2.13rem; /* Réduit de 1/3 : × 2/3 */
-                line-height: 1.4;
-            }
-            
-            .activity-card-badge {
-                padding: clamp(0.53rem, 0.67vw, 1.07rem) clamp(1.07rem, 1.33vw, 2.13rem); /* Réduit de 1/3 : × 2/3 */
-                border-radius: 1.6rem; /* Réduit de 1/3 : × 2/3 */
-                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            .activity-card-date {
-                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
-                gap: clamp(0.8rem, 1.07vw, 1.6rem); /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            .activity-card-time {
-                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            .activity-card-location {
-                font-size: 1.6rem; /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            .activity-card-color-indicator {
-                width: 0.53rem; /* Réduit de 1/3 : × 2/3 */
-            }
-            
-            /* Calendrier - éléments internes agrandis pour tablette (ratio 2.61 strict) */
-            .calendar-day-header {
-                width: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
-                height: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
-            }
-            
-            .calendar-day-header-text {
-                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
-                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
-            }
-            
-            .calendar-date {
-                width: 4.56rem; /* 28px × 2.61 / 16 = 4.56rem */
-                height: 4.56rem;
-            }
-            
-            .calendar-date-text {
-                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
-                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
-            }
-            
-            .calendar-nav-button {
-                width: 3.91rem; /* 24px × 2.61 / 16 = 3.91rem */
-                height: 3.91rem;
-            }
-            
-            .calendar-nav-icon {
-                width: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
-                height: 1.96rem;
-            }
-            
-            .calendar-dropdown {
-                height: 3.91rem; /* 24px × 2.61 / 16 = 3.91rem */
-                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
-            }
-            
-            .calendar-dropdown-text {
-                font-size: 1.95rem; /* 12px × 2.61 / 16 = 1.95rem */
-                line-height: 2.55rem; /* 16px × 2.61 / 16 = 2.55rem */
-            }
-            
-            .activity-dot {
-                width: 0.65rem; /* 4px × 2.61 / 16 = 0.65rem */
-                height: 0.65rem;
-            }
-            
-            .activities-title {
-                font-size: 2.625rem; /* 16px × 2.61 / 16 = 2.625rem */
-                height: 4.56rem; /* 35px × 2.61 / 16 = 5.71rem, ajusté pour correspondre */
-            }
-            
-            /* Header et Footer agrandis pour tablette - Adaptation homothétique stricte 414px -> 1080px (ratio 2.61) */
-            .header {
-                height: clamp(12vh, 14vw, 15vh);
-                min-height: clamp(90px, 11vw, 120px);
-                padding: clamp(3vh, 3.5vw, 4vh) clamp(4vw, 4.5vw, 5vw) clamp(1.5vh, 1.8vw, 2vh);
-            }
-            
-            .header-logo {
-                width: 9.1rem; /* 3.5rem × 2.61 = 9.135rem */
-                height: 9.1rem;
-            }
-            
-            .header-icon {
-                width: 4.7rem; /* 1.8rem × 2.61 = 4.698rem */
-                height: 4.7rem;
-            }
-            
-            .header-icons {
-                gap: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
-            }
-            
-            .footer {
-                height: clamp(8vh, 9vw, 10vh);
-                min-height: clamp(55px, 6.5vw, 75px);
-                padding: clamp(1.5vh, 1.8vw, 2vh) clamp(2.8vw, 3.2vw, 3.8vw);
-            }
-            
-            .footer-link {
-                font-size: 1.6rem; /* Légèrement augmenté : 1.4rem + 0.2rem */
-                padding: clamp(0.3rem, 0.4vw, 0.5rem) clamp(0.45rem, 0.55vw, 0.65rem);
-            }
-            
-            .footer-link:first-child {
-                min-width: clamp(240px, 29vw, 320px);
-            }
-            
-            .footer-link:last-child {
-                min-width: clamp(155px, 19vw, 200px);
-            }
-            
-            .footer-links {
-                gap: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
-                width: clamp(520px, 63vw, 680px);
-                padding: clamp(0.6rem, 0.75vw, 0.9rem) clamp(0.9rem, 1.1vw, 1.3rem);
-            }
-            
-            .footer-separator {
-                height: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
-            }
-            
-            .footer-separator::before {
-                width: 2.35rem; /* 0.9rem × 2.61 = 2.349rem */
-                height: 1.5px;
-            }
-            
-            /* Gaps et espacements agrandis pour tablette (ratio 2.61 strict) */
-            .calendar-days-header {
-                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem, ajusté pour correspondre */
-            }
-            
-            .calendar-dates-grid {
-                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem */
-                padding-top: 1.57rem;
-            }
-            
-            .calendar-week {
-                gap: 1.57rem; /* 6px × 2.61 / 16 = 0.98rem */
-            }
-            
-            .calendar-month-year {
-                gap: 1.04rem; /* 4px × 2.61 / 16 = 0.65rem, ajusté */
-            }
-            
-            /* Widgets agrandis pour tablette (ratio 2.61 strict) */
-            .schedule-widget {
-                max-width: clamp(700px, 85vw, 950px);
-            }
-            
-            .schedule-widget-card {
-                width: clamp(550px, 67vw, 750px);
-                min-height: auto;
-                height: auto;
-                max-height: clamp(900px, 70vh, 1100px);
-                padding: clamp(2.5rem, 3vw, 3.5rem);
-                gap: clamp(1.5rem, 2vw, 2.5rem);
-            }
-            
-            .schedule-title {
-                font-size: 2.28rem; /* 14px × 2.61 / 16 = 2.28rem */
-                line-height: 2.85rem; /* 18px × 2.61 / 16 = 2.85rem */
-            }
-            
-            .schedule-date-navigator {
-                width: clamp(300px, 37vw, 420px);
-                height: 4.24rem; /* 26px × 2.61 / 16 = 4.24rem */
-            }
-            
-            .schedule-date-text {
-                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
-                line-height: 2.45rem; /* 16px × 2.61 / 16 = 2.45rem */
-            }
-            
-            .schedule-nav-arrow {
-                width: 0.98rem; /* 6px × 2.61 / 16 = 0.98rem */
-                height: 2.61rem; /* 16px × 2.61 / 16 = 2.61rem */
-                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
-            }
-            
-            .schedule-nav-arrow.prev {
-                left: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
-            }
-            
-            .schedule-nav-arrow.next {
-                right: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
-            }
-            
-            .schedule-timeline {
-                /* Hauteur basée sur le dernier marqueur (20h) + padding */
-                min-height: calc(clamp(38rem, 47vw, 58rem) + clamp(1.3rem, 1.6vw, 2rem));
-                height: auto;
-                max-height: none;
-                margin-top: clamp(1.5rem, 2vw, 2.5rem);
-                padding-top: clamp(1.3rem, 1.6vw, 2rem);
-                padding-bottom: clamp(1.3rem, 1.6vw, 2rem);
-            }
-            
-            .schedule-close-button {
-                top: clamp(1.3rem, 1.6vw, 2rem);
-                right: clamp(1.3rem, 1.6vw, 2rem);
-                width: 4.57rem; /* 28px × 2.61 / 16 = 4.57rem */
-                height: 4.57rem;
-            }
-            
-            .schedule-time-label {
-                left: 3.75rem; /* 23px × 2.61 / 16 = 3.75rem */
-                height: 3.26rem; /* 20px × 2.61 / 16 = 3.26rem */
-                padding: 0 clamp(0.65rem, 0.8vw, 1rem); /* 4px × 2.61 / 16 = 0.65rem */
-                font-size: 1.63rem; /* 10px × 2.61 / 16 = 1.63rem */
-                line-height: 3.26rem; /* 20px × 2.61 / 16 = 3.26rem */
-            }
-            
-            .schedule-time-marker[data-hour="6"] {
-                top: clamp(1.3rem, 1.6vw, 2rem); /* 8px × 2.61 / 16 = 1.3rem */
-            }
-            
-            .schedule-time-marker[data-hour="8"] {
-                top: clamp(6.5rem, 8vw, 10rem); /* 40px × 2.61 / 16 = 6.5rem */
-            }
-            
-            .schedule-time-marker[data-hour="10"] {
-                top: clamp(11.75rem, 14.5vw, 18rem); /* 72px × 2.61 / 16 = 11.75rem */
-            }
-            
-            .schedule-time-marker[data-hour="12"] {
-                top: clamp(17rem, 21vw, 26rem); /* 104px × 2.61 / 16 = 17rem */
-            }
-            
-            .schedule-time-marker[data-hour="14"] {
-                top: clamp(22.25rem, 27.5vw, 34rem); /* 136px × 2.61 / 16 = 22.25rem */
-            }
-            
-            .schedule-time-marker[data-hour="16"] {
-                top: clamp(27.5rem, 34vw, 42rem); /* 168px × 2.61 / 16 = 27.5rem */
-            }
-            
-            .schedule-time-marker[data-hour="18"] {
-                top: clamp(32.75rem, 40.5vw, 50rem); /* 200px × 2.61 / 16 = 32.75rem */
-            }
-            
-            .schedule-time-marker[data-hour="20"] {
-                top: clamp(38rem, 47vw, 58rem); /* 232px × 2.61 / 16 = 38rem */
-            }
-            
-            .schedule-activity-text {
-                font-size: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
-                padding: 0 clamp(0.98rem, 1.2vw, 1.5rem); /* 6px × 2.61 / 16 = 0.98rem */
-            }
-            
-            .schedule-current-time {
-                left: 2.93rem; /* 18px × 2.61 / 16 = 2.93rem */
-                width: 4.24rem; /* 33px × 2.61 / 16 = 4.24rem (approximé) */
-                height: 2.61rem; /* 16px × 2.61 / 16 = 2.61rem */
-            }
-            
-            .schedule-current-time::before {
-                bottom: clamp(7.83rem, 9.6vw, 12rem); /* 48px × 2.61 / 16 = 7.83rem */
-            }
-            
-            .schedule-current-time-label {
-                font-size: 1.31rem; /* 8px × 2.61 / 16 = 1.31rem */
-                line-height: 1.96rem; /* 12px × 2.61 / 16 = 1.96rem */
-            }
-            
-            .activity-detail-card {
-                max-width: clamp(700px, 85vw, 950px);
-                min-height: clamp(650px, 80vw, 900px);
-                padding: clamp(2rem, 2.5vw, 3rem) clamp(1.8rem, 2.2vw, 2.8rem);
-                gap: clamp(1.5rem, 1.8vw, 2.2rem);
-            }
-            
-            .activity-detail-close {
-                top: clamp(1.2rem, 1.5vw, 1.8rem);
-                right: clamp(1.2rem, 1.5vw, 1.8rem);
-                width: clamp(2.2rem, 2.7vw, 3rem);
-                height: clamp(2.2rem, 2.7vw, 3rem);
-            }
-            
-            .activity-detail-title {
-                font-size: clamp(2rem, 2.4vw, 2.67rem); /* Augmenté de 1/3 : × 4/3 */
-                line-height: clamp(2.53rem, 3.07vw, 3.33rem); /* Augmenté de 1/3 : × 4/3 */
-            }
-            
-            .activity-detail-navigator {
-                max-width: clamp(550px, 67vw, 750px);
-                height: clamp(2.5rem, 3vw, 3.5rem);
-            }
-            
-            .activity-detail-navigator-name {
-                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
-                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
-                padding: 0 clamp(2.5rem, 3vw, 3.5rem);
-            }
-            
-            .activity-detail-nav-arrow {
-                font-size: clamp(2rem, 2.4vw, 2.67rem); /* Augmenté de 1/3 : × 4/3 */
-            }
-            
-            .activity-detail-info-box {
-                max-width: clamp(600px, 73vw, 850px);
-                gap: clamp(0.6rem, 0.8vw, 1rem);
-            }
-            
-            .activity-detail-date-time {
-                font-size: clamp(1.47rem, 1.73vw, 2rem); /* Augmenté de 1/3 : × 4/3 */
-                gap: clamp(0.6rem, 0.8vw, 1rem);
-            }
-            
-            .activity-detail-description-box {
-                max-width: clamp(600px, 73vw, 850px);
-                min-height: clamp(280px, 34vw, 400px);
-                padding: clamp(1.5rem, 1.8vw, 2.2rem);
-                border-radius: clamp(1rem, 1.2vw, 1.5rem);
-            }
-            
-            .activity-detail-description-label {
-                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
-                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
-                margin-bottom: clamp(1rem, 1.2vw, 1.5rem);
-            }
-            
-            .activity-detail-description {
-                font-size: clamp(1.47rem, 1.73vw, 2rem); /* Augmenté de 1/3 : × 4/3 */
-                line-height: clamp(2.13rem, 2.67vw, 2.93rem); /* Augmenté de 1/3 : × 4/3 */
-            }
-            
-            .activity-detail-register-button {
-                max-width: clamp(500px, 61vw, 700px);
-                height: clamp(3.5rem, 4.3vw, 5rem);
-                border-radius: clamp(1rem, 1.2vw, 1.5rem);
-                margin-top: clamp(0.6rem, 0.8vw, 1rem);
-            }
-            
-            .activity-detail-register-button-text {
-                font-size: clamp(1.6rem, 2vw, 2.27rem); /* Augmenté de 1/3 : × 4/3 */
-                letter-spacing: clamp(0.2px, 0.03vw, 0.4px);
-            }
-            
-            .profile-card {
-                max-width: clamp(700px, 85vw, 950px);
-                padding: clamp(4rem, 5vw, 6rem) clamp(3.6rem, 4.4vw, 5.6rem); /* Doublé */
-                gap: clamp(3rem, 3.6vw, 4.4rem); /* Doublé */
-            }
-            
-            .profile-close {
-                top: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
-                right: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
-                width: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
-                height: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
-            }
-            
-            .profile-section-title {
-                font-size: clamp(2.4rem, 3vw, 3.4rem); /* Doublé */
-            }
-            
-            .profile-info-content {
-                gap: clamp(3rem, 3.6vw, 4.4rem); /* Doublé */
-            }
-            
-            .profile-info-left {
-                gap: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
-            }
-            
-            .profile-field {
-                gap: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
-            }
-            
-            .profile-field-label {
-                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-            }
-            
-            .profile-field-value {
-                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-            }
-            
-            .profile-photo-placeholder {
-                width: clamp(16rem, 19.6vw, 24rem); /* Doublé */
-                height: clamp(16rem, 19.6vw, 24rem); /* Doublé */
-                border-radius: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
-            }
-            
-            .profile-photo-text {
-                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-            }
-            
-            .profile-medical-textarea {
-                min-height: clamp(12rem, 14.8vw, 18rem); /* Doublé */
-                padding: clamp(2rem, 2.4vw, 3rem) clamp(10rem, 12.2vw, 15rem) clamp(2rem, 2.4vw, 3rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-                line-height: clamp(2.8rem, 3.4vw, 3.8rem); /* Doublé */
-                border-radius: clamp(1.2rem, 1.6vw, 2rem); /* Doublé */
-            }
-            
-            .profile-medical-validate-btn {
-                bottom: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                right: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                padding: clamp(1rem, 1.2vw, 1.5rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                font-size: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                border-radius: clamp(1rem, 1.2vw, 1.5rem); /* Doublé */
-            }
-            
-            .profile-password-masked {
-                font-size: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-                letter-spacing: clamp(3px, 0.4vw, 5px); /* Doublé */
-            }
-            
-            .profile-password-edit {
-                font-size: clamp(1.9rem, 2.3vw, 2.5rem); /* Doublé */
-                gap: clamp(0.8rem, 1vw, 1.2rem); /* Doublé */
-            }
-            
-            .profile-edit-icon {
-                width: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-                height: clamp(2.2rem, 2.6vw, 3rem); /* Doublé */
-            }
-            
-            /* Widget de messagerie - Adaptation tablette 1080x1920 (ratio 2.61) */
-            .message-card {
-                max-width: 95vw;
-                padding: 0;
-            }
-            
-            .message-close {
-                top: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
-                right: clamp(2.4rem, 3vw, 3.6rem); /* Doublé */
-                width: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
-                height: clamp(4.4rem, 5.4vw, 6rem); /* Doublé */
-            }
-            
-            .message-separator {
-                margin-top: clamp(9.8rem, 12vw, 15.6rem); /* 60px × 2.61 / 16 = 9.8rem */
-            }
-            
-            .message-title {
-                font-size: clamp(2.6rem, 3.2vw, 3.5rem); /* 16px × 2.61 / 16 = 2.61rem, ajusté */
-                margin: clamp(2.6rem, 3.2vw, 3.5rem) auto; /* Doublé */
-            }
-            
-            .message-profiles-grid {
-                padding: 0 clamp(3.3rem, 4vw, 5.2rem) clamp(4.1rem, 5vw, 6.5rem); /* Doublé */
-                gap: clamp(3.9rem, 4.8vw, 6rem); /* Augmenté de 50% pour plus d'espace */
-            }
-            
-            .message-profile-card {
-                max-width: clamp(14.7rem, 18vw, 19.5rem); /* 90px × 2.61 / 16 = 14.7rem */
-                padding: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                gap: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-            }
-            
-            .message-profile-photo {
-                width: clamp(9.8rem, 12vw, 15.6rem); /* 60px × 2.61 / 16 = 9.8rem */
-                height: clamp(9.8rem, 12vw, 15.6rem);
-            }
-            
-            .message-profile-photo-text {
-                font-size: clamp(1.6rem, 2vw, 2.6rem); /* 10px × 2.61 / 16 = 1.6rem */
-            }
-            
-            .message-profile-name {
-                font-size: clamp(2rem, 2.4vw, 3rem); /* 12px × 2.61 / 16 = 1.96rem, ajusté */
-            }
-            
-            .message-profile-role {
-                font-size: clamp(1.6rem, 2vw, 2.6rem); /* 10px × 2.61 / 16 = 1.6rem */
-            }
-            
-            .message-compose-section {
-                padding: clamp(3.3rem, 4vw, 5.2rem); /* Doublé */
-                gap: clamp(3.3rem, 4vw, 5.2rem); /* Doublé */
-            }
-            
-            .message-compose-title {
-                font-size: clamp(2.9rem, 3.6vw, 4.7rem); /* 18px × 2.61 / 16 = 2.9rem */
-            }
-            
-            .message-profile-details {
-                gap: clamp(3.9rem, 4.8vw, 6rem); /* Doublé */
-            }
-            
-            .message-profile-info {
-                gap: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-            }
-            
-            .message-profile-info-item {
-                gap: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-            }
-            
-            .message-profile-info-label,
-            .message-profile-info-value {
-                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
-            }
-            
-            .message-profile-photo-square {
-                width: clamp(19.6rem, 24vw, 31.2rem); /* 120px × 2.61 / 16 = 19.6rem */
-                height: clamp(19.6rem, 24vw, 31.2rem);
-                min-width: clamp(19.6rem, 24vw, 31.2rem);
-                min-height: clamp(19.6rem, 24vw, 31.2rem);
-                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-            }
-            
-            .message-profile-photo-square-text {
-                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
-            }
-            
-            .message-compose-subtitle {
-                font-size: clamp(2.6rem, 3.2vw, 4.1rem); /* 16px × 2.61 / 16 = 2.6rem */
-            }
-            
-            .message-textarea {
-                min-height: clamp(19.6rem, 24vw, 31.2rem); /* 120px × 2.61 / 16 = 19.6rem */
-                padding: clamp(1.6rem, 2vw, 2.6rem) clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                font-size: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-            }
-            
-            .message-send-button {
-                padding: clamp(2rem, 2.4vw, 3rem); /* Doublé */
-                border-radius: clamp(1.3rem, 1.6vw, 2.1rem); /* Doublé */
-            }
-            
-            .message-send-button-text {
-                font-size: clamp(2.3rem, 2.8vw, 3.6rem); /* 14px × 2.61 / 16 = 2.3rem */
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1079px) {
-            /* Tablettes moyennes */
-            .main-container {
-                padding: clamp(2rem, 8vh, 10vh) clamp(1.2rem, 1.5vw, 1.8rem) clamp(2.5rem, 3vw, 3.5rem);
-                justify-content: flex-start;
-            }
-            
-            .body-content {
-                max-width: clamp(600px, 70vw, 800px);
-            }
-            
-            .calendar-wrapper {
-                width: clamp(600px, 70vw, 800px);
-            }
-            
-            .calendar {
-                max-width: clamp(580px, 68vw, 780px);
-            }
-            
-            .search-bar {
-                width: clamp(500px, 60vw, 700px);
-            }
-            
-            .activity-cards-container {
-                max-width: clamp(600px, 70vw, 800px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            /* Mobile - Priorité 1 */
-            body {
-                padding-top: 0vh;
-                padding-bottom: 0vh;
-            }
-            
-            /* Widget de messagerie - Mobile */
-            .message-overlay {
-                padding: clamp(5px, 1vh, 2vh) clamp(5px, 1vw, 2vw);
-            }
-            
-            .message-profiles-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: clamp(12px, 1.5vw, 20px);
-                padding: 0 clamp(15px, 2vw, 25px) clamp(20px, 2.5vw, 35px);
-            }
-            
-            .message-profile-card {
-                max-width: 100%;
-            }
-            
-            .message-profile-details {
-                flex-direction: row;
-                align-items: flex-start;
-                gap: clamp(16px, 2vw, 24px);
-            }
-            
-            .message-profile-info {
-                width: 100%;
-                align-items: flex-start;
-            }
-            
-            .message-profile-photo-square {
-                width: clamp(100px, 12vw, 150px);
-                height: clamp(100px, 12vw, 150px);
-                min-width: clamp(100px, 12vw, 150px);
-                min-height: clamp(100px, 12vw, 150px);
-            }
-
-            .header {
-                width: 100vw;
-                padding: clamp(2vh, 3vw, 4vh) clamp(3vw, 4vw, 5vw) clamp(1.5vh, 2vw, 2.5vh);
-                height: auto;
-                min-height: clamp(8vh, 10vw, 12vh);
-                left: 0;
-                right: 0;
-                box-sizing: border-box;
-            }
-            
-            .header-logo {
-                width: clamp(3.5rem, 5vw, 5rem);
-                height: clamp(3.5rem, 5vw, 5rem);
-            }
-            
-            .header-icon {
-                width: clamp(2rem, 3vw, 3rem);
-                height: clamp(2rem, 3vw, 3rem);
-            }
-            
-            .header-icons {
-                gap: clamp(1rem, 1.5vw, 2rem);
-            }
-            
-            .footer {
-                height: clamp(6vh, 8vw, 10vh);
-                min-height: clamp(50px, 6vw, 100px);
-                padding: clamp(1.5vh, 2vw, 3vh) clamp(2.5vw, 3.5vw, 4vw);
-            }
-            
-            .footer-link {
-                font-size: clamp(0.85rem, 1.2vw, 1.5rem);
-                padding: clamp(0.3rem, 0.5vw, 0.6rem) clamp(0.4rem, 0.6vw, 0.8rem);
-            }
-            
-            .footer-links {
-                gap: clamp(0.8rem, 1.2vw, 1.8rem);
-                padding: clamp(0.4rem, 0.6vw, 1rem) clamp(0.8rem, 1.2vw, 1.8rem);
-            }
-            
-            .footer-separator {
-                height: clamp(1.5rem, 2.5vw, 3rem);
-            }
-            
-            .footer-separator::before {
-                width: clamp(1.5rem, 2.5vw, 3rem);
-            }
-
-            .main-container {
-                padding: clamp(2rem, 8vh, 10vh) 2.5vw clamp(16vh, 18vh, 20vh);
-                min-height: calc(100vh - 10vh - 10vh - 10vh);
-                justify-content: flex-start;
-            }
-
-            .body-content {
-                max-width: 100%;
-                padding: 0.5vh 0;
-            }
-            
-            /* Calendrier - tailles mobiles optimisées */
-            .calendar-day-header {
-                width: clamp(28px, 7vw, 40px);
-                height: clamp(18px, 4.5vw, 25px);
-            }
-            
-            .calendar-day-header-text {
-                font-size: clamp(10px, 2.5vw, 14px);
-            }
-            
-            .calendar-date {
-                width: clamp(28px, 7vw, 40px);
-                height: clamp(28px, 7vw, 40px);
-            }
-            
-            .calendar-date-text {
-                font-size: clamp(12px, 3vw, 16px);
-            }
-
-            .calendar-wrapper,
-            .calendar {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .search-bar {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .activity-cards-container {
-                max-width: 100%;
-            }
-
-            .footer {
-                bottom: 0vh;
-                height: 6vh;
-                padding: 2vh 3.5vw;
-            }
-        }
-
-        @media (max-width: 480px) {
-            /* Mobile */
-            body {
-                padding-top: 0vh;
-                padding-bottom: 0vh;
-            }
-            
-            /* Widget de messagerie - Mobile petit */
-            .message-overlay {
-                padding: clamp(5px, 0.8vh, 1.5vh) clamp(5px, 0.8vw, 1.5vw);
-            }
-            
-            .message-profiles-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: clamp(10px, 1.2vw, 16px);
-            }
-            
-            .message-profile-details {
-                flex-direction: row;
-                align-items: flex-start;
-                gap: clamp(12px, 1.5vw, 20px);
-            }
-            
-            .message-profile-photo-square {
-                width: clamp(80px, 10vw, 120px);
-                height: clamp(80px, 10vw, 120px);
-                min-width: clamp(80px, 10vw, 120px);
-                min-height: clamp(80px, 10vw, 120px);
-            }
-
-            .header {
-                width: 100vw;
-                padding: clamp(1.8vh, 2.5vw, 3vh) clamp(2.5vw, 3.5vw, 4vw) clamp(1.2vh, 1.8vw, 2vh);
-                height: auto;
-                min-height: clamp(7vh, 9vw, 11vh);
-                left: 0;
-                right: 0;
-                box-sizing: border-box;
-            }
-            
-            .header-logo {
-                width: clamp(3rem, 4.5vw, 4.5rem);
-                height: clamp(3rem, 4.5vw, 4.5rem);
-            }
-            
-            .header-icon {
-                width: clamp(1.8rem, 2.8vw, 2.8rem);
-                height: clamp(1.8rem, 2.8vw, 2.8rem);
-            }
-            
-            .header-icons {
-                gap: clamp(0.9rem, 1.3vw, 1.8rem);
-            }
-            
-            .footer {
-                height: clamp(5.5vh, 7vw, 9vh);
-                min-height: clamp(45px, 5.5vw, 90px);
-                padding: clamp(1.2vh, 1.8vw, 2.5vh) clamp(2vw, 3vw, 3.5vw);
-            }
-            
-            .footer-link {
-                font-size: clamp(0.8rem, 1.1vw, 1.3rem);
-                padding: clamp(0.25rem, 0.4vw, 0.5rem) clamp(0.35rem, 0.5vw, 0.7rem);
-            }
-            
-            .footer-links {
-                gap: clamp(0.7rem, 1vw, 1.5rem);
-                padding: clamp(0.35rem, 0.5vw, 0.8rem) clamp(0.7rem, 1vw, 1.5rem);
-            }
-            
-            .footer-separator {
-                height: clamp(1.3rem, 2vw, 2.5rem);
-            }
-            
-            .footer-separator::before {
-                width: clamp(1.3rem, 2vw, 2.5rem);
-            }
-
-            .main-container {
-                padding: clamp(2rem, 8vh, 10vh) 2vw clamp(15vh, 17vh, 19vh);
-                min-height: calc(100vh - 8.9vh - 7.6vh);
-                justify-content: flex-start;
-            }
-
-            .body-content {
-                max-width: 100%;
-                padding: 1.9vh 0;
-                gap: 1.5vh;
-            }
-
-            .calendar-wrapper {
-                width: 100%;
-            }
-
-            .calendar {
-                width: 100%;
-                padding: 1.27vh;
-            }
-
-            .search-bar {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .activity-cards-container {
-                max-width: 100%;
-            }
-
-            .footer {
-                width: 100%;
-                padding: clamp(1.2vh, 1.8vw, 2.5vh) clamp(2vw, 3vw, 3.5vw);
-                bottom: 0vh;
-                height: clamp(5.5vh, 7vw, 9vh);
-                min-height: clamp(45px, 5.5vw, 90px);
-            }
-            
-            .footer-link {
-                font-size: clamp(0.8rem, 1.1vw, 1.3rem);
-                padding: clamp(0.25rem, 0.4vw, 0.5rem) clamp(0.35rem, 0.5vw, 0.7rem);
-            }
-            
-            .footer-links {
-                gap: clamp(0.7rem, 1vw, 1.5rem);
-                padding: clamp(0.35rem, 0.5vw, 0.8rem) clamp(0.7rem, 1vw, 1.5rem);
-            }
-            
-            .footer-separator {
-                height: clamp(1.3rem, 2vw, 2.5rem);
-            }
-            
-            .footer-separator::before {
-                width: clamp(1.3rem, 2vw, 2.5rem);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style_adherent.css">
 </head>
-<body>
+<body data-user-role="adherent">
+    <!-- data-user-role : "adherent" (défaut) | "benevole" (si id_rôle = bénévole en BDD) | "partenaire" (réservé) -->
     <!-- Fond décoratif -->
     <div class="background-decoration"></div>
 
-    <!-- Header -->
-    <div class="header">
-        <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo" onerror="this.src='logo et charte graphique/LogoRond.png'">
-        <div class="header-icons">
-            <img src="icon/Message circle.svg" alt="Messagerie" class="header-icon" id="messageIcon">
-            <img src="icon/account_circle.svg" alt="Profil" class="header-icon" id="profileIcon">
+    <!-- Header (sans menu nav) -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo" onclick="window.location.href='accueil-adherent.html'" onerror="this.src='logo et charte graphique/LogoRond.png';">
+            </div>
+            <div class="header-right">
+                <div class="header-profile" id="profileIcon">
+                    <svg class="header-profile-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Container principal -->
-    <div class="main-container">
-        <div class="body-content">
-            <!-- Titre -->
-            <h1 class="activities-title">Activités</h1>
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Bouton Faire une demande (réservation salle / RDV) -->
+        <button type="button" class="demandes-adherent-button" id="demandesAdherentButton" aria-label="Faire une demande">
+            <svg class="demandes-adherent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="demandes-adherent-text">Faire une demande</span>
+        </button>
 
-            <!-- Calendrier -->
-            <div class="calendar-wrapper">
-                <div class="calendar" id="calendar">
-                    <!-- Header du calendrier -->
-                    <div class="calendar-header">
-                        <button class="calendar-nav-button" id="prevMonth">
-                            <svg class="calendar-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M10 12l-4-4 4-4"></path>
-                            </svg>
-                        </button>
-                        <div class="calendar-month-year">
-                            <div class="calendar-dropdown" id="monthDropdown">
-                                <span class="calendar-dropdown-text" id="monthText">Fév</span>
-                                <svg class="calendar-dropdown-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 4.5l3 3 3-3"></path>
-                                </svg>
-                            </div>
-                            <div class="calendar-dropdown" id="yearDropdown">
-                                <span class="calendar-dropdown-text" id="yearText">2026</span>
-                                <svg class="calendar-dropdown-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 4.5l3 3 3-3"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <button class="calendar-nav-button" id="nextMonth">
-                            <svg class="calendar-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M6 12l4-4-4-4"></path>
-                            </svg>
-                        </button>
-                    </div>
+        <!-- Navigation titre avec flèches -->
+        <div class="view-navigation">
+            <div class="view-arrow" id="prevView">‹</div>
+            <h1 class="view-title" id="viewTitle">ACTIVITÉS</h1>
+            <div class="view-arrow" id="nextView">›</div>
+        </div>
 
-                    <!-- Grille du calendrier -->
-                    <div class="calendar-grid-wrapper">
-                        <!-- En-têtes des jours -->
-                        <div class="calendar-days-header">
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Di</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Lu</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Ma</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Me</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Je</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Ve</span></div>
-                            <div class="calendar-day-header"><span class="calendar-day-header-text">Sa</span></div>
-                        </div>
-
-                        <!-- Grille des dates -->
-                        <div class="calendar-dates-grid" id="calendarDates">
-                            <!-- Les dates seront générées dynamiquement par JavaScript -->
-                        </div>
-                    </div>
+        <!-- Calendrier Activités -->
+        <div class="calendar-container" id="calendarActivites">
+            <div class="calendar-header">
+                <div class="calendar-nav-arrow" id="prevMonth">‹</div>
+                <div class="calendar-date-selectors">
+                    <select class="calendar-select" id="monthSelect">
+                        <option value="0">Janvier</option>
+                        <option value="1" selected>Février</option>
+                        <option value="2">Mars</option>
+                        <option value="3">Avril</option>
+                        <option value="4">Mai</option>
+                        <option value="5">Juin</option>
+                        <option value="6">Juillet</option>
+                        <option value="7">Août</option>
+                        <option value="8">Septembre</option>
+                        <option value="9">Octobre</option>
+                        <option value="10">Novembre</option>
+                        <option value="11">Décembre</option>
+                    </select>
+                    <select class="calendar-select" id="yearSelect">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
                 </div>
+                <div class="calendar-nav-arrow" id="nextMonth">›</div>
             </div>
 
-            <!-- Widget d'emploi du temps -->
-            <div class="schedule-widget" id="scheduleWidget">
-                <div class="schedule-widget-card">
-                    <button class="schedule-close-button" id="closeScheduleWidget">
-                        <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
-                            <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Les jours de la semaine et les dates seront générés par JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de recherche / Menu déroulant -->
+        <div class="search-container" id="searchContainer">
+            <div class="search-wrapper">
+                <div class="search-bar" id="searchBar">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#9586a8" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <div class="search-select-custom" id="customSelect">
+                        <span class="search-select-text" id="selectText">Rechercher une activité</span>
+                        <svg class="search-arrow" viewBox="0 0 12 12" fill="none" stroke="#9586a8" stroke-width="2">
+                            <path d="M3 4.5l3 3 3-3"></path>
                         </svg>
-                    </button>
-                    
-                    <h2 class="schedule-title">Activités</h2>
-                    
-                    <div class="schedule-date-navigator">
-                        <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
-                        <span class="schedule-date-text" id="scheduleDateText">10 Fevrier 2026</span>
-                        <div class="schedule-nav-arrow next" id="nextDay">›</div>
                     </div>
-                    
-                    <div class="schedule-timeline" id="scheduleTimeline">
-                        <!-- Marqueurs d'heure -->
-                        <div class="schedule-time-marker" data-hour="6">
-                            <span class="schedule-time-label">6h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="8">
-                            <span class="schedule-time-label">8h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="10">
-                            <span class="schedule-time-label">10h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="12">
-                            <span class="schedule-time-label">12h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="14">
-                            <span class="schedule-time-label">14h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="16">
-                            <span class="schedule-time-label">16h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="18">
-                            <span class="schedule-time-label">18h</span>
-                        </div>
-                        <div class="schedule-time-marker" data-hour="20">
-                            <span class="schedule-time-label">20h</span>
-                        </div>
-                        
-                        <!-- Indicateur de l'heure actuelle -->
-                        <div class="schedule-current-time" id="currentTimeIndicator">
-                            <span class="schedule-current-time-label" id="currentTimeText">9:48</span>
-                        </div>
-                        
-                        <!-- Les activités seront ajoutées dynamiquement ici -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Barre de recherche / Menu déroulant -->
-            <div class="search-bar">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#9586a8" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <select class="search-select" id="activitySelect">
-                    <option value="">Rechercher une activité</option>
+                    <select class="search-select-hidden" id="activitySelect" style="display: none;">
+                        <option value="">Rechercher une activité</option>
                         <optgroup label="Catégories">
                             <option value="category:numerique">Numérique</option>
                             <option value="category:arts-vivants">Arts vivants</option>
                             <option value="category:projet-pro">Projet pro</option>
                             <option value="category:solidarite">Solidarité</option>
                         </optgroup>
-                    <optgroup label="Activités" id="activitiesList">
-                        <!-- Les activités seront ajoutées dynamiquement -->
-                    </optgroup>
-                </select>
-                <svg class="search-arrow" viewBox="0 0 12 12" fill="none" stroke="#9586a8" stroke-width="2">
-                    <path d="M3 4.5l3 3 3-3"></path>
-                </svg>
-            </div>
-
-            <!-- Container pour les cards d'activités -->
-            <div class="activity-cards-container" id="activityCardsContainer">
-                <!-- Les cards seront ajoutées dynamiquement -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Widget de détail d'activité (overlay) -->
-    <div class="activity-detail-overlay" id="activityDetailOverlay">
-        <div class="activity-detail-card">
-            <button class="activity-detail-close" id="closeActivityDetail">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
-                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-            <div class="activity-detail-header">
-                <h2 class="activity-detail-title">Activités</h2>
-                <div class="activity-detail-navigator">
-                    <button class="activity-detail-nav-arrow prev" id="prevActivity">‹</button>
-                    <div class="activity-detail-navigator-name" id="activityDetailName">Activité 1</div>
-                    <button class="activity-detail-nav-arrow next" id="nextActivity">›</button>
+                        <optgroup label="Activités" id="activitiesList"></optgroup>
+                    </select>
+                </div>
+                <div class="custom-dropdown" id="customDropdown">
+                    <div class="dropdown-content">
+                        <div class="dropdown-item placeholder" data-value="">
+                            <span>Rechercher une activité</span>
+                        </div>
+                        <div class="dropdown-group">
+                            <div class="dropdown-group-label">Catégories</div>
+                            <div class="dropdown-item" data-value="category:numerique">
+                                <span>Numérique</span>
+                            </div>
+                            <div class="dropdown-item" data-value="category:arts-vivants">
+                                <span>Arts vivants</span>
+                            </div>
+                            <div class="dropdown-item" data-value="category:projet-pro">
+                                <span>Projet pro</span>
+                            </div>
+                            <div class="dropdown-item" data-value="category:solidarite">
+                                <span>Solidarité</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-group" id="activitiesGroup">
+                            <div class="dropdown-group-label">Activités</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="activity-detail-info-box">
-                <div class="activity-detail-date-time" id="activityDetailDateTime">
-                    <span class="activity-detail-date" id="activityDetailDate">10 Février 2026</span>
-                    <span class="activity-detail-time-separator">•</span>
-                    <span class="activity-detail-time-detail" id="activityDetailTimeDetail">14h00 - 15h30</span>
+            
+            <div class="activity-cards-container" id="activityCardsContainer"></div>
+        </div>
+
+        <!-- Calendrier Salles -->
+        <div class="calendar-container" id="calendarSalles" style="display: none;">
+            <div class="calendar-header">
+                <div class="calendar-nav-arrow" id="prevMonthSalles">‹</div>
+                <div class="calendar-date-selectors">
+                    <select class="calendar-select" id="monthSelectSalles">
+                        <option value="0">Janvier</option>
+                        <option value="1" selected>Février</option>
+                        <option value="2">Mars</option>
+                        <option value="3">Avril</option>
+                        <option value="4">Mai</option>
+                        <option value="5">Juin</option>
+                        <option value="6">Juillet</option>
+                        <option value="7">Août</option>
+                        <option value="8">Septembre</option>
+                        <option value="9">Octobre</option>
+                        <option value="10">Novembre</option>
+                        <option value="11">Décembre</option>
+                    </select>
+                    <select class="calendar-select" id="yearSelectSalles">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="calendar-nav-arrow" id="nextMonthSalles">›</div>
+            </div>
+
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-grid" id="calendarGridSalles"></div>
+            </div>
+        </div>
+
+        <!-- Widget d'emploi du temps -->
+        <div class="schedule-widget" id="scheduleWidget">
+            <div class="schedule-widget-card">
+                <button class="schedule-close-button" id="closeScheduleWidget">
+                    <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                
+                <h2 class="schedule-title">Activités</h2>
+                
+                <div class="schedule-date-navigator">
+                    <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
+                    <span class="schedule-date-text" id="scheduleDateText">10 Fevrier 2026</span>
+                    <div class="schedule-nav-arrow next" id="nextDay">›</div>
+                </div>
+                
+                <div class="schedule-timeline" id="scheduleTimeline">
+                    <div class="schedule-time-marker" data-hour="6"><span class="schedule-time-label">6h</span></div>
+                    <div class="schedule-time-marker" data-hour="8"><span class="schedule-time-label">8h</span></div>
+                    <div class="schedule-time-marker" data-hour="10"><span class="schedule-time-label">10h</span></div>
+                    <div class="schedule-time-marker" data-hour="12"><span class="schedule-time-label">12h</span></div>
+                    <div class="schedule-time-marker" data-hour="14"><span class="schedule-time-label">14h</span></div>
+                    <div class="schedule-time-marker" data-hour="16"><span class="schedule-time-label">16h</span></div>
+                    <div class="schedule-time-marker" data-hour="18"><span class="schedule-time-label">18h</span></div>
+                    <div class="schedule-time-marker" data-hour="20"><span class="schedule-time-label">20h</span></div>
+                    <div class="schedule-current-time" id="currentTimeIndicator">
+                        <span class="schedule-current-time-label" id="currentTimeText">9:48</span>
+                    </div>
                 </div>
             </div>
-            <div class="activity-detail-description-box">
-                <div class="activity-detail-description-label">Description :</div>
-                <div class="activity-detail-description" id="activityDetailDescription">Pendant 1h nous allons faire une activité, décrire l'activiter et possiblement ajouter si il y a des contre-indications médicales ou autres.</div>
+        </div>
+
+        <!-- Légende des couleurs pour les salles -->
+        <div class="salles-legend" id="sallesLegend" style="display: none;">
+            <h3 class="legend-title">Légende des salles :</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f658e;"></div>
+                    <span>Salle de l'Eau</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #649d50;"></div>
+                    <span>Salle de la Terre + patio</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f08d35;"></div>
+                    <span>Salle du Feu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>Salle du Vent</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6e6f75;"></div>
+                    <span>Salle de formation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e6b800;"></div>
+                    <span>Accueil</span>
+                </div>
             </div>
-            <button class="activity-detail-register-button" id="registerActivityButton">
-                <span class="activity-detail-register-button-text">Je m'inscris</span>
-            </button>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-links">
-            <a href="#" class="footer-link">Politique de confidentialité</a>
-            <div class="footer-separator"></div>
-            <a href="#" class="footer-link">Mentions légales</a>
+        <!-- Widget de détail d'activité (bouton Je suis intéressé, salle en lecture seule) -->
+        <div class="activity-detail-overlay" id="activityDetailOverlay">
+            <div class="activity-detail-card">
+                <button class="activity-detail-close" id="closeActivityDetail">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div class="activity-detail-header">
+                    <h2 class="activity-detail-title">Activités</h2>
+                    <div class="activity-detail-navigator">
+                        <button class="activity-detail-nav-arrow prev" id="prevActivity">‹</button>
+                        <div class="activity-detail-navigator-name" id="activityDetailName">Activité 1</div>
+                        <button class="activity-detail-nav-arrow next" id="nextActivity">›</button>
+                    </div>
+                </div>
+                <div class="activity-detail-info-box">
+                    <div class="activity-detail-date-time" id="activityDetailDateTime">
+                        <span class="activity-detail-date" id="activityDetailDate">10 Février 2026</span>
+                        <span class="activity-detail-time-separator">•</span>
+                        <span class="activity-detail-time-detail" id="activityDetailTimeDetail">14h00 - 15h30</span>
+                    </div>
+                    <div class="activity-detail-badges">
+                        <div class="activity-detail-salle-badge" id="activityDetailSalleBadge">
+                            <span id="activityDetailSalleDisplay">—</span>
+                        </div>
+                        <div class="activity-detail-benevole-badge" id="activityDetailBenevoleBadge">
+                            <span id="activityDetailBenevoleName">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-detail-description-box">
+                    <div class="activity-detail-description-label">Description :</div>
+                    <div class="activity-detail-description" id="activityDetailDescription">Pendant 1h nous allons faire une activité, décrire l'activiter et possiblement ajouter si il y a des contre-indications médicales ou autres.</div>
+                </div>
+                <div class="activity-detail-register-wrapper" id="activityDetailRegisterWrapper">
+                    <button class="activity-detail-register-button" id="interetActivityButton">
+                        <span class="activity-detail-register-button-text">Je suis intéressé</span>
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Widget de profil utilisateur (overlay) -->
+        <!-- Widget Faire une demande (réservation salle / RDV) -->
+        <div class="demandes-adherent-overlay" id="demandesAdherentOverlay">
+            <div class="demandes-adherent-widget">
+                <button type="button" class="demandes-adherent-close" id="closeDemandesAdherent" aria-label="Fermer">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <!-- Étape 1 : Choix du type de demande -->
+                <div class="demandes-adherent-step demandes-adherent-choice-step" id="demandesChoiceStep">
+                    <h2 class="demandes-adherent-title">Faire une demande</h2>
+                    <p class="demandes-adherent-subtitle">Choisissez le type de demande</p>
+                    <div class="demandes-adherent-options">
+                        <button type="button" class="demandes-adherent-option" id="demandesOptionSalle" data-type="salle">
+                            <span class="demandes-adherent-option-label">Réserver une salle</span>
+                            <span class="demandes-adherent-option-desc">Demander la réservation d’une salle pour une date et un créneau.</span>
+                        </button>
+                        <button type="button" class="demandes-adherent-option" id="demandesOptionRdv" data-type="rdv">
+                            <span class="demandes-adherent-option-label">Prendre rendez-vous</span>
+                            <span class="demandes-adherent-option-desc">Demander un rendez-vous avec l’équipe.</span>
+                        </button>
+                        <button type="button" class="demandes-adherent-option" id="demandesOptionBenevole" data-type="benevole">
+                            <span class="demandes-adherent-option-label">Devenir Bénévole</span>
+                            <span class="demandes-adherent-option-desc">Pour devenir bénévole, on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Étape 2 : Formulaire (date, heure, motif, envoi) -->
+                <div class="demandes-adherent-step demandes-adherent-form-step" id="demandesFormStep" hidden>
+                    <button type="button" class="demandes-adherent-back" id="demandesAdherentBack" aria-label="Retour au choix">← Retour</button>
+                    <h2 class="demandes-adherent-title" id="demandesFormTitle">Demande</h2>
+
+                    <form class="demandes-adherent-form" id="demandesAdherentForm" novalidate>
+                        <input type="hidden" id="demandesType" name="type" value="">
+                        <!-- Visible uniquement pour "Prendre rendez-vous" -->
+                        <div class="demandes-form-group demandes-form-group-full" id="demandesContactGroup" hidden>
+                            <label for="demandesContact" class="demandes-form-label">Membre de l'équipe à contacter <abbr title="obligatoire">*</abbr></label>
+                            <select id="demandesContact" name="contact" class="demandes-form-input">
+                                <option value="">Sélectionner un bénévole</option>
+                                <!-- Options remplies par JS -->
+                            </select>
+                        </div>
+                        <!-- Visible uniquement pour "Réserver une salle" -->
+                        <div class="demandes-form-group demandes-form-group-full" id="demandesCategorieGroup" hidden>
+                            <label for="demandesCategorie" class="demandes-form-label">Catégorie <abbr title="obligatoire">*</abbr></label>
+                            <select id="demandesCategorie" name="categorie" class="demandes-form-input">
+                                <option value="">Sélectionner une catégorie</option>
+                                <!-- Options remplies par JS -->
+                            </select>
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="demandesDate" class="demandes-form-label">Date <abbr title="obligatoire">*</abbr></label>
+                            <input type="date" id="demandesDate" name="date" class="demandes-form-input" required>
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="demandesTime" class="demandes-form-label">Heure <abbr title="obligatoire">*</abbr></label>
+                            <input type="time" id="demandesTime" name="time" class="demandes-form-input" required>
+                        </div>
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="demandesMotif" class="demandes-form-label">Motif détaillé <abbr title="obligatoire">*</abbr></label>
+                            <textarea id="demandesMotif" name="motif" class="demandes-form-textarea" rows="4" required placeholder="Décrivez votre demande (pourquoi, contexte…)"></textarea>
+                        </div>
+                        <div class="demandes-form-actions">
+                            <button type="button" class="demandes-form-btn demandes-form-cancel" id="demandesFormCancel">Annuler</button>
+                            <button type="submit" class="demandes-form-btn demandes-form-submit" id="demandesFormSubmit">Envoyer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Étape 2b : Formulaire inscription bénévole -->
+                <div class="demandes-adherent-step demandes-benevole-step" id="demandesBenevoleStep" hidden>
+                    <button type="button" class="demandes-adherent-back" id="demandesBenevoleBack" aria-label="Retour au choix">← Retour</button>
+                    <h2 class="demandes-adherent-title">Devenir Bénévole</h2>
+                    <p class="demandes-adherent-subtitle">Remplis ce formulaire pour candidater. Un essai d'au moins 2h sur 5 jours différents est demandé.</p>
+                    <form class="demandes-benevole-form" id="demandesBenevoleForm" novalidate>
+                        <div class="demandes-benevole-scroll">
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Ce que j'aimerais amener (plusieurs options possibles) <abbr title="au moins une case">*</abbr></label>
+                                <div class="demandes-checkbox-grid">
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="bonne-humeur"> <span>bonne humeur & bienveillance</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="soutien"> <span>soutien technique/moral/matériel à des projets existants/futurs</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="projet-personnel"> <span>un projet personnel en phase avec le Vill'Âge Jeunes</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="aide-espace" id="demandesBenevoleAideEspace"> <span>de l'aide particulière sur un/des espace(s) :</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="reseau" id="demandesBenevoleReseau"> <span>un réseau particulier :</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="autre-idee" id="demandesBenevoleAutreIdee"> <span>autre idée :</span></label>
+                                </div>
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleAideEspaceText" name="aideEspace" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleReseauText" name="reseauParticulier" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleAutreIdeeText" name="autreIdee" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Type(s) de projets qui m'intéressent <abbr title="au moins une case">*</abbr></label>
+                                <div class="demandes-checkbox-grid">
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="artistique"> <span>artistique</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="culturel"> <span>culturel</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="solidaire"> <span>solidaire</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="numerique"> <span>numérique</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="accompagnement-pro"> <span>accompagnement pro</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="bien-etre"> <span>bien-être (Sport-Santé)</span></label>
+                                    <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="autre" id="demandesBenevoleProjetAutre"> <span>autre :</span></label>
+                                </div>
+                                <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleProjetAutreText" name="typeProjetAutre" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Bénévolat ici ? <abbr title="obligatoire : cocher les 3">*</abbr></label>
+                                <div class="demandes-checkbox-inline">
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="volontaire"> <span>Je suis Volontaire</span></label>
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="motive"> <span>Motivé·e</span></label>
+                                    <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="disponible"> <span>Disponible</span></label>
+                                </div>
+                                <span class="demandes-form-hint">Tu dois cocher les 3 cases pour envoyer ta candidature.</span>
+                            </div>
+                            <div class="demandes-info-box">
+                                <strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <span class="demandes-form-label">Je sais faire / J'aimerais faire / Je peux transmettre / J'aimerais apprendre <abbr title="au moins un des quatre champs à remplir">*</abbr></span>
+                                <span class="demandes-form-hint">Remplis au moins un des quatre champs ci-dessous.</span>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Je sais faire</label>
+                                <textarea class="demandes-form-textarea" name="saisFaire" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">J'aimerais faire</label>
+                                <textarea class="demandes-form-textarea" name="aimeraisFaire" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">Je peux transmettre</label>
+                                <textarea class="demandes-form-textarea" name="peuxTransmettre" rows="3" placeholder=""></textarea>
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <label class="demandes-form-label">J'aimerais apprendre</label>
+                                <textarea class="demandes-form-textarea" name="aimeraisApprendre" rows="3" placeholder=""></textarea>
+                            </div>
+                        </div>
+                        <div class="demandes-form-actions">
+                            <button type="button" class="demandes-form-btn demandes-form-cancel" id="demandesBenevoleCancel">Annuler</button>
+                            <button type="submit" class="demandes-form-btn demandes-form-submit" id="demandesBenevoleSubmit">Envoyer ma candidature</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget confirmation candidature bénévole (message 2h/5 jours + Envoyer ma candidature) -->
+        <div class="benevole-confirm-overlay" id="benevoleConfirmOverlay" aria-hidden="true">
+            <div class="benevole-confirm-widget">
+                <h2 class="demandes-adherent-title">Devenir Bénévole</h2>
+                <div class="benevole-confirm-message">
+                    <p><strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos). Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.</p>
+                </div>
+                <div class="demandes-form-actions">
+                    <button type="button" class="demandes-form-btn demandes-form-cancel" id="benevoleConfirmCancel">Annuler</button>
+                    <button type="button" class="demandes-form-btn demandes-form-submit" id="benevoleConfirmSubmit">Envoyer ma candidature</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget Je suis intéressé (confirmation) -->
+        <div class="interet-overlay" id="interetOverlay">
+            <div class="interet-widget">
+                <button class="interet-close" id="closeInteretWidget">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="interet-title">Je suis intéressé</h2>
+                <div class="interet-activity-info" id="interetActivityInfo">
+                    <div class="interet-activity-name" id="interetActivityName">—</div>
+                    <div class="interet-activity-date" id="interetActivityDate">—</div>
+                </div>
+                <p class="interet-text">Vous souhaitez participer à cette activité ? Appuyez sur Je suis intéressé et le responsable d'activité vous recontactera.</p>
+                <button type="button" class="interet-confirm-btn" id="interetConfirmBtn">Je suis intéressé</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Widget Profil adhérent (fiche complète, champs modifiables : surnom, médical, situation pro, permis) -->
     <div class="profile-overlay" id="profileOverlay">
-        <div class="profile-card">
+        <div class="profile-widget">
             <button class="profile-close" id="closeProfile">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
                     <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
                 </svg>
             </button>
-            
-            <!-- Section Informations -->
-            <div class="profile-section">
-                <div class="profile-section-header">
-                    <h3 class="profile-section-title">Informations</h3>
-                    <div class="profile-section-line"></div>
+            <h2 class="profile-title">Mon profil</h2>
+
+            <!-- Header (lecture seule : nom prénom affichés, n° adhérent jamais modifiable) -->
+            <div class="profile-header">
+                <div class="profile-photo" id="profilePhoto">Photo</div>
+                <div class="profile-header-info">
+                    <div class="profile-name" id="profileDisplayName">—</div>
+                    <div class="profile-number" id="profileMemberNumber">N° —</div>
                 </div>
-                <div class="profile-info-content">
-                    <div class="profile-info-left">
-                        <div class="profile-field">
-                            <span class="profile-field-label">Nom :</span>
-                            <span class="profile-field-value" id="profileName">Martin</span>
-                        </div>
-                        <div class="profile-field">
-                            <span class="profile-field-label">Prénom :</span>
-                            <span class="profile-field-value" id="profileFirstName">Jean</span>
-                        </div>
-                        <div class="profile-field">
-                            <span class="profile-field-label">Surnom :</span>
-                            <span class="profile-field-value" id="profileNickname">Jéjé</span>
-                        </div>
-                        <div class="profile-field member-number">
-                            <span class="profile-field-label">Numéro adhérent :</span>
-                            <span class="profile-field-value" id="profileMemberNumber">VJ-2026-001</span>
-                        </div>
+            </div>
+
+            <!-- Informations personnelles -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">Informations personnelles</h3>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <span class="profile-label">Nom :</span>
+                        <span class="profile-value profile-readonly" id="profileLastName">—</span>
                     </div>
-                    <div class="profile-photo-container">
-                        <div class="profile-photo-placeholder">
-                            <span class="profile-photo-text">Photo</span>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Prénom :</span>
+                        <span class="profile-value profile-readonly" id="profileFirstName">—</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Date de naissance :</span>
+                        <span class="profile-value profile-readonly" id="profileDateNaissance">—</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Surnom :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileNickname" placeholder="Surnom">
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Genre :</span>
+                        <span class="profile-value profile-readonly" id="profileGenre">—</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Téléphone :</span>
+                        <span class="profile-value profile-readonly" id="profileTelephone">—</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Email :</span>
+                        <span class="profile-value profile-readonly" id="profileEmail">—</span>
+                    </div>
+                    <div class="profile-info-item full-width">
+                        <span class="profile-label">Où vis-tu ?</span>
+                        <div class="profile-address-group">
+                            <select class="profile-select profile-editable" id="profileProvince">
+                                <option value="">Sélectionnez une province</option>
+                            </select>
+                            <select class="profile-select profile-editable" id="profileCommune">
+                                <option value="">Sélectionnez une commune</option>
+                            </select>
+                            <div id="profileQuartierContainer">
+                                <select class="profile-select profile-editable" id="profileQuartier">
+                                    <option value="">Sélectionnez un quartier</option>
+                                </select>
+                            </div>
+                            <div id="profileDistrictContainer" style="display: none;">
+                                <select class="profile-select profile-editable" id="profileDistrict">
+                                    <option value="">Sélectionnez un district</option>
+                                </select>
+                            </div>
+                            <input type="text" class="profile-input profile-editable" id="profileQuartierInput" placeholder="Quartier" style="display: none;">
+                            <input type="text" class="profile-input profile-editable" id="profileDistrictInput" placeholder="District" style="display: none;">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Section Informations médicales -->
+            <!-- Informations médicales (modifiable) -->
             <div class="profile-section">
-                <div class="profile-section-header">
-                    <h3 class="profile-section-title">Informations médicales</h3>
-                    <div class="profile-section-line"></div>
-                </div>
-                <div class="profile-medical-textarea-container">
-                    <textarea class="profile-medical-textarea" id="profileMedicalInfo" placeholder="Avez-vous un problème de santé ?"></textarea>
-                    <button class="profile-medical-validate-btn" id="validateMedicalInfo" style="display: none;">Valider</button>
+                <h3 class="profile-section-title">Informations médicales</h3>
+                <textarea class="profile-textarea profile-editable" id="profileMedicalInfo" placeholder="Avez-vous un problème de santé ?" rows="3"></textarea>
+            </div>
+
+            <!-- Ce que je fais dans la vie (modifiable) -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">Ce que je fais dans la vie</h3>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <span class="profile-label">Étudiant :</span>
+                        <select class="profile-select profile-editable" id="profileEstEtudiant">
+                            <option value="">—</option>
+                            <option value="Oui">Oui</option>
+                            <option value="Non">Non</option>
+                        </select>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Type établissement :</span>
+                        <select class="profile-select profile-editable" id="profileTypeEtablissement">
+                            <option value="">Sélectionnez un type</option>
+                            <option value="College">Collège</option>
+                            <option value="Lycee">Lycée</option>
+                            <option value="EtudesSup">Etudes sup</option>
+                        </select>
+                    </div>
+                    <div class="profile-info-item" id="profileEtablissementSelectWrap">
+                        <span class="profile-label">Établissement :</span>
+                        <select class="profile-select profile-editable" id="profileEtablissement">
+                            <option value="">Sélectionnez d'abord un type</option>
+                        </select>
+                    </div>
+                    <div class="profile-info-item" id="profileEtudesSupWrap" style="display: none;">
+                        <span class="profile-label">Établissement (études sup) :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileEtudesSup" placeholder="Nom de l'établissement">
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">En recherche d'emploi :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileRechercheEmploi" placeholder="Détails">
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Activité payée :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileActivitePayee" placeholder="Secteur d'activité">
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Association :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileAsso" placeholder="Nom - Sujet">
+                    </div>
+                    <div class="profile-info-item full-width">
+                        <span class="profile-label">Autre activité :</span>
+                        <input type="text" class="profile-input profile-editable" id="profileAutreActivite" placeholder="Détails">
+                    </div>
                 </div>
             </div>
 
-            <!-- Section Sécurité -->
+            <!-- Mobilité et Permis (modifiable) -->
             <div class="profile-section">
-                <div class="profile-section-header">
-                    <h3 class="profile-section-title">Sécurité</h3>
-                    <div class="profile-section-line"></div>
-                </div>
-                <div class="profile-security-content">
-                    <div class="profile-field">
-                        <span class="profile-field-label">Adresse mail :</span>
-                        <span class="profile-field-value" id="profileEmail">jean.martin@email.com</span>
+                <h3 class="profile-section-title">Mobilité et Permis</h3>
+                <div class="profile-mobilite-group">
+                    <span class="profile-label">Mobilité :</span>
+                    <div class="profile-checkbox-group">
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profileMobilite" value="pieton"><span>Piéton</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profileMobilite" value="bus"><span>Bus</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profileMobilite" value="velo"><span>Vélo</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profileMobilite" value="scooter"><span>Scooter</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profileMobilite" value="voiture"><span>Voiture</span></label>
                     </div>
-                    <div class="profile-password-field">
-                        <span class="profile-field-label">Mot de passe :</span>
-                        <span class="profile-password-masked">*******</span>
-                        <a href="#" class="profile-password-edit">
-                            <svg class="profile-edit-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M11.333 2a1.414 1.414 0 0 1 2 2L5 11.667l-3.333 1L3 9.333 11.333 2z"/>
-                            </svg>
-                            modifier le mot de passe
-                        </a>
+                </div>
+                <div class="profile-permis-group">
+                    <span class="profile-label">Permis :</span>
+                    <div class="profile-checkbox-group">
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profilePermis" value="sans"><span>Sans</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profilePermis" value="voiture"><span>Voiture</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profilePermis" value="moto"><span>Moto</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profilePermis" value="pl"><span>PL</span></label>
+                        <label class="profile-checkbox-label"><input type="checkbox" class="profile-checkbox" name="profilePermis" value="trp"><span>TRP</span></label>
                     </div>
                 </div>
             </div>
+
+            <!-- Autorisations (lecture seule) -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">Autorisations</h3>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <span class="profile-label">Autorisation image :</span>
+                        <span class="profile-value profile-readonly" id="profileAutorisationImage">—</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Autorisation urgence médicale :</span>
+                        <span class="profile-value profile-readonly" id="profileAutorisationUrgence">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Représentant légal si mineur (lecture seule) -->
+            <div class="profile-section" id="profileMineurSection" style="display: none;">
+                <h3 class="profile-section-title">Représentant légal (moins de 18 ans)</h3>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item"><span class="profile-label">Nom :</span><span class="profile-value profile-readonly" id="profileParentNom">—</span></div>
+                    <div class="profile-info-item"><span class="profile-label">Téléphone :</span><span class="profile-value profile-readonly" id="profileParentTelephone">—</span></div>
+                    <div class="profile-info-item"><span class="profile-label">Email :</span><span class="profile-value profile-readonly" id="profileParentEmail">—</span></div>
+                    <div class="profile-info-item full-width"><span class="profile-label">Adresse :</span><span class="profile-value profile-readonly" id="profileParentAdresse">—</span></div>
+                </div>
+            </div>
+
+            <button type="button" class="profile-save-btn" id="profileSaveBtn">Enregistrer les modifications</button>
         </div>
     </div>
 
-    <!-- Widget de messagerie -->
-    <div class="message-overlay" id="messageOverlay">
-        <div class="message-card">
-            <button class="message-close" id="closeMessage">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
-                    <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-            
-            <!-- Ligne de séparation -->
-            <div class="message-separator"></div>
-            
-            <!-- Titre -->
-            <h2 class="message-title">L'équipe Vill'Âge Jeunes</h2>
-            
-            <!-- Grille de profils -->
-            <div class="message-profiles-grid" id="messageProfilesGrid">
-                <!-- Les profils seront générés dynamiquement par JavaScript -->
-            </div>
-            
-            <!-- Section message (affichée après sélection d'un profil) -->
-            <div class="message-compose-section" id="messageComposeSection" style="display: none;">
-                <!-- Titre "Écrire au Staff" -->
-                <h3 class="message-compose-title">Écrire au Staff</h3>
-                <div class="message-compose-separator"></div>
-                
-                <!-- Informations du profil sélectionné -->
-                <div class="message-profile-details" id="messageSelectedProfile">
-                    <!-- Informations à gauche -->
-                    <div class="message-profile-info">
-                        <div class="message-profile-info-item">
-                            <span class="message-profile-info-label">Nom :</span>
-                            <span class="message-profile-info-value" id="messageProfileName">Nom</span>
-                        </div>
-                        <div class="message-profile-info-item">
-                            <span class="message-profile-info-label">Prénom :</span>
-                            <span class="message-profile-info-value" id="messageProfileFirstName">Prénom</span>
-                        </div>
-                        <div class="message-profile-info-item">
-                            <span class="message-profile-info-label">Surnom :</span>
-                            <span class="message-profile-info-value" id="messageProfileNickname">Surnom</span>
-                        </div>
-                        <div class="message-profile-info-item">
-                            <span class="message-profile-info-label">Rôle :</span>
-                            <span class="message-profile-info-value" id="messageProfileRole">Rôle</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Photo à droite -->
-                    <div class="message-profile-photo-square">
-                        <span class="message-profile-photo-square-text">Photo</span>
-                    </div>
-                </div>
-                
-                <!-- Section message -->
-                <h4 class="message-compose-subtitle">Ton message</h4>
-                <div class="message-text-section">
-                    <textarea class="message-textarea" id="messageText" placeholder="En quoi peut-on t'aider ?" rows="6"></textarea>
-                </div>
-                
-                <button class="message-send-button" id="sendMessage">
-                    <span class="message-send-button-text">Envoyer</span>
-                </button>
-            </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-social" aria-label="Réseaux sociaux Vill'Age Jeunes">
+            <a href="https://www.facebook.com/villagejeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--facebook" aria-label="Facebook Vill'Age Jeunes">
+                <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/VillageJeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--instagram" aria-label="Instagram Vill'Age Jeunes">
+                <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.218 4.771 1.693 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.219-4.771-1.693-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            </a>
         </div>
-    </div>
+        <div class="footer-legal">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <div class="footer-separator"></div>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </div>
+    </footer>
 
+    <script src="config.js"></script>
+    <script src="form-data.js"></script>
     <script src="accueil-adherent.js"></script>
 </body>
 </html>

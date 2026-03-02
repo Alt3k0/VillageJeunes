@@ -362,7 +362,7 @@
                     <form class="demandes-benevole-form" id="demandesBenevoleForm" novalidate>
                         <div class="demandes-benevole-scroll">
                             <div class="demandes-form-group demandes-form-group-full">
-                                <label class="demandes-form-label">Ce que j'aimerais amener (plusieurs options possibles)</label>
+                                <label class="demandes-form-label">Ce que j'aimerais amener (plusieurs options possibles) <abbr title="au moins une case">*</abbr></label>
                                 <div class="demandes-checkbox-grid">
                                     <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="bonne-humeur"> <span>bonne humeur & bienveillance</span></label>
                                     <label class="demandes-checkbox-label"><input type="checkbox" name="amener" value="soutien"> <span>soutien technique/moral/matériel à des projets existants/futurs</span></label>
@@ -376,7 +376,7 @@
                                 <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleAutreIdeeText" name="autreIdee" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
                             </div>
                             <div class="demandes-form-group demandes-form-group-full">
-                                <label class="demandes-form-label">Type(s) de projets qui m'intéressent</label>
+                                <label class="demandes-form-label">Type(s) de projets qui m'intéressent <abbr title="au moins une case">*</abbr></label>
                                 <div class="demandes-checkbox-grid">
                                     <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="artistique"> <span>artistique</span></label>
                                     <label class="demandes-checkbox-label"><input type="checkbox" name="typeProjet" value="culturel"> <span>culturel</span></label>
@@ -389,15 +389,20 @@
                                 <input type="text" class="demandes-form-input demandes-conditional" id="demandesBenevoleProjetAutreText" name="typeProjetAutre" placeholder="Précisez" style="display:none; margin-top:0.5rem;">
                             </div>
                             <div class="demandes-form-group demandes-form-group-full">
-                                <label class="demandes-form-label">Bénévolat ici ?</label>
+                                <label class="demandes-form-label">Bénévolat ici ? <abbr title="obligatoire : cocher les 3">*</abbr></label>
                                 <div class="demandes-checkbox-inline">
                                     <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="volontaire"> <span>Je suis Volontaire</span></label>
                                     <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="motive"> <span>Motivé·e</span></label>
                                     <label class="demandes-checkbox-label-inline"><input type="checkbox" name="benevolat" value="disponible"> <span>Disponible</span></label>
                                 </div>
+                                <span class="demandes-form-hint">Tu dois cocher les 3 cases pour envoyer ta candidature.</span>
                             </div>
                             <div class="demandes-info-box">
                                 <strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos) Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.
+                            </div>
+                            <div class="demandes-form-group demandes-form-group-full">
+                                <span class="demandes-form-label">Je sais faire / J'aimerais faire / Je peux transmettre / J'aimerais apprendre <abbr title="au moins un des quatre champs à remplir">*</abbr></span>
+                                <span class="demandes-form-hint">Remplis au moins un des quatre champs ci-dessous.</span>
                             </div>
                             <div class="demandes-form-group demandes-form-group-full">
                                 <label class="demandes-form-label">Je sais faire</label>
@@ -421,6 +426,20 @@
                             <button type="submit" class="demandes-form-btn demandes-form-submit" id="demandesBenevoleSubmit">Envoyer ma candidature</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget confirmation candidature bénévole (message 2h/5 jours + Envoyer ma candidature) -->
+        <div class="benevole-confirm-overlay" id="benevoleConfirmOverlay" aria-hidden="true">
+            <div class="benevole-confirm-widget">
+                <h2 class="demandes-adherent-title">Devenir Bénévole</h2>
+                <div class="benevole-confirm-message">
+                    <p><strong>Pour devenir bénévole,</strong> on demande un essai d'au moins 2h sur 5 jours différents (selon tes dispos). Comme ça, tu vois si la vibe du lieu/public/équipe te correspond bien et si ta vibe est aussi en phase avec notre philosophie.</p>
+                </div>
+                <div class="demandes-form-actions">
+                    <button type="button" class="demandes-form-btn demandes-form-cancel" id="benevoleConfirmCancel">Annuler</button>
+                    <button type="button" class="demandes-form-btn demandes-form-submit" id="benevoleConfirmSubmit">Envoyer ma candidature</button>
                 </div>
             </div>
         </div>

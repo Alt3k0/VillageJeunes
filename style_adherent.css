@@ -463,6 +463,13 @@ body[data-user-role="benevole"] {
     cursor: pointer;
 }
 
+.demandes-form-hint {
+    display: block;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    color: #6e6f75;
+    margin-top: 0.35rem;
+}
+
 .demandes-info-box {
     padding: clamp(0.75rem, 1.2vw, 1rem);
     background: rgba(var(--accent-rgb), 0.08);
@@ -481,6 +488,40 @@ body[data-user-role="benevole"] {
 .demandes-form-submit:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(var(--accent-rgb), 0.4);
+}
+
+/* Widget confirmation candidature bénévole (message 2h/5 jours + bouton Envoyer) */
+.benevole-confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1002;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw, 2rem);
+}
+.benevole-confirm-overlay.active {
+    display: flex;
+}
+.benevole-confirm-widget {
+    background: #F7F7F7;
+    border-radius: clamp(12px, 1.5vw, 24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: clamp(320px, 90vw, 450px);
+    padding: clamp(20px, 2.5vw, 35px);
+}
+.benevole-confirm-message {
+    margin: clamp(12px, 1.5vw, 20px) 0 clamp(20px, 2.5vw, 28px);
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    line-height: 1.5;
+    color: #1e1e1d;
+}
+.benevole-confirm-message p {
+    margin: 0;
 }
 
 /* Adhérent : pas de sidebar, contenu centré */

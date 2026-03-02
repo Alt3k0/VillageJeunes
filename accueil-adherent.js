@@ -1220,48 +1220,107 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    var benevoleConfirmOverlay = document.getElementById('benevoleConfirmOverlay');
+    function openBenevoleConfirm() {
+        if (benevoleConfirmOverlay) {
+            benevoleConfirmOverlay.classList.add('active');
+            benevoleConfirmOverlay.setAttribute('aria-hidden', 'false');
+        }
+    }
+    function closeBenevoleConfirm() {
+        if (benevoleConfirmOverlay) {
+            benevoleConfirmOverlay.classList.remove('active');
+            benevoleConfirmOverlay.setAttribute('aria-hidden', 'true');
+        }
+    }
+    function sendBenevoleCandidature() {
+        var form = demandesBenevoleForm;
+        if (!form) return;
+        var memberNumber = (typeof profileData !== 'undefined' && profileData.memberNumber) ? profileData.memberNumber : (document.getElementById('profileMemberNumber')?.textContent || '').replace(/^N°\s*/, '').trim() || '—';
+        var lines = ['Bonjour,', '', 'Candidature bénévole', 'Numéro adhérent : ' + memberNumber, ''];
+        function addLine(label, value) {
+            if (value !== undefined && value !== null && (value + '').trim() !== '') lines.push(label + ' : ' + (value + '').trim());
+        }
+        function getCheckboxes(name) {
+            var nodes = form.querySelectorAll('input[name="' + name + '"]:checked');
+            return Array.prototype.map.call(nodes, function(n) { return n.value; }).join(', ');
+        }
+        addLine('Ce que j\'aimerais amener', getCheckboxes('amener'));
+        addLine('Aide espace', form.querySelector('[name="aideEspace"]')?.value);
+        addLine('Réseau particulier', form.querySelector('[name="reseauParticulier"]')?.value);
+        addLine('Autre idée', form.querySelector('[name="autreIdee"]')?.value);
+        addLine('Types de projets', getCheckboxes('typeProjet'));
+        addLine('Type projet autre', form.querySelector('[name="typeProjetAutre"]')?.value);
+        addLine('Bénévolat', getCheckboxes('benevolat'));
+        addLine('Je sais faire', form.querySelector('[name="saisFaire"]')?.value);
+        addLine('J\'aimerais faire', form.querySelector('[name="aimeraisFaire"]')?.value);
+        addLine('Je peux transmettre', form.querySelector('[name="peuxTransmettre"]')?.value);
+        addLine('J\'aimerais apprendre', form.querySelector('[name="aimeraisApprendre"]')?.value);
+        var email = (typeof CONFIG !== 'undefined' && CONFIG.EMAIL_CONTACT) ? CONFIG.EMAIL_CONTACT : 'contact@vill-age-jeunes.fr';
+        var subject = encodeURIComponent('[Adhérent] Candidature bénévole');
+        var body = encodeURIComponent(lines.join('\n'));
+        window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+        closeBenevoleConfirm();
+        closeDemandesWidget();
+        if (demandesBenevoleForm) demandesBenevoleForm.reset();
+        alert('Merci de te rendre à l\'accueil auprès d\'un des membres du staff pour finir de valider ta candidature.');
+    }
+
     if (demandesBenevoleForm) {
         demandesBenevoleForm.addEventListener('submit', function(e) {
             e.preventDefault();
             var form = this;
-            var memberNumber = (typeof profileData !== 'undefined' && profileData.memberNumber) ? profileData.memberNumber : (document.getElementById('profileMemberNumber')?.textContent || '').replace(/^N°\s*/, '').trim() || '—';
-            var lines = ['Bonjour,', '', 'Candidature bénévole', 'Numéro adhérent : ' + memberNumber, ''];
-            function addLine(label, value) {
-                if (value !== undefined && value !== null && (value + '').trim() !== '') lines.push(label + ' : ' + (value + '').trim());
+
+            var amenerChecked = form.querySelectorAll('input[name="amener"]:checked').length;
+            if (amenerChecked === 0) {
+                alert('Veuillez cocher au moins une option dans « Ce que j\'aimerais amener ».');
+                return;
             }
-            function getCheckboxes(name) {
-                var nodes = form.querySelectorAll('input[name="' + name + '"]:checked');
-                return Array.prototype.map.call(nodes, function(n) { return n.value; }).join(', ');
+
+            var typeProjetChecked = form.querySelectorAll('input[name="typeProjet"]:checked').length;
+            if (typeProjetChecked === 0) {
+                alert('Veuillez cocher au moins un type de projet dans « Type(s) de projets qui m\'intéressent ».');
+                return;
             }
-            addLine('Ce que j\'aimerais amener', getCheckboxes('amener'));
-            addLine('Aide espace', form.querySelector('[name="aideEspace"]')?.value);
-            addLine('Réseau particulier', form.querySelector('[name="reseauParticulier"]')?.value);
-            addLine('Autre idée', form.querySelector('[name="autreIdee"]')?.value);
-            addLine('Types de projets', getCheckboxes('typeProjet'));
-            addLine('Type projet autre', form.querySelector('[name="typeProjetAutre"]')?.value);
-            addLine('Bénévolat', getCheckboxes('benevolat'));
-            addLine('Je sais faire', form.querySelector('[name="saisFaire"]')?.value);
-            addLine('J\'aimerais faire', form.querySelector('[name="aimeraisFaire"]')?.value);
-            addLine('Je peux transmettre', form.querySelector('[name="peuxTransmettre"]')?.value);
-            addLine('J\'aimerais apprendre', form.querySelector('[name="aimeraisApprendre"]')?.value);
-            var email = (typeof CONFIG !== 'undefined' && CONFIG.EMAIL_CONTACT) ? CONFIG.EMAIL_CONTACT : 'contact@vill-age-jeunes.fr';
-            var subject = encodeURIComponent('[Adhérent] Candidature bénévole');
-            var body = encodeURIComponent(lines.join('\n'));
-            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
-            closeDemandesWidget();
-            alert('Votre candidature bénévole a bien été préparée. Ouvrez votre logiciel de messagerie pour l\'envoyer.');
+
+            var benevolatCheckboxes = form.querySelectorAll('input[name="benevolat"]');
+            var benevolatChecked = Array.prototype.filter.call(benevolatCheckboxes, function(cb) { return cb.checked; }).length;
+            if (benevolatChecked !== 3) {
+                alert('Veuillez cocher les 3 cases : Je suis Volontaire, Motivé·e et Disponible.');
+                return;
+            }
+
+            var saisFaire = (form.querySelector('[name="saisFaire"]')?.value || '').trim();
+            var aimeraisFaire = (form.querySelector('[name="aimeraisFaire"]')?.value || '').trim();
+            var peuxTransmettre = (form.querySelector('[name="peuxTransmettre"]')?.value || '').trim();
+            var aimeraisApprendre = (form.querySelector('[name="aimeraisApprendre"]')?.value || '').trim();
+            var atLeastOneText = saisFaire !== '' || aimeraisFaire !== '' || peuxTransmettre !== '' || aimeraisApprendre !== '';
+            if (!atLeastOneText) {
+                alert('Veuillez remplir au moins un des quatre champs : Je sais faire, J\'aimerais faire, Je peux transmettre, J\'aimerais apprendre.');
+                return;
+            }
+
+            openBenevoleConfirm();
         });
     }
+    document.getElementById('benevoleConfirmCancel')?.addEventListener('click', closeBenevoleConfirm);
+    document.getElementById('benevoleConfirmSubmit')?.addEventListener('click', sendBenevoleCandidature);
+    benevoleConfirmOverlay?.addEventListener('click', function(e) {
+        if (e.target === benevoleConfirmOverlay) closeBenevoleConfirm();
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             const interetOverlay = document.getElementById('interetOverlay');
+            const benevoleConfirm = document.getElementById('benevoleConfirmOverlay');
             const profileOverlay = document.getElementById('profileOverlay');
             const activityDetailOverlay = document.getElementById('activityDetailOverlay');
             const scheduleWidget = document.getElementById('scheduleWidget');
             const demandesOverlay = document.getElementById('demandesAdherentOverlay');
             if (interetOverlay?.classList.contains('active')) {
                 interetOverlay.classList.remove('active');
+            } else if (benevoleConfirm?.classList.contains('active')) {
+                closeBenevoleConfirm();
             } else if (demandesOverlay?.classList.contains('active')) {
                 closeDemandesWidget();
             } else if (profileOverlay?.classList.contains('active')) {

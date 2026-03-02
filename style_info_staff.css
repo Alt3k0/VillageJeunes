@@ -932,6 +932,29 @@ body {
     transform: translateY(-1px);
 }
 
+/* Deux zones de signature (bénévole : bénévole + référent) */
+.member-detail-signature-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.25rem, 2vw, 2rem);
+}
+
+@media (max-width: 600px) {
+    .member-detail-signature-double {
+        grid-template-columns: 1fr;
+    }
+}
+
+.member-detail-signature-box {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.8vw, 0.75rem);
+}
+
+.member-detail-signature-box .member-detail-signature-wrapper {
+    height: clamp(120px, 20vw, 180px);
+}
+
 /* Section paiement */
 .member-detail-paiement {
     display: flex;
@@ -1229,6 +1252,129 @@ body {
 .member-detail-password-info small {
     display: block;
     margin-top: clamp(0.25rem, 0.4vw, 0.5rem);
+}
+
+/* Fiche mission bénévole (formulaire dématérialisé) */
+.member-detail-fiche-mission {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.member-detail-fiche-block {
+    padding: clamp(0.75rem, 1.2vw, 1rem) 0;
+    border-bottom: 1px solid rgba(110, 111, 117, 0.15);
+}
+
+.member-detail-fiche-block:last-child {
+    border-bottom: none;
+}
+
+.member-detail-fiche-subtitle {
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    font-weight: 700;
+    color: #1e1e1d;
+    margin-bottom: clamp(0.6rem, 1vw, 0.9rem);
+}
+
+.member-detail-fiche-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 1.2vw, 1rem);
+}
+
+@media (max-width: 500px) {
+    .member-detail-fiche-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.member-detail-fiche-input,
+.member-detail-fiche-textarea {
+    width: 100%;
+    padding: clamp(0.5rem, 0.8vw, 0.75rem);
+    border: 2px solid rgba(110, 111, 117, 0.3);
+    border-radius: clamp(0.4rem, 0.6vw, 0.5rem);
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    color: #1e1e1d;
+    background: #fff;
+    font-family: inherit;
+}
+
+.member-detail-fiche-textarea {
+    min-height: 4em;
+    resize: vertical;
+}
+
+.member-detail-fiche-input:focus,
+.member-detail-fiche-textarea:focus {
+    outline: none;
+    border-color: #afb3b6;
+}
+
+.member-detail-fiche-input:hover,
+.member-detail-fiche-textarea:hover {
+    border-color: rgba(110, 111, 117, 0.5);
+}
+
+.member-detail-fiche-time {
+    max-width: 6rem;
+}
+
+.member-detail-fiche-duree {
+    max-width: 4rem;
+}
+
+.member-detail-fiche-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+}
+
+.member-detail-fiche-table th,
+.member-detail-fiche-table td {
+    padding: clamp(0.4rem, 0.6vw, 0.6rem);
+    border: 1px solid rgba(110, 111, 117, 0.25);
+    text-align: left;
+}
+
+.member-detail-fiche-table th {
+    background: rgba(110, 111, 117, 0.1);
+    font-weight: 600;
+    color: #1e1e1d;
+}
+
+.member-detail-fiche-table input {
+    width: 100%;
+    min-width: 0;
+}
+
+.member-detail-fiche-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.6vw, 0.5rem);
+}
+
+.member-detail-fiche-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    font-weight: 400;
+    color: #1e1e1d;
+    cursor: pointer;
+}
+
+.member-detail-fiche-check input[type="checkbox"],
+.member-detail-fiche-check input[type="radio"] {
+    flex-shrink: 0;
+}
+
+.member-detail-fiche-note {
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+    color: rgba(110, 111, 117, 0.9);
+    font-style: italic;
+    margin: 0;
 }
 
 /* Widget Pointage Bénévole */

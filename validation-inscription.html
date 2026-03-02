@@ -200,6 +200,18 @@
             text-align: center;
         }
 
+        /* Validation bénévole : blocs texte multiligne et placeholder formulaire dématérialisé */
+        .member-detail-value-block {
+            white-space: pre-wrap;
+            display: block;
+            margin-top: 0.25rem;
+        }
+        .member-detail-placeholder {
+            color: #6e6f75;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
         /* Grid de cards */
         .cards-container {
             display: grid;
@@ -359,16 +371,18 @@
 
             <h2 class="member-detail-title">Détails du membre</h2>
 
-            <!-- Header avec photo et nom -->
+            <!-- Header avec photo, nom, prénom, numéro (adhérent pour bénévole) -->
             <div class="member-detail-header">
                 <div class="member-detail-photo" id="memberDetailPhoto">Photo</div>
                 <div class="member-detail-header-info">
                     <div class="member-detail-name" id="memberDetailName">{member_nom} {member_prenom}</div>
-                    <div class="member-detail-number" id="memberDetailNumber">N° {member_numero}</div>
+                    <div class="member-detail-number"><span id="memberDetailNumberLabel">N°</span> <span id="memberDetailNumber">{member_numero}</span></div>
                     <div class="member-detail-role" id="memberDetailRole">{member_role}</div>
                 </div>
             </div>
 
+            <!-- Contenu réservé aux adhérents (validation adhérent) -->
+            <div id="memberDetailContentAdherent">
             <!-- Informations personnelles -->
             <div class="member-detail-section">
                 <h3 class="member-detail-section-title">Informations personnelles</h3>
@@ -593,9 +607,256 @@
                     </div>
                 </div>
             </div>
+            </div>
+            <!-- Fin memberDetailContentAdherent -->
 
-            <!-- Mot de passe -->
-            <div class="member-detail-section">
+            <!-- Contenu réservé aux bénévoles (validation bénévole) -->
+            <div id="memberDetailContentBenevole" style="display: none;">
+                <div class="member-detail-section">
+                    <h3 class="member-detail-section-title">Réponses au formulaire Devenir Bénévole</h3>
+                    <div class="member-detail-info-grid">
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Ce que j'aimerais amener :</span>
+                            <span class="member-detail-value" id="memberDetailBenevoleAmener">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Aide espace / Réseau particulier / Autre idée :</span>
+                            <span class="member-detail-value" id="memberDetailBenevoleAmenerPrecision">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Type(s) de projets :</span>
+                            <span class="member-detail-value" id="memberDetailBenevoleTypeProjet">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Type projet autre :</span>
+                            <span class="member-detail-value" id="memberDetailBenevoleTypeProjetAutre">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Bénévolat ici (Volontaire / Motivé·e / Disponible) :</span>
+                            <span class="member-detail-value" id="memberDetailBenevoleBenevolat">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Je sais faire :</span>
+                            <span class="member-detail-value member-detail-value-block" id="memberDetailBenevoleSaisFaire">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">J'aimerais faire :</span>
+                            <span class="member-detail-value member-detail-value-block" id="memberDetailBenevoleAimeraisFaire">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Je peux transmettre :</span>
+                            <span class="member-detail-value member-detail-value-block" id="memberDetailBenevolePeuxTransmettre">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">J'aimerais apprendre :</span>
+                            <span class="member-detail-value member-detail-value-block" id="memberDetailBenevoleAimeraisApprendre">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-detail-section">
+                    <h3 class="member-detail-section-title">Formulaire dématérialisé – Fiche mission bénévole</h3>
+                    <div id="memberDetailBenevoleFormulaireDematerialise" class="member-detail-fiche-mission">
+                        <div class="member-detail-fiche-block" data-fiche-part="entete">
+                            <h4 class="member-detail-fiche-subtitle">En-tête</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item">
+                                    <span class="member-detail-label">Nom du bénévole :</span>
+                                    <span class="member-detail-value" id="memberDetailFicheNomBenevole">—</span>
+                                </div>
+                                <div class="member-detail-info-item member-detail-fiche-row">
+                                    <div class="member-detail-info-item">
+                                        <label class="member-detail-label" for="memberDetailFicheDateArrivee">Date d'arrivée :</label>
+                                        <input type="date" id="memberDetailFicheDateArrivee" class="member-detail-fiche-input" />
+                                    </div>
+                                    <div class="member-detail-info-item">
+                                        <label class="member-detail-label" for="memberDetailFichePeriodeEngagement">Période d'engagement :</label>
+                                        <input type="text" id="memberDetailFichePeriodeEngagement" class="member-detail-fiche-input" placeholder="ex. Janvier–Juin 2025" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="referent">
+                            <h4 class="member-detail-fiche-subtitle">1. Référent et encadrement</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheReferentNom">Nom du coordinateur / référent :</label>
+                                    <input type="text" id="memberDetailFicheReferentNom" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheReferentPoste">Poste :</label>
+                                    <input type="text" id="memberDetailFicheReferentPoste" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheReferentContact">Contact du référent (téléphone / mail) :</label>
+                                    <input type="text" id="memberDetailFicheReferentContact" class="member-detail-fiche-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="horaires">
+                            <h4 class="member-detail-fiche-subtitle">2. Jours et horaires d'intervention</h4>
+                            <div class="member-detail-fiche-horaires">
+                                <table class="member-detail-fiche-table" aria-label="Grille des horaires">
+                                    <thead>
+                                        <tr>
+                                            <th>Jour</th>
+                                            <th>Heure de début</th>
+                                            <th>Heure de fin</th>
+                                            <th>Durée (heures)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Lundi</td><td><input type="time" id="memberDetailFicheLunDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheLunFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheLunDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                        <tr><td>Mardi</td><td><input type="time" id="memberDetailFicheMarDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheMarFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheMarDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                        <tr><td>Mercredi</td><td><input type="time" id="memberDetailFicheMerDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheMerFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheMerDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                        <tr><td>Jeudi</td><td><input type="time" id="memberDetailFicheJeuDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheJeuFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheJeuDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                        <tr><td>Vendredi</td><td><input type="time" id="memberDetailFicheVenDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheVenFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheVenDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                        <tr><td>Samedi</td><td><input type="time" id="memberDetailFicheSamDebut" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="time" id="memberDetailFicheSamFin" class="member-detail-fiche-input member-detail-fiche-time" /></td><td><input type="text" id="memberDetailFicheSamDuree" class="member-detail-fiche-input member-detail-fiche-duree" placeholder="h" /></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="missions">
+                            <h4 class="member-detail-fiche-subtitle">3. Missions et tâches confiées</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheAnimationAteliers">Animation d'ateliers :</label>
+                                    <input type="text" id="memberDetailFicheAnimationAteliers" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheAccompagnementJeunes">Accompagnement des jeunes :</label>
+                                    <input type="text" id="memberDetailFicheAccompagnementJeunes" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheGestionSalle">Gestion de la salle (danse/cafétéria/accueil/informatique/coworking) :</label>
+                                    <input type="text" id="memberDetailFicheGestionSalle" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheSoutienAdmin">Soutien administratif ou logistique :</label>
+                                    <input type="text" id="memberDetailFicheSoutienAdmin" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheMissionsAutre">Autre :</label>
+                                    <input type="text" id="memberDetailFicheMissionsAutre" class="member-detail-fiche-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="priorites">
+                            <h4 class="member-detail-fiche-subtitle">4. Missions prioritaires</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFichePriorite1">Priorité 1 :</label>
+                                    <input type="text" id="memberDetailFichePriorite1" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFichePriorite2">Priorité 2 :</label>
+                                    <input type="text" id="memberDetailFichePriorite2" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFichePriorite3">Priorité 3 :</label>
+                                    <input type="text" id="memberDetailFichePriorite3" class="member-detail-fiche-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="autonomie">
+                            <h4 class="member-detail-fiche-subtitle">5. Autonomie et encadrement</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <span class="member-detail-label">Niveau d'autonomie du bénévole :</span>
+                                    <div class="member-detail-fiche-checkboxes">
+                                        <label class="member-detail-fiche-check"><input type="radio" name="memberDetailFicheAutonomie" value="accompagne" id="memberDetailFicheAutonomieAccompagne" /> Le bénévole sera toujours accompagné par un référent.</label>
+                                        <label class="member-detail-fiche-check"><input type="radio" name="memberDetailFicheAutonomie" value="partiel" id="memberDetailFicheAutonomiePartiel" /> Le bénévole peut gérer certaines tâches de manière autonome après formation.</label>
+                                        <label class="member-detail-fiche-check"><input type="radio" name="memberDetailFicheAutonomie" value="autonome" id="memberDetailFicheAutonomieAutonome" /> Le bénévole est autonome pour toutes les tâches confiées, mais peut solliciter de l'aide en cas de besoin.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="specialites">
+                            <h4 class="member-detail-fiche-subtitle">6. Spécialités et compétences du bénévole</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <div class="member-detail-fiche-checkboxes">
+                                        <label class="member-detail-fiche-check"><input type="checkbox" id="memberDetailFicheSpecAnimation" /> Animation / gestion de groupe</label>
+                                        <label class="member-detail-fiche-check"><input type="checkbox" id="memberDetailFicheSpecFormation" /> Formation / coaching</label>
+                                        <label class="member-detail-fiche-check"><input type="checkbox" id="memberDetailFicheSpecCommunication" /> Communication / médiation</label>
+                                        <label class="member-detail-fiche-check"><input type="checkbox" id="memberDetailFicheSpecTechniques" /> Compétences techniques spécifiques (ex : informatique, musique, danse, etc.)</label>
+                                    </div>
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheSpecAutres">Autres :</label>
+                                    <input type="text" id="memberDetailFicheSpecAutres" class="member-detail-fiche-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="actions">
+                            <h4 class="member-detail-fiche-subtitle">7. Actions spécifiques confiées</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheObjectifs">Objectifs :</label>
+                                    <input type="text" id="memberDetailFicheObjectifs" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheResultatsAttendus">Résultats attendus :</label>
+                                    <textarea id="memberDetailFicheResultatsAttendus" class="member-detail-fiche-textarea" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="conditions">
+                            <h4 class="member-detail-fiche-subtitle">8. Conditions et engagements</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheMateriel">Matériel fourni :</label>
+                                    <textarea id="memberDetailFicheMateriel" class="member-detail-fiche-textarea" rows="2"></textarea>
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheConditionsParticulieres">Conditions particulières :</label>
+                                    <textarea id="memberDetailFicheConditionsParticulieres" class="member-detail-fiche-textarea" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="suivi">
+                            <h4 class="member-detail-fiche-subtitle">9. Suivi et évaluation</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFichePointsEchange">Points d'échange prévus (réunions régulières, retour sur missions, etc.) :</label>
+                                    <input type="text" id="memberDetailFichePointsEchange" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <p class="member-detail-fiche-note">À la fin de l'engagement, un bilan sera réalisé pour évaluer les missions effectuées, l'implication du bénévole et les objectifs atteints.</p>
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheCommentairesSuivi">Commentaires / observations (à compléter lors du suivi) :</label>
+                                    <textarea id="memberDetailFicheCommentairesSuivi" class="member-detail-fiche-textarea" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="observations">
+                            <h4 class="member-detail-fiche-subtitle">10. Observations et remarques</h4>
+                            <div class="member-detail-info-grid">
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheObservations1">•</label>
+                                    <input type="text" id="memberDetailFicheObservations1" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheObservations2">•</label>
+                                    <input type="text" id="memberDetailFicheObservations2" class="member-detail-fiche-input" />
+                                </div>
+                                <div class="member-detail-info-item full-width">
+                                    <label class="member-detail-label" for="memberDetailFicheObservations3">•</label>
+                                    <input type="text" id="memberDetailFicheObservations3" class="member-detail-fiche-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-detail-fiche-block" data-fiche-part="signatures">
+                            <h4 class="member-detail-fiche-subtitle">11. Signatures</h4>
+                            <p class="member-detail-fiche-note">Voir les zones de signature ci-dessous.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin memberDetailContentBenevole -->
+
+            <!-- Mot de passe (masqué pour les bénévoles) -->
+            <div class="member-detail-section" id="memberDetailPasswordSection">
                 <h3 class="member-detail-section-title">Mot de passe</h3>
                 <div class="member-detail-password-container">
                     <label class="member-detail-label" for="memberPasswordInput">Mot de passe à attribuer :</label>
@@ -612,8 +873,8 @@
                 </div>
             </div>
 
-            <!-- Signature -->
-            <div class="member-detail-section">
+            <!-- Signature : une zone pour adhérent/partenaire -->
+            <div class="member-detail-section" id="memberDetailSignatureSectionAdherent">
                 <h3 class="member-detail-section-title">Signature</h3>
                 <div class="member-detail-signature-container">
                     <div class="member-detail-signature-wrapper">
@@ -626,6 +887,37 @@
                         <button type="button" class="member-detail-btn-signature-clear" id="signatureClearBtn">
                             Effacer
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature : deux zones pour bénévole (bénévole + référent staff) -->
+            <div class="member-detail-section member-detail-signature-benevole-wrap" id="memberDetailSignatureSectionBenevole" style="display: none;">
+                <h3 class="member-detail-section-title">Signatures</h3>
+                <div class="member-detail-signature-double">
+                    <div class="member-detail-signature-box">
+                        <span class="member-detail-label">Signature du bénévole</span>
+                        <div class="member-detail-signature-wrapper">
+                            <canvas id="signatureCanvasBenevole" class="member-detail-signature-canvas"></canvas>
+                            <div class="member-detail-signature-placeholder" id="signaturePlaceholderBenevole">
+                                <span>Signez ici</span>
+                            </div>
+                        </div>
+                        <div class="member-detail-signature-actions">
+                            <button type="button" class="member-detail-btn-signature-clear" id="signatureClearBtnBenevole">Effacer</button>
+                        </div>
+                    </div>
+                    <div class="member-detail-signature-box">
+                        <span class="member-detail-label">Signature du référent (membre du staff)</span>
+                        <div class="member-detail-signature-wrapper">
+                            <canvas id="signatureCanvasReferent" class="member-detail-signature-canvas"></canvas>
+                            <div class="member-detail-signature-placeholder" id="signaturePlaceholderReferent">
+                                <span>Signez ici</span>
+                            </div>
+                        </div>
+                        <div class="member-detail-signature-actions">
+                            <button type="button" class="member-detail-btn-signature-clear" id="signatureClearBtnReferent">Effacer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -722,11 +1014,25 @@
                 allMembers.benevoles.push({
                     id: `PENDING_BEN${String(i).padStart(4, '0')}`,
                     numero: null,
+                    numeroAdherent: i === 1 ? 'VJ-2026-001' : (i === 2 ? 'VJ-2026-008' : null),
                     password: null,
                     nom: `Bénévole${i}`,
                     prenom: `Prénom${i}`,
                     role: 'Bénévole',
-                    isPending: true
+                    isPending: true,
+                    candidatureBenevole: {
+                        amener: ['bonne-humeur', 'soutien', i === 1 ? 'projet-personnel' : 'aide-espace'],
+                        aideEspace: i === 1 ? 'Salle du Feu' : '',
+                        reseauParticulier: i === 2 ? 'Associations jeunesse' : '',
+                        autreIdee: '',
+                        typeProjet: ['artistique', 'culturel', i <= 2 ? 'solidaire' : 'numerique'],
+                        typeProjetAutre: i === 3 ? 'Événementiel' : '',
+                        benevolat: ['volontaire', 'motive', 'disponible'],
+                        saisFaire: i === 1 ? 'Animation, montage vidéo.' : (i === 2 ? 'Comptabilité, organisation.' : ''),
+                        aimeraisFaire: i === 2 ? 'Animer des ateliers.' : (i === 3 ? 'Accueil du public.' : ''),
+                        peuxTransmettre: i === 1 ? 'Outils numériques.' : '',
+                        aimeraisApprendre: i === 3 ? 'Gestion de projet.' : (i === 2 ? 'Communication.' : '')
+                    }
                 });
             }
 
@@ -889,129 +1195,86 @@
         // Gestion de la signature (uniquement pour validation-inscription.html)
         let signatureCanvas = null;
         let signatureCtx = null;
-        let signatureIsDrawing = false;
-        let signatureLastX = 0;
-        let signatureLastY = 0;
+        let signatureCanvasBenevole = null;
+        let signatureCtxBenevole = null;
+        let signatureCanvasReferent = null;
+        let signatureCtxReferent = null;
 
-        function setupSignatureCanvas() {
-            signatureCanvas = document.getElementById('signatureCanvas');
-            const placeholder = document.getElementById('signaturePlaceholder');
-            const clearBtn = document.getElementById('signatureClearBtn');
-            
-            if (!signatureCanvas) return;
-
-            signatureCtx = signatureCanvas.getContext('2d');
-
-            // Ajuster la taille du canvas
-            function resizeCanvas() {
-                if (!signatureCanvas) return;
-                const rect = signatureCanvas.getBoundingClientRect();
-                signatureCanvas.width = rect.width;
-                signatureCanvas.height = rect.height;
-                
-                // Configuration du style de dessin
-                signatureCtx.strokeStyle = '#1e1e1d';
-                signatureCtx.lineWidth = 2.5;
-                signatureCtx.lineCap = 'round';
-                signatureCtx.lineJoin = 'round';
+        function canvasHasSignature(canvas, ctx) {
+            if (!canvas || !ctx) return false;
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 3; i < data.length; i += 4) {
+                if (data[i] !== 0) return true;
             }
+            return false;
+        }
 
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
+        function setupOneSignatureCanvas(canvasId, placeholderId, clearBtnId, clearCallback) {
+            const canvas = document.getElementById(canvasId);
+            const placeholder = document.getElementById(placeholderId);
+            const clearBtn = document.getElementById(clearBtnId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0, lastY = 0;
 
-            // Obtenir les coordonnées (souris ou tactile)
-            function getCoordinates(e) {
-                if (!signatureCanvas) return { x: 0, y: 0 };
-                const rect = signatureCanvas.getBoundingClientRect();
+            function resize() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                ctx.strokeStyle = '#1e1e1d';
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+            function getCoords(e) {
+                const rect = canvas.getBoundingClientRect();
                 if (e.touches && e.touches.length > 0) {
-                    return {
-                        x: e.touches[0].clientX - rect.left,
-                        y: e.touches[0].clientY - rect.top
-                    };
-                } else {
-                    return {
-                        x: e.clientX - rect.left,
-                        y: e.clientY - rect.top
-                    };
+                    return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
                 }
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
             }
-
-            // Commencer à dessiner
             function startDrawing(e) {
                 e.preventDefault();
-                signatureIsDrawing = true;
-                const coords = getCoordinates(e);
-                signatureLastX = coords.x;
-                signatureLastY = coords.y;
-                
-                if (placeholder) {
-                    placeholder.classList.add('hidden');
-                }
+                isDrawing = true;
+                const c = getCoords(e);
+                lastX = c.x; lastY = c.y;
+                if (placeholder) placeholder.classList.add('hidden');
             }
-
-            // Dessiner
             function draw(e) {
-                if (!signatureIsDrawing || !signatureCtx) return;
+                if (!isDrawing || !ctx) return;
                 e.preventDefault();
-                
-                const coords = getCoordinates(e);
-                signatureCtx.beginPath();
-                signatureCtx.moveTo(signatureLastX, signatureLastY);
-                signatureCtx.lineTo(coords.x, coords.y);
-                signatureCtx.stroke();
-                
-                signatureLastX = coords.x;
-                signatureLastY = coords.y;
+                const c = getCoords(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(c.x, c.y);
+                ctx.stroke();
+                lastX = c.x; lastY = c.y;
             }
+            function stopDrawing() { isDrawing = false; }
 
-            // Arrêter de dessiner
-            function stopDrawing() {
-                signatureIsDrawing = false;
-            }
-
-            // Événements souris (desktop)
-            signatureCanvas.addEventListener('mousedown', startDrawing);
-            signatureCanvas.addEventListener('mousemove', draw);
-            signatureCanvas.addEventListener('mouseup', stopDrawing);
-            signatureCanvas.addEventListener('mouseleave', stopDrawing);
-
-            // Événements tactiles (tablette/mobile)
-            signatureCanvas.addEventListener('touchstart', startDrawing, { passive: false });
-            signatureCanvas.addEventListener('touchmove', draw, { passive: false });
-            signatureCanvas.addEventListener('touchend', stopDrawing);
-            signatureCanvas.addEventListener('touchcancel', stopDrawing);
-
-            // Bouton effacer
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function() {
-                    clearSignature();
-                });
-            }
+            resize();
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchcancel', stopDrawing);
+            if (clearBtn) clearBtn.addEventListener('click', clearCallback);
+            return { canvas: canvas, ctx: ctx };
         }
 
-        // Réinitialiser la signature
-        function clearSignature() {
-            if (!signatureCanvas || !signatureCtx) return;
-            signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
-            const placeholder = document.getElementById('signaturePlaceholder');
-            if (placeholder) {
-                placeholder.classList.remove('hidden');
+        function setupSignatureCanvas() {
+            const ref = setupOneSignatureCanvas('signatureCanvas', 'signaturePlaceholder', 'signatureClearBtn', clearSignature);
+            if (ref) {
+                signatureCanvas = ref.canvas;
+                signatureCtx = ref.ctx;
             }
-        }
-
-        // Réinitialiser la signature et le mot de passe à l'ouverture du modal
-        function resetSignatureOnModalOpen() {
-            // Réinitialiser le champ mot de passe
-            const passwordInput = document.getElementById('memberPasswordInput');
-            if (passwordInput) {
-                passwordInput.value = '';
-            }
-
-            // Attendre que le modal soit visible pour réinitialiser la signature
-            setTimeout(function() {
-                clearSignature();
-                // Réajuster la taille du canvas après l'ouverture
-                if (signatureCanvas) {
+            window.addEventListener('resize', function() {
+                if (signatureCanvas && signatureCtx) {
                     const rect = signatureCanvas.getBoundingClientRect();
                     signatureCanvas.width = rect.width;
                     signatureCanvas.height = rect.height;
@@ -1020,26 +1283,103 @@
                     signatureCtx.lineCap = 'round';
                     signatureCtx.lineJoin = 'round';
                 }
+            });
+        }
+
+        function setupSignatureCanvasesBenevole() {
+            const refB = setupOneSignatureCanvas('signatureCanvasBenevole', 'signaturePlaceholderBenevole', 'signatureClearBtnBenevole', clearSignatureBenevole);
+            const refR = setupOneSignatureCanvas('signatureCanvasReferent', 'signaturePlaceholderReferent', 'signatureClearBtnReferent', clearSignatureReferent);
+            if (refB) { signatureCanvasBenevole = refB.canvas; signatureCtxBenevole = refB.ctx; }
+            if (refR) { signatureCanvasReferent = refR.canvas; signatureCtxReferent = refR.ctx; }
+        }
+
+        function clearSignature() {
+            if (!signatureCanvas || !signatureCtx) return;
+            signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            const p = document.getElementById('signaturePlaceholder');
+            if (p) p.classList.remove('hidden');
+        }
+
+        function clearSignatureBenevole() {
+            if (!signatureCanvasBenevole || !signatureCtxBenevole) return;
+            signatureCtxBenevole.clearRect(0, 0, signatureCanvasBenevole.width, signatureCanvasBenevole.height);
+            const p = document.getElementById('signaturePlaceholderBenevole');
+            if (p) p.classList.remove('hidden');
+        }
+
+        function clearSignatureReferent() {
+            if (!signatureCanvasReferent || !signatureCtxReferent) return;
+            signatureCtxReferent.clearRect(0, 0, signatureCanvasReferent.width, signatureCanvasReferent.height);
+            const p = document.getElementById('signaturePlaceholderReferent');
+            if (p) p.classList.remove('hidden');
+        }
+
+        function resetSignatureOnModalOpen() {
+            const passwordInput = document.getElementById('memberPasswordInput');
+            if (passwordInput) passwordInput.value = '';
+
+            const sectionBenevole = document.getElementById('memberDetailSignatureSectionBenevole');
+            const isBenevole = sectionBenevole && sectionBenevole.style.display !== 'none';
+
+            setTimeout(function() {
+                if (isBenevole) {
+                    clearSignatureBenevole();
+                    clearSignatureReferent();
+                    if (signatureCanvasBenevole && signatureCtxBenevole) {
+                        const r = signatureCanvasBenevole.getBoundingClientRect();
+                        signatureCanvasBenevole.width = r.width;
+                        signatureCanvasBenevole.height = r.height;
+                        signatureCtxBenevole.strokeStyle = '#1e1e1d';
+                        signatureCtxBenevole.lineWidth = 2.5;
+                        signatureCtxBenevole.lineCap = 'round';
+                        signatureCtxBenevole.lineJoin = 'round';
+                    }
+                    if (signatureCanvasReferent && signatureCtxReferent) {
+                        const r = signatureCanvasReferent.getBoundingClientRect();
+                        signatureCanvasReferent.width = r.width;
+                        signatureCanvasReferent.height = r.height;
+                        signatureCtxReferent.strokeStyle = '#1e1e1d';
+                        signatureCtxReferent.lineWidth = 2.5;
+                        signatureCtxReferent.lineCap = 'round';
+                        signatureCtxReferent.lineJoin = 'round';
+                    }
+                } else {
+                    clearSignature();
+                    if (signatureCanvas && signatureCtx) {
+                        const rect = signatureCanvas.getBoundingClientRect();
+                        signatureCanvas.width = rect.width;
+                        signatureCanvas.height = rect.height;
+                        signatureCtx.strokeStyle = '#1e1e1d';
+                        signatureCtx.lineWidth = 2.5;
+                        signatureCtx.lineCap = 'round';
+                        signatureCtx.lineJoin = 'round';
+                    }
+                }
             }, 100);
         }
 
-        // Obtenir la signature en base64
         function getSignatureData() {
-            if (!signatureCanvas) return null;
-            return signatureCanvas.toDataURL('image/png');
+            return signatureCanvas ? signatureCanvas.toDataURL('image/png') : null;
         }
 
-        // Vérifier si une signature existe
+        function getSignatureDataBenevole() {
+            return signatureCanvasBenevole ? signatureCanvasBenevole.toDataURL('image/png') : null;
+        }
+
+        function getSignatureDataReferent() {
+            return signatureCanvasReferent ? signatureCanvasReferent.toDataURL('image/png') : null;
+        }
+
         function hasSignature() {
-            if (!signatureCanvas || !signatureCtx) return false;
-            const imageData = signatureCtx.getImageData(0, 0, signatureCanvas.width, signatureCanvas.height);
-            const data = imageData.data;
-            
-            // Vérifier si au moins un pixel n'est pas transparent
-            for (let i = 3; i < data.length; i += 4) {
-                if (data[i] !== 0) return true;
-            }
-            return false;
+            return canvasHasSignature(signatureCanvas, signatureCtx);
+        }
+
+        function hasSignatureBenevole() {
+            return canvasHasSignature(signatureCanvasBenevole, signatureCtxBenevole);
+        }
+
+        function hasSignatureReferent() {
+            return canvasHasSignature(signatureCanvasReferent, signatureCtxReferent);
         }
 
         // Intercepter l'ouverture du modal pour réinitialiser la signature et désactiver le mode édition
@@ -1055,6 +1395,20 @@
                 }
                 originalOpenMemberModal(member);
                 resetSignatureOnModalOpen();
+
+                // Bénévole : remplacer Modifier par Supprimer
+                const modifyBtn = document.getElementById('memberDetailModify');
+                if (modifyBtn) {
+                    if (member.role === 'Bénévole') {
+                        modifyBtn.textContent = 'Supprimer';
+                        modifyBtn.classList.remove('member-detail-btn-modify');
+                        modifyBtn.classList.add('member-detail-btn-delete');
+                    } else {
+                        modifyBtn.textContent = 'Modifier';
+                        modifyBtn.classList.remove('member-detail-btn-delete');
+                        modifyBtn.classList.add('member-detail-btn-modify');
+                    }
+                }
             };
         }
 
@@ -1812,22 +2166,104 @@
             }
         }
 
-        // Gestion du bouton Modifier/Annuler
+        // Gestion du bouton Modifier/Annuler (adhérent) ou Supprimer (bénévole)
         function setupModifyButton() {
             const modifyBtn = document.getElementById('memberDetailModify');
             if (!modifyBtn) return;
 
             modifyBtn.addEventListener('click', function() {
-                if (isEditMode) {
-                    // Mode édition actif : annuler
-                    if (confirm('Voulez-vous annuler les modifications ? Les changements non enregistrés seront perdus.')) {
-                        disableEditMode();
+                const roleEl = document.getElementById('memberDetailRole');
+                const memberRole = roleEl ? roleEl.textContent.trim() : '';
+
+                if (memberRole === 'Bénévole') {
+                    // Supprimer : refuser l'inscription bénévole
+                    const memberId = document.getElementById('memberDetailOverlay')?.dataset.currentMemberId;
+                    if (!memberId) {
+                        alert('Erreur : membre non identifié.');
+                        return;
                     }
+                    if (!confirm('Voulez-vous supprimer cette inscription bénévole ? L\'inscription sera refusée.')) {
+                        return;
+                    }
+                    supprimerInscriptionBenevole(memberId);
                 } else {
-                    // Mode lecture : activer l'édition
-                    enableEditMode();
+                    if (isEditMode) {
+                        if (confirm('Voulez-vous annuler les modifications ? Les changements non enregistrés seront perdus.')) {
+                            disableEditMode();
+                        }
+                    } else {
+                        enableEditMode();
+                    }
                 }
             });
+        }
+
+        // Supprimer (refuser) une inscription bénévole
+        async function supprimerInscriptionBenevole(memberId) {
+            try {
+                const response = await fetch(`/api/staff/inscriptions/${memberId}/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'reject' })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la suppression');
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    const overlay = document.getElementById('memberDetailOverlay');
+                    if (overlay) overlay.classList.remove('active');
+                    if (typeof allMembers !== 'undefined' && allMembers.benevoles) {
+                        allMembers.benevoles = allMembers.benevoles.filter(m => String(m.id) !== String(memberId));
+                    }
+                    if (typeof renderCards === 'function') renderCards();
+                    alert('Inscription bénévole supprimée (refusée).');
+                } else {
+                    throw new Error(result.error?.message || 'Erreur');
+                }
+            } catch (e) {
+                alert(e instanceof Error ? e.message : 'Erreur lors de la suppression.');
+            }
+        }
+
+        // Validation fiche mission bénévole : au moins une réponse par partie (cocher ou écrire)
+        function validateFicheMissionBenevole() {
+            const partTitles = {
+                entete: 'En-tête',
+                referent: '1. Référent et encadrement',
+                horaires: '2. Jours et horaires d\'intervention',
+                missions: '3. Missions et tâches confiées',
+                priorites: '4. Missions prioritaires',
+                autonomie: '5. Autonomie et encadrement',
+                specialites: '6. Spécialités et compétences du bénévole',
+                actions: '7. Actions spécifiques confiées',
+                conditions: '8. Conditions et engagements',
+                suivi: '9. Suivi et évaluation',
+                observations: '10. Observations et remarques'
+            };
+            const parts = ['entete', 'referent', 'horaires', 'missions', 'priorites', 'autonomie', 'specialites', 'actions', 'conditions', 'suivi', 'observations'];
+            for (let i = 0; i < parts.length; i++) {
+                const part = parts[i];
+                const block = document.querySelector('.member-detail-fiche-block[data-fiche-part="' + part + '"]');
+                if (!block) continue;
+                const inputs = block.querySelectorAll('input:not([type="hidden"]), textarea');
+                let filled = false;
+                for (let j = 0; j < inputs.length; j++) {
+                    const el = inputs[j];
+                    if (el.type === 'radio' || el.type === 'checkbox') {
+                        if (el.checked) { filled = true; break; }
+                    } else if (String(el.value || '').trim() !== '') {
+                        filled = true;
+                        break;
+                    }
+                }
+                if (!filled) {
+                    return 'Veuillez remplir ou cocher au moins un champ dans la partie « ' + (partTitles[part] || part) + ' ».';
+                }
+            }
+            return null;
         }
 
         // Gestion du bouton Enregistrer/Valider
@@ -1837,44 +2273,60 @@
 
             validateBtn.addEventListener('click', function() {
                 if (isEditMode) {
-                    // Mode édition : enregistrer
                     saveMemberModifications();
                 } else {
-                    // Mode lecture : valider l'inscription
                     const memberId = document.getElementById('memberDetailOverlay')?.dataset.currentMemberId;
                     if (!memberId) {
                         alert('Erreur : membre non identifié.');
                         return;
                     }
 
-                    let password, signatureData, memberRole;
+                    const roleEl = document.getElementById('memberDetailRole');
+                    const memberRole = validateMemberRole(roleEl ? roleEl.textContent : '');
+
+                    let password, signatureData;
+
                     try {
-                        const passwordInput = document.getElementById('memberPasswordInput');
-                        password = validatePassword(passwordInput ? passwordInput.value : '', true);
-
-                        if (!hasSignature()) {
-                            throw new Error('Veuillez signer avant de valider.');
+                        if (memberRole === 'Bénévole') {
+                            const ficheError = validateFicheMissionBenevole();
+                            if (ficheError) {
+                                throw new Error(ficheError);
+                            }
+                            if (!hasSignatureBenevole()) {
+                                throw new Error('Veuillez remplir la signature du bénévole.');
+                            }
+                            if (!hasSignatureReferent()) {
+                                throw new Error('Veuillez remplir la signature du référent (membre du staff).');
+                            }
+                            const rawB = getSignatureDataBenevole();
+                            const rawR = getSignatureDataReferent();
+                            signatureData = {
+                                signatureBenevole: validateSignature(rawB, true),
+                                signatureReferent: validateSignature(rawR, true)
+                            };
+                            password = null;
+                        } else {
+                            const passwordInput = document.getElementById('memberPasswordInput');
+                            password = validatePassword(passwordInput ? passwordInput.value : '', true);
+                            if (!hasSignature()) {
+                                throw new Error('Veuillez signer avant de valider.');
+                            }
+                            const rawSignature = getSignatureData();
+                            signatureData = validateSignature(rawSignature, true);
                         }
-                        const rawSignature = getSignatureData();
-                        signatureData = validateSignature(rawSignature, true);
-
-                        const roleEl = document.getElementById('memberDetailRole');
-                        memberRole = validateMemberRole(roleEl ? roleEl.textContent : '');
                     } catch (e) {
                         alert(e instanceof Error ? e.message : 'Données invalides.');
-                        document.getElementById('memberPasswordInput')?.focus();
+                        if (memberRole !== 'Bénévole') {
+                            document.getElementById('memberPasswordInput')?.focus();
+                        }
                         return;
                     }
 
                     const confirmMessage = 'Êtes-vous sûr de vouloir valider cette inscription ?\n\nCette action est définitive et générera un numéro d\'adhérent.';
-                    if (!confirm(confirmMessage)) {
-                        return;
-                    }
+                    if (!confirm(confirmMessage)) return;
 
                     const doubleConfirmMessage = 'Confirmez une dernière fois la validation de cette inscription.';
-                    if (!confirm(doubleConfirmMessage)) {
-                        return;
-                    }
+                    if (!confirm(doubleConfirmMessage)) return;
 
                     validateInscription(memberId, password, signatureData, memberRole);
                 }
@@ -1919,19 +2371,23 @@
 
                 const memberNumber = generateMemberNumber(memberRole);
 
-                // Envoyer la validation au backend
+                const body = {
+                    action: 'approve',
+                    memberNumber: memberNumber,
+                    role: memberRole
+                };
+                if (memberRole === 'Bénévole') {
+                    body.signatureBenevole = signatureData.signatureBenevole;
+                    body.signatureReferent = signatureData.signatureReferent;
+                } else {
+                    body.password = password;
+                    body.signature = signatureData;
+                }
+
                 const response = await fetch(`/api/staff/inscriptions/${memberId}/validate`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'approve',
-                        password: password, // Mot de passe saisi par le staff
-                        memberNumber: memberNumber, // Numéro généré
-                        signature: signatureData, // Signature du staff
-                        role: memberRole // Rôle pour déterminer dans quelle section basculer
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
                 });
 
                 if (!response.ok) {
@@ -1949,7 +2405,11 @@
                         role: memberRole
                     };
 
-                    alert(`Inscription validée avec succès !\n\nNuméro attribué : ${validatedMember.numero}\nMot de passe : ${password}`);
+                    let successMsg = 'Inscription validée avec succès !\n\nNuméro attribué : ' + validatedMember.numero;
+                    if (memberRole !== 'Bénévole' && password) {
+                        successMsg += '\nMot de passe : ' + password;
+                    }
+                    alert(successMsg);
                     
                     // Retirer l'inscription de la liste locale (elle n'apparaîtra plus ici)
                     removeInscriptionFromList(memberId);
@@ -2012,6 +2472,7 @@
 
             // Initialiser la signature (spécifique à validation-inscription.html)
             setupSignatureCanvas();
+            setupSignatureCanvasesBenevole();
             setupModifyButton();
             setupValidateButton();
         });

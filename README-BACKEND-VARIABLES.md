@@ -754,16 +754,32 @@ Récupère les inscriptions en attente
 ```
 
 #### POST `/api/staff/inscriptions/{inscription_id}/validate`
-Valide une inscription
+Valide ou refuse une inscription.
 
-**Body attendu :**
+**Body attendu :** selon le rôle (`Adhérent`, `Partenaire` vs `Bénévole`) et l'action (`approve` vs `reject`).
+
+---
+
+##### Action `approve` – Adhérent ou Partenaire
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `action` | String | `"approve"` |
+| `password` | String | Mot de passe à attribuer au membre (saisi par le staff) |
+| `memberNumber` | String | Numéro généré (format `ADH0001`, `PAR0001`) |
+| `signature` | String | Base64 de la signature du staff (image PNG) |
+| `role` | String | `"Adhérent"` ou `"Partenaire"` |
+
+**Exemple :**
 ```json
 {
-  "action": "approve" // ou "reject"
+  "action": "approve",
+  "password": "MotDePasse123",
+  "memberNumber": "ADH0001",
+  "signature": "data:image/png;base64,iVBORw0KG...",
+  "role": "Adhérent"
 }
 ```
-
-**Note :** Le backend génère automatiquement l'ID membre et le mot de passe si l'action est "approve".
 
 **Réponse attendue :**
 ```json
@@ -771,8 +787,96 @@ Valide une inscription
   "success": true,
   "message": "Inscription validée",
   "member": {
-    // Données du membre créé
+    "id": "{member_id}",
+    "numero": "{member_numero}",
+    "password": "{password}",
+    "role": "Adhérent"
   }
+}
+```
+
+---
+
+##### Action `approve` – Bénévole
+
+Pour les bénévoles : pas de mot de passe, deux signatures (bénévole + référent staff), fiche mission dématérialisée.
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `action` | String | `"approve"` |
+| `memberNumber` | String | Numéro généré (format `BEN0001`) |
+| `signatureBenevole` | String | Base64 de la signature du bénévole (image PNG) |
+| `signatureReferent` | String | Base64 de la signature du référent (membre du staff) (image PNG) |
+| `role` | String | `"Bénévole"` |
+
+**Variables supplémentaires (fiche mission bénévole)** – à intégrer ultérieurement dans le body si le backend doit les persister :
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `ficheMission.dateArrivee` | String | Date d'arrivée (YYYY-MM-DD) |
+| `ficheMission.periodeEngagement` | String | Période (ex. Janvier–Juin 2025) |
+| `ficheMission.referentNom` | String | Nom du coordinateur / référent |
+| `ficheMission.referentPoste` | String | Poste du référent |
+| `ficheMission.referentContact` | String | Contact (téléphone / mail) |
+| `ficheMission.horaires` | Object | Grille Lun–Sam (debut, fin, duree) |
+| `ficheMission.missions` | Object | Animation ateliers, accompagnement, etc. |
+| `ficheMission.priorites` | Array | Missions prioritaires (3 max) |
+| `ficheMission.autonomie` | String | `accompagne` / `partiel` / `autonome` |
+| `ficheMission.specialites` | Array | Compétences cochées + autres |
+| `ficheMission.objectifs` | String | Objectifs |
+| `ficheMission.resultatsAttendus` | String | Résultats attendus |
+| `ficheMission.materiel` | String | Matériel fourni |
+| `ficheMission.conditionsParticulieres` | String | Conditions particulières |
+| `ficheMission.pointsEchange` | String | Points d'échange prévus |
+| `ficheMission.commentairesSuivi` | String | Commentaires / observations |
+| `ficheMission.observations` | Array | 3 lignes de remarques |
+
+**Exemple (body minimal actuel) :**
+```json
+{
+  "action": "approve",
+  "memberNumber": "BEN0001",
+  "signatureBenevole": "data:image/png;base64,iVBORw0KG...",
+  "signatureReferent": "data:image/png;base64,iVBORw0KG...",
+  "role": "Bénévole"
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Inscription validée",
+  "member": {
+    "id": "{member_id}",
+    "numero": "BEN0001",
+    "role": "Bénévole"
+  }
+}
+```
+
+---
+
+##### Action `reject` – Supprimer une inscription bénévole
+
+Appelé quand le staff clique sur « Supprimer » pour une inscription bénévole (refus).
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `action` | String | `"reject"` |
+
+**Exemple :**
+```json
+{
+  "action": "reject"
+}
+```
+
+**Réponse attendue :**
+```json
+{
+  "success": true,
+  "message": "Inscription refusée"
 }
 ```
 
@@ -867,7 +971,11 @@ Avant de considérer l'intégration comme complète :
 ---
 
 **Dernière mise à jour :** 02 Mars 2026  
-**Version :** 2.4
+**Version :** 2.5
+
+**Changelog v2.5 (02/03/2026) :**
+- **Validation Bénévole** : documentation des variables pour `approve` (signatureBenevole, signatureReferent, pas de password) et pour `reject` (suppression inscription)
+- Inventaire des champs de la fiche mission bénévole (optionnel pour persistance backend)
 
 **Changelog v2.4 (02/03/2026) :**
 - Ajout widget adhérent **« Faire une demande »** (salle / RDV) + inventaire champs + endpoint optionnel

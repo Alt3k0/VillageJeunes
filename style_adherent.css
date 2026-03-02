@@ -20,7 +20,13 @@ body[data-user-role="benevole"] {
     --accent-dark: #4d7a3e;
     --accent-rgb: 100, 157, 80;
 }
-/* Partenaire (réservé) : body[data-user-role="partenaire"] { --accent: ... } */
+/* Partenaire = vert charte (mise à disposition espaces) */
+body[data-user-role="partenaire"] {
+    --accent: #649d50;
+    --accent-light: #7ab368;
+    --accent-dark: #4d7a3e;
+    --accent-rgb: 100, 157, 80;
+}
 
 /* Icône profil header : couleur thème (orange adhérent / vert bénévole) */
 .header-profile {
@@ -186,19 +192,31 @@ body[data-user-role="benevole"] {
     white-space: nowrap;
 }
 
-/* Overlay & widget */
+/* Verrouillage du scroll page quand le widget demandes est ouvert (bonnes pratiques modale) */
+html.demandes-overlay-open,
+body.demandes-overlay-open {
+    overflow: hidden;
+    touch-action: none;
+}
+
+/* Overlay modal : démarre sous le header (top), blur jusqu'en bas */
 .demandes-adherent-overlay {
     display: none;
     position: fixed;
-    inset: 0;
+    top: calc(clamp(2.5rem, 4vw, 5.5rem) + 2vh);
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    z-index: 1001;
+    z-index: 2000;
     align-items: center;
     justify-content: center;
-    padding: clamp(1rem, 2vw, 2rem);
+    padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 2vw, 2rem);
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .demandes-adherent-overlay.active {
@@ -210,10 +228,12 @@ body[data-user-role="benevole"] {
     border-radius: clamp(12px, 1.5vw, 24px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: clamp(320px, 90vw, 480px);
-    padding: clamp(1.25rem, 2.5vw, 2rem);
+    max-width: clamp(260px, 75vw, 380px);
+    max-height: 65vh;
+    padding: clamp(1.1rem, 2vw, 1.75rem);
     position: relative;
     margin: auto;
+    overflow-y: auto;
 }
 
 .demandes-adherent-close {
@@ -373,6 +393,12 @@ body[data-user-role="benevole"] {
 .demandes-form-textarea {
     resize: vertical;
     min-height: 100px;
+    max-height: 180px;
+}
+
+/* Motif détaillé (RDV) : rester dans le widget, ne pas déborder */
+.demandes-adherent-widget .demandes-adherent-form-step .demandes-form-textarea {
+    max-height: 160px;
 }
 
 .demandes-form-actions {
@@ -1045,4 +1071,172 @@ body[data-user-role="benevole"] {
         max-height: calc(100vh - clamp(20vh, 28vw, 35vh));
         padding: clamp(18px, 4vw, 24px);
     }
+}
+
+/* --- Partenaire : vue Salles uniquement + widget Réserver une salle --- */
+.view-navigation-partenaire {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.view-navigation-partenaire .view-arrow {
+    display: none;
+}
+
+/* Widget Réserver une salle (mise à disposition des espaces) */
+/* Dimensionnement sur le widget (pas l'overlay) : blur visible tout autour */
+.demandes-adherent-widget.reserver-salle-widget {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Étape « Réserver une salle » dans le widget partenaire (choix + RDV + salle) */
+.demandes-adherent-step.reserver-salle-step-content {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (orientation: portrait) {
+    .demandes-adherent-widget,
+    .demandes-adherent-widget.reserver-salle-widget {
+        max-height: 70vh;
+    }
+    .demandes-adherent-step.reserver-salle-step-content {
+        max-height: 70vh;
+    }
+}
+
+.reserver-salle-section-header {
+    background-color: #e6b800;
+    color: #1e1e1d;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(0.85rem, 1.4vw, 1rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.25rem);
+    margin: clamp(1rem, 2vw, 1.5rem) 0 clamp(0.75rem, 1.5vw, 1rem);
+    border-radius: clamp(4px, 0.6vw, 8px);
+}
+.reserver-salle-niveau {
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+.reserver-salle-niveau-title {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    font-weight: 700;
+    color: #1e1e1d;
+    margin: 0 0 0.25em 0;
+}
+.reserver-salle-niveau-desc {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    color: #6e6f75;
+    margin: 0 0 0.5em 0;
+}
+.reserver-salle-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1.5em;
+}
+.reserver-salle-check {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    cursor: pointer;
+    color: #1e1e1d;
+}
+.reserver-salle-check input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    accent-color: var(--accent);
+}
+.reserver-salle-champs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    margin: clamp(1rem, 2vw, 1.5rem) 0;
+}
+.reserver-salle-champs .demandes-form-group-full {
+    grid-column: 1 / -1;
+}
+@media (max-width: 600px) {
+    .reserver-salle-champs {
+        grid-template-columns: 1fr;
+    }
+}
+.reserver-salle-attestation-header {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+.reserver-salle-attestation-text {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    color: #414d55;
+    line-height: 1.5;
+    margin: 0 0 clamp(1rem, 2vw, 1.25rem) 0;
+}
+.reserver-salle-attestation-text ul {
+    margin: 0.5em 0 0 1.2em;
+    padding: 0;
+}
+.reserver-salle-signature-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    margin-bottom: 1rem;
+}
+@media (max-width: 500px) {
+    .reserver-salle-signature-fields {
+        grid-template-columns: 1fr;
+    }
+}
+.reserver-salle-signature-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: clamp(100px, 18vw, 140px);
+    border: 2px dashed rgba(175, 179, 182, 0.6);
+    border-radius: clamp(6px, 1vw, 10px);
+    background: #fafbfd;
+}
+.reserver-salle-signature-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    cursor: crosshair;
+    touch-action: none;
+}
+.reserver-salle-signature-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    color: #afb3b6;
+    pointer-events: none;
+}
+.reserver-salle-signature-placeholder.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.reserver-salle-signature-clear {
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+    color: #6e6f75;
+    background: #f1f1f1;
+    border: 1px solid #d9d0e3;
+    border-radius: clamp(4px, 0.6vw, 8px);
+    cursor: pointer;
+}
+.reserver-salle-signature-clear:hover {
+    background: #e8e4ed;
+    color: #1e1e1d;
+}
+.reserver-salle-attestation-check {
+    margin-top: 0.5rem;
+}
+.reserver-salle-form .demandes-form-actions {
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
 }

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil Partenaire - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style_adherent.css">
+</head>
+<body data-user-role="partenaire">
+    <div class="background-decoration"></div>
+
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="header-logo" onclick="window.location.href='accueil-partenaire.html'" onerror="this.src='logo et charte graphique/LogoRond.png';">
+            </div>
+            <div class="header-right">
+                <div class="header-profile" id="profileIcon">
+                    <svg class="header-profile-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <button type="button" class="demandes-adherent-button" id="demandesPartenaireButton" aria-label="Faire une demande">
+            <svg class="demandes-adherent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="demandes-adherent-text">Faire une demande</span>
+        </button>
+
+        <div class="view-navigation view-navigation-partenaire">
+            <h1 class="view-title" id="viewTitle">SALLES OCCUPÉES</h1>
+        </div>
+
+        <!-- Calendrier Salles uniquement -->
+        <div class="calendar-container" id="calendarSalles">
+            <div class="calendar-header">
+                <div class="calendar-nav-arrow" id="prevMonthSalles">‹</div>
+                <div class="calendar-date-selectors">
+                    <select class="calendar-select" id="monthSelectSalles">
+                        <option value="0">Janvier</option>
+                        <option value="1" selected>Février</option>
+                        <option value="2">Mars</option>
+                        <option value="3">Avril</option>
+                        <option value="4">Mai</option>
+                        <option value="5">Juin</option>
+                        <option value="6">Juillet</option>
+                        <option value="7">Août</option>
+                        <option value="8">Septembre</option>
+                        <option value="9">Octobre</option>
+                        <option value="10">Novembre</option>
+                        <option value="11">Décembre</option>
+                    </select>
+                    <select class="calendar-select" id="yearSelectSalles">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div class="calendar-nav-arrow" id="nextMonthSalles">›</div>
+            </div>
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-grid" id="calendarGridSalles"></div>
+            </div>
+        </div>
+
+        <!-- Légende des salles -->
+        <div class="salles-legend" id="sallesLegend">
+            <h3 class="legend-title">Légende des salles :</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f658e;"></div>
+                    <span>Salle de l'Eau</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #649d50;"></div>
+                    <span>Salle de la Terre + patio</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f08d35;"></div>
+                    <span>Salle du Feu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>Salle du Vent</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6e6f75;"></div>
+                    <span>Salle de formation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e6b800;"></div>
+                    <span>Accueil</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget emploi du temps (salles occupées pour la date cliquée) -->
+        <div class="schedule-widget" id="scheduleWidget">
+            <div class="schedule-widget-card">
+                <button class="schedule-close-button" id="closeScheduleWidget">
+                    <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="schedule-title">Salles occupées</h2>
+                <div class="schedule-date-navigator">
+                    <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
+                    <span class="schedule-date-text" id="scheduleDateText">—</span>
+                    <div class="schedule-nav-arrow next" id="nextDay">›</div>
+                </div>
+                <div class="schedule-timeline" id="scheduleTimeline"></div>
+            </div>
+        </div>
+
+        <!-- Widget Faire une demande : choix (Prendre RDV / Réserver une salle) puis formulaire -->
+        <div class="demandes-adherent-overlay" id="demandesPartenaireOverlay">
+            <div class="demandes-adherent-widget">
+                <button type="button" class="demandes-adherent-close" id="closeDemandesPartenaire" aria-label="Fermer">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <!-- Étape 1 : Choix du type de demande -->
+                <div class="demandes-adherent-step" id="demandesPartenaireChoiceStep">
+                    <h2 class="demandes-adherent-title">Faire une demande</h2>
+                    <p class="demandes-adherent-subtitle">Choisissez le type de demande</p>
+                    <div class="demandes-adherent-options">
+                        <button type="button" class="demandes-adherent-option" id="demandesPartenaireOptionRdv" data-type="rdv">
+                            <span class="demandes-adherent-option-label">Prendre rendez-vous</span>
+                            <span class="demandes-adherent-option-desc">Demander un rendez-vous avec l'équipe.</span>
+                        </button>
+                        <button type="button" class="demandes-adherent-option" id="demandesPartenaireOptionSalle" data-type="salle">
+                            <span class="demandes-adherent-option-label">Réserver une salle</span>
+                            <span class="demandes-adherent-option-desc">Demande de mise à disposition des espaces pour une date et un créneau.</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Étape 2 : Formulaire Prendre rendez-vous (identique accueil-adherent) -->
+                <div class="demandes-adherent-step demandes-adherent-form-step" id="demandesPartenaireFormStep" hidden>
+                    <button type="button" class="demandes-adherent-back" id="demandesPartenaireBack" aria-label="Retour au choix">← Retour</button>
+                    <h2 class="demandes-adherent-title">Prendre rendez-vous</h2>
+                    <form class="demandes-adherent-form" id="demandesPartenaireForm" novalidate>
+                        <input type="hidden" name="type" value="rdv">
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="demandesPartenaireContact" class="demandes-form-label">Membre de l'équipe à contacter <abbr title="obligatoire">*</abbr></label>
+                            <select id="demandesPartenaireContact" name="contact" class="demandes-form-input" required>
+                                <option value="">Sélectionner un bénévole</option>
+                                <!-- Options remplies par JS -->
+                            </select>
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="demandesPartenaireDate" class="demandes-form-label">Date <abbr title="obligatoire">*</abbr></label>
+                            <input type="date" id="demandesPartenaireDate" name="date" class="demandes-form-input" required>
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="demandesPartenaireTime" class="demandes-form-label">Heure <abbr title="obligatoire">*</abbr></label>
+                            <input type="time" id="demandesPartenaireTime" name="time" class="demandes-form-input" required>
+                        </div>
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="demandesPartenaireMotif" class="demandes-form-label">Motif détaillé <abbr title="obligatoire">*</abbr></label>
+                            <textarea id="demandesPartenaireMotif" name="motif" class="demandes-form-textarea" rows="4" required placeholder="Décrivez votre demande (pourquoi, contexte…)"></textarea>
+                        </div>
+                        <div class="demandes-form-actions">
+                            <button type="button" class="demandes-form-btn demandes-form-cancel" id="demandesPartenaireFormCancel">Annuler</button>
+                            <button type="submit" class="demandes-form-btn demandes-form-submit">Envoyer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Étape 3 : Réserver une salle (mise à disposition des espaces) -->
+                <div class="demandes-adherent-step demandes-adherent-reserver-salle-step reserver-salle-step-content" id="demandesPartenaireReserverSalleStep" hidden>
+                    <button type="button" class="demandes-adherent-back" id="demandesPartenaireReserverSalleBack" aria-label="Retour au choix">← Retour</button>
+                    <h2 class="demandes-adherent-title">Demande de mise à disposition des espaces</h2>
+                    <p class="demandes-adherent-subtitle">Vill'Âge Jeunes</p>
+
+                    <form id="reserverSalleForm" class="reserver-salle-form" novalidate>
+                    <div class="reserver-salle-niveau">
+                        <h3 class="reserver-salle-niveau-title">SOUS-SOL</h3>
+                        <p class="reserver-salle-niveau-desc">niveau limité à 50 personnes max.</p>
+                        <div class="reserver-salle-checkboxes">
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="salle-vent"> <span>Salle du Vent/Arts vivants (20 pers.)</span></label>
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="salle-terre"> <span>Salle de la Terre/Cafétéria (20 pers.)</span></label>
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="patio"> <span>Patio/Cour intérieure (10 pers.)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="reserver-salle-niveau">
+                        <h3 class="reserver-salle-niveau-title">REZ-DE-CHAUSSÉE</h3>
+                        <p class="reserver-salle-niveau-desc">niveau limité à 50 personnes max.</p>
+                        <div class="reserver-salle-checkboxes">
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="hall"> <span>Hall d'entrée/Salle de réception (35 pers.)</span></label>
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="salle-feu"> <span>Salle du Feu/Coworking (10 pers.)</span></label>
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="bureau"> <span>Bureau (5 pers.)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="reserver-salle-niveau">
+                        <h3 class="reserver-salle-niveau-title">1er ÉTAGE</h3>
+                        <p class="reserver-salle-niveau-desc">niveau limité à 50 personnes max.</p>
+                        <div class="reserver-salle-checkboxes">
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="salle-eau"> <span>Salle de l'Eau/EPN (20 pers.) vidéo projecteur</span></label>
+                            <label class="reserver-salle-check"><input type="checkbox" name="espace" value="salle-formation"> <span>Salle de formation/1.1 (30 pers.) vidéo projecteur</span></label>
+                        </div>
+                    </div>
+
+                    <div class="reserver-salle-champs">
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="reserverSalleDateDuree" class="demandes-form-label">Le (date, durée ou fréquence) <abbr title="obligatoire">*</abbr></label>
+                            <input type="text" id="reserverSalleDateDuree" name="dateDuree" class="demandes-form-input" placeholder="ex. 15 mars 2026, 14h-17h ou tous les mardis" required>
+                        </div>
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="reserverSalleHoraires" class="demandes-form-label">Aux horaires suivants <abbr title="obligatoire">*</abbr></label>
+                            <input type="text" id="reserverSalleHoraires" name="horaires" class="demandes-form-input" placeholder="ex. 9h-12h" required>
+                        </div>
+                        <div class="demandes-form-group demandes-form-group-full">
+                            <label for="reserverSalleActivite" class="demandes-form-label">Pour l'activité, ci-après <abbr title="obligatoire">*</abbr></label>
+                            <input type="text" id="reserverSalleActivite" name="activite" class="demandes-form-input" placeholder="Décrivez l'activité prévue" required>
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="reserverSalleEffectif" class="demandes-form-label">Comprenant un effectif de <abbr title="obligatoire">*</abbr></label>
+                            <input type="number" id="reserverSalleEffectif" name="effectif" class="demandes-form-input" min="1" placeholder="Nombre de personnes" required>
+                        </div>
+                    </div>
+
+                    <div class="reserver-salle-section-header reserver-salle-attestation-header">ATTESTATION SUR L'HONNEUR</div>
+                    <div class="reserver-salle-attestation-text">
+                        <p>J'atteste avoir été informé(e) par l'agent responsable de la structure, que :</p>
+                        <ul>
+                            <li>Les conditions du règlement intérieur du Vill'Âge Jeunes doivent être strictement respectées.</li>
+                            <li>La capacité maximale indiquée des espaces doit être respectée.</li>
+                            <li>J'utilise les espaces aux dates et horaires convenus, en les laissant propres et en bon état.</li>
+                            <li>Je respecte le règlement (sécurité, bruit, respect des autres).</li>
+                            <li>J'utilise les espaces uniquement pour l'activité indiquée, sans sous-louer ni prêter sans autorisation.</li>
+                            <li>Je prends en charge les dégradations éventuelles et les frais de réparation.</li>
+                            <li>Je garantis que les activités ne présentent pas de risques pour les participants et le public.</li>
+                            <li>Je dégage le Vill'Âge Jeunes de toute responsabilité en cas d'accident ou dommage lié à mon activité dans les espaces mis à disposition.</li>
+                        </ul>
+                    </div>
+                    <div class="reserver-salle-signature-fields">
+                        <div class="demandes-form-group">
+                            <label for="reserverSalleFaitA" class="demandes-form-label">Fait à</label>
+                            <input type="text" id="reserverSalleFaitA" name="faitA" class="demandes-form-input" placeholder="Lieu">
+                        </div>
+                        <div class="demandes-form-group">
+                            <label for="reserverSalleLe" class="demandes-form-label">Le</label>
+                            <input type="date" id="reserverSalleLe" name="le" class="demandes-form-input">
+                        </div>
+                    </div>
+                    <div class="demandes-form-group demandes-form-group-full">
+                        <label class="demandes-checkbox-label reserver-salle-attestation-check">
+                            <input type="checkbox" id="reserverSalleAttestationAccept" name="attestationAccept" required>
+                            <span>J'atteste avoir été informé(e) et j'accepte les conditions ci-dessus.</span>
+                        </label>
+                    </div>
+                    <div class="demandes-form-group demandes-form-group-full">
+                        <label class="demandes-form-label">Signature</label>
+                        <div class="reserver-salle-signature-wrapper">
+                            <canvas id="reserverSalleSignatureCanvas" class="reserver-salle-signature-canvas"></canvas>
+                            <div class="reserver-salle-signature-placeholder" id="reserverSalleSignaturePlaceholder">Signez ici</div>
+                        </div>
+                        <button type="button" class="reserver-salle-signature-clear" id="reserverSalleSignatureClear">Effacer</button>
+                    </div>
+
+                    <div class="demandes-form-actions">
+                        <button type="button" class="demandes-form-btn demandes-form-cancel" id="reserverSalleCancel">Annuler</button>
+                        <button type="submit" class="demandes-form-btn demandes-form-submit" id="reserverSalleSubmit">Envoyer la demande</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-social" aria-label="Réseaux sociaux Vill'Age Jeunes">
+            <a href="https://www.facebook.com/villagejeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--facebook" aria-label="Facebook Vill'Age Jeunes">
+                <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/VillageJeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link footer-social-link--instagram" aria-label="Instagram Vill'Age Jeunes">
+                <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.218 4.771 1.693 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.219-4.771-1.693-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            </a>
+        </div>
+        <div class="footer-legal">
+            <a href="#" class="footer-link">Politique de confidentialité</a>
+            <div class="footer-separator"></div>
+            <a href="#" class="footer-link">Mentions légales</a>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="form-data.js"></script>
+    <script src="accueil-partenaire.js"></script>
+</body>
+</html>

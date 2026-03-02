@@ -855,7 +855,78 @@
             </div>
             <!-- Fin memberDetailContentBenevole -->
 
-            <!-- Mot de passe (masqué pour les bénévoles) -->
+            <!-- Contenu réservé aux partenaires (validation partenaire) -->
+            <div id="memberDetailContentPartenaire" style="display: none;">
+                <div class="member-detail-section">
+                    <h3 class="member-detail-section-title">Structure</h3>
+                    <div class="member-detail-info-grid">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Type de structure :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireTypeStructure">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Nom de la structure :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireNomStructure">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Numéro de RIDET :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireNumeroRidet">—</span>
+                        </div>
+                        <div class="member-detail-info-item full-width">
+                            <span class="member-detail-label">Adresse :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireAdresse">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">B.P :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireBp">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Code postal :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireCodePostal">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Commune :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireCommune">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Téléphone :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireTelephone">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Email :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireEmail">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-detail-section">
+                    <h3 class="member-detail-section-title">Responsable</h3>
+                    <div class="member-detail-info-grid">
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Nom :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireResponsableNom">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Prénom :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireResponsablePrenom">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Qualité :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireResponsableQualite">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Téléphone :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireResponsableTelephone">—</span>
+                        </div>
+                        <div class="member-detail-info-item">
+                            <span class="member-detail-label">Email :</span>
+                            <span class="member-detail-value" id="memberDetailPartenaireResponsableEmail">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin memberDetailContentPartenaire -->
+
+            <!-- Mot de passe (masqué pour les bénévoles et partenaires) -->
             <div class="member-detail-section" id="memberDetailPasswordSection">
                 <h3 class="member-detail-section-title">Mot de passe</h3>
                 <div class="member-detail-password-container">
@@ -1041,10 +1112,28 @@
                     id: `PENDING_PAR${String(i).padStart(4, '0')}`,
                     numero: null,
                     password: null,
-                    nom: `Partenaire${i}`,
-                    prenom: `Structure${i}`,
+                    nom: `Structure partenaire ${i}`,
+                    prenom: '',
                     role: 'Partenaire',
-                    isPending: true
+                    isPending: true,
+                    inscriptionPartenaire: {
+                        typeStructure: i === 1 ? 'Association' : 'Autre',
+                        nomStructure: 'Structure partenaire ' + i,
+                        numeroRidet: 1000 + i,
+                        adresse: '12 rue Example, Nouméa',
+                        bp: 123,
+                        codePostal: 98800,
+                        commune: 'Nouméa',
+                        telephoneStructure: '27 63 95',
+                        emailStructure: 'contact@partenaire' + i + '.nc',
+                        responsable: {
+                            nom: 'Dupont',
+                            prenom: 'Jean',
+                            qualite: 'Président',
+                            telephone: '87 65 43',
+                            email: 'jean.dupont@partenaire' + i + '.nc'
+                        }
+                    }
                 });
             }
         }
@@ -1396,10 +1485,10 @@
                 originalOpenMemberModal(member);
                 resetSignatureOnModalOpen();
 
-                // Bénévole : remplacer Modifier par Supprimer
+                // Bénévole et Partenaire : remplacer Modifier par Supprimer
                 const modifyBtn = document.getElementById('memberDetailModify');
                 if (modifyBtn) {
-                    if (member.role === 'Bénévole') {
+                    if (member.role === 'Bénévole' || member.role === 'Partenaire') {
                         modifyBtn.textContent = 'Supprimer';
                         modifyBtn.classList.remove('member-detail-btn-modify');
                         modifyBtn.classList.add('member-detail-btn-delete');
@@ -2175,17 +2264,17 @@
                 const roleEl = document.getElementById('memberDetailRole');
                 const memberRole = roleEl ? roleEl.textContent.trim() : '';
 
-                if (memberRole === 'Bénévole') {
-                    // Supprimer : refuser l'inscription bénévole
+                if (memberRole === 'Bénévole' || memberRole === 'Partenaire') {
                     const memberId = document.getElementById('memberDetailOverlay')?.dataset.currentMemberId;
                     if (!memberId) {
                         alert('Erreur : membre non identifié.');
                         return;
                     }
-                    if (!confirm('Voulez-vous supprimer cette inscription bénévole ? L\'inscription sera refusée.')) {
-                        return;
-                    }
-                    supprimerInscriptionBenevole(memberId);
+                    var msg = memberRole === 'Partenaire'
+                        ? 'Voulez-vous supprimer cette inscription partenaire ? L\'inscription sera refusée.'
+                        : 'Voulez-vous supprimer cette inscription bénévole ? L\'inscription sera refusée.';
+                    if (!confirm(msg)) return;
+                    supprimerInscriptionRejet(memberId, memberRole);
                 } else {
                     if (isEditMode) {
                         if (confirm('Voulez-vous annuler les modifications ? Les changements non enregistrés seront perdus.')) {
@@ -2198,8 +2287,8 @@
             });
         }
 
-        // Supprimer (refuser) une inscription bénévole
-        async function supprimerInscriptionBenevole(memberId) {
+        // Supprimer (refuser) une inscription bénévole ou partenaire
+        async function supprimerInscriptionRejet(memberId, memberRole) {
             try {
                 const response = await fetch(`/api/staff/inscriptions/${memberId}/validate`, {
                     method: 'POST',
@@ -2215,11 +2304,16 @@
                 if (result.success) {
                     const overlay = document.getElementById('memberDetailOverlay');
                     if (overlay) overlay.classList.remove('active');
-                    if (typeof allMembers !== 'undefined' && allMembers.benevoles) {
-                        allMembers.benevoles = allMembers.benevoles.filter(m => String(m.id) !== String(memberId));
+                    if (typeof allMembers !== 'undefined') {
+                        var key = memberRole === 'Partenaire' ? 'partenaires' : 'benevoles';
+                        var list = allMembers[key];
+                        if (Array.isArray(list)) {
+                            allMembers[key] = list.filter(function(m) { return String(m.id) !== String(memberId); });
+                        }
                     }
                     if (typeof renderCards === 'function') renderCards();
-                    alert('Inscription bénévole supprimée (refusée).');
+                    var lib = memberRole === 'Partenaire' ? 'partenaire' : 'bénévole';
+                    alert('Inscription ' + lib + ' supprimée (refusée).');
                 } else {
                     throw new Error(result.error?.message || 'Erreur');
                 }
@@ -2305,6 +2399,9 @@
                                 signatureReferent: validateSignature(rawR, true)
                             };
                             password = null;
+                        } else if (memberRole === 'Partenaire') {
+                            password = null;
+                            signatureData = null;
                         } else {
                             const passwordInput = document.getElementById('memberPasswordInput');
                             password = validatePassword(passwordInput ? passwordInput.value : '', true);
@@ -2316,7 +2413,7 @@
                         }
                     } catch (e) {
                         alert(e instanceof Error ? e.message : 'Données invalides.');
-                        if (memberRole !== 'Bénévole') {
+                        if (memberRole !== 'Bénévole' && memberRole !== 'Partenaire') {
                             document.getElementById('memberPasswordInput')?.focus();
                         }
                         return;
@@ -2379,6 +2476,8 @@
                 if (memberRole === 'Bénévole') {
                     body.signatureBenevole = signatureData.signatureBenevole;
                     body.signatureReferent = signatureData.signatureReferent;
+                } else if (memberRole === 'Partenaire') {
+                    // Pas de mot de passe ni signature pour le partenaire
                 } else {
                     body.password = password;
                     body.signature = signatureData;

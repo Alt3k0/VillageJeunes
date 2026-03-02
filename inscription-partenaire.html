@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Partenaire - VILL'AGE JEUNES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style_inscription_partenaire.css">
+</head>
+<body class="theme-partenaire">
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="logo et charte graphique/LogoRond.svg" alt="VILL'AGE JEUNES" class="logo-svg" onerror="this.src='logo et charte graphique/LogoRond.png';">
+            <div class="logo" style="display: none;">
+                <span class="logo-text">VILL'AGE<br>JEUNES</span>
+            </div>
+        </div>
+
+        <!-- Formulaire principal -->
+        <div class="form-container">
+            <h1 class="form-title">INSCRIPTION PARTENAIRE</h1>
+
+            <form id="formPartenaire" novalidate>
+                <!-- Étape 1 : Structure -->
+                <div class="form-step active" id="step1">
+                    <h2 class="section-title">Structure</h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Type de structure :</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="typeStructure" value="Association" required>
+                                <span>Association</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="typeStructure" value="Autre">
+                                <span>Autre</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nomStructure">Nom de la structure :</label>
+                        <input type="text" id="nomStructure" class="form-input" name="nomStructure" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="numeroRidet">Numéro de RIDET :</label>
+                        <input type="number" id="numeroRidet" class="form-input" name="numeroRidet" placeholder="________________" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adresse">Adresse :</label>
+                        <input type="text" id="adresse" class="form-input" name="adresse" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group form-row-two">
+                        <div class="form-group">
+                            <label class="form-label" for="bp">B.P :</label>
+                            <input type="number" id="bp" class="form-input" name="bp" placeholder="________________" min="0" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="codePostal">Code postal :</label>
+                            <input type="number" id="codePostal" class="form-input" name="codePostal" placeholder="________________" min="0" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="commune">Commune :</label>
+                        <input type="text" id="commune" class="form-input" name="commune" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="telephoneStructure">Téléphone :</label>
+                        <input type="tel" id="telephoneStructure" class="form-input" name="telephoneStructure" placeholder="Chiffres et espaces uniquement" inputmode="numeric" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="emailStructure">Email :</label>
+                        <input type="email" id="emailStructure" class="form-input" name="emailStructure" placeholder="________________" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+                    </div>
+                </div>
+
+                <!-- Étape 2 : Responsable -->
+                <div class="form-step" id="step2">
+                    <h2 class="section-title">Responsable</h2>
+
+                    <div class="form-group">
+                        <label class="form-label" for="responsableNom">Nom :</label>
+                        <input type="text" id="responsableNom" class="form-input" name="responsableNom" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="responsablePrenom">Prénom :</label>
+                        <input type="text" id="responsablePrenom" class="form-input" name="responsablePrenom" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="responsableQualite">Qualité :</label>
+                        <input type="text" id="responsableQualite" class="form-input" name="responsableQualite" placeholder="________________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="responsableTelephone">Téléphone :</label>
+                        <input type="tel" id="responsableTelephone" class="form-input" name="responsableTelephone" placeholder="Chiffres et espaces uniquement" inputmode="numeric" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="responsableEmail">Email :</label>
+                        <input type="email" id="responsableEmail" class="form-input" name="responsableEmail" placeholder="________________" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-previous" onclick="previousStep()">Précédent</button>
+                        <button type="submit" class="btn-submit">Envoyer ma demande</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Indicateur de progression -->
+            <div class="pagination">
+                <span class="pagination-dot active" id="dot1" aria-current="step"></span>
+                <span class="pagination-dot" id="dot2"></span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-social" aria-label="Réseaux sociaux Vill'Age Jeunes">
+                <a href="https://www.facebook.com/villagejeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Facebook Vill'Age Jeunes">
+                    <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/VillageJeunes/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram Vill'Age Jeunes">
+                    <svg class="footer-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.218 4.771 1.693 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.219-4.771-1.693-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                </a>
+            </div>
+            <div class="footer-legal">
+                <a href="#" class="footer-link">Politique de confidentialité</a>
+                <span class="footer-separator">|</span>
+                <a href="#" class="footer-link">Mentions légales</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('formPartenaire');
+            const steps = [
+                document.getElementById('step1'),
+                document.getElementById('step2')
+            ];
+            const dots = [
+                document.getElementById('dot1'),
+                document.getElementById('dot2')
+            ];
+
+            function isFieldEmpty(el) {
+                if (!el) return true;
+                if (el.type === 'radio') {
+                    var group = form.querySelectorAll('input[name="' + el.name + '"]');
+                    for (var i = 0; i < group.length; i++) if (group[i].checked) return false;
+                    return true;
+                }
+                var v = (el.value || '').trim();
+                return v === '';
+            }
+
+            function validateStep(stepEl) {
+                if (!stepEl) return true;
+                var required = stepEl.querySelectorAll('[required]');
+                for (var i = 0; i < required.length; i++) {
+                    var el = required[i];
+                    if (el.type === 'radio') {
+                        var group = form.querySelectorAll('input[name="' + el.name + '"]');
+                        var anyChecked = false;
+                        for (var j = 0; j < group.length; j++) if (group[j].checked) { anyChecked = true; break; }
+                        if (!anyChecked) {
+                            el.focus();
+                            if (el.setCustomValidity) el.setCustomValidity('Veuillez sélectionner une option.');
+                            el.reportValidity && el.reportValidity();
+                            return false;
+                        }
+                        if (el.setCustomValidity) el.setCustomValidity('');
+                    } else if (isFieldEmpty(el)) {
+                        el.focus();
+                        el.reportValidity && el.reportValidity();
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            window.nextStep = function() {
+                if (!steps[0].classList.contains('active')) return;
+                if (!validateStep(steps[0])) return;
+                steps[0].classList.remove('active');
+                steps[1].classList.add('active');
+                if (dots[0]) dots[0].classList.remove('active');
+                if (dots[1]) dots[1].classList.add('active');
+            };
+
+            window.previousStep = function() {
+                if (!steps[1].classList.contains('active')) return;
+                steps[1].classList.remove('active');
+                steps[0].classList.add('active');
+                if (dots[1]) dots[1].classList.remove('active');
+                if (dots[0]) dots[0].classList.add('active');
+            };
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!validateStep(steps[0])) {
+                    steps[1].classList.remove('active');
+                    steps[0].classList.add('active');
+                    if (dots[1]) dots[1].classList.remove('active');
+                    if (dots[0]) dots[0].classList.add('active');
+                    return;
+                }
+                if (!validateStep(steps[1])) {
+                    steps[0].classList.remove('active');
+                    steps[1].classList.add('active');
+                    if (dots[0]) dots[0].classList.remove('active');
+                    if (dots[1]) dots[1].classList.add('active');
+                    return;
+                }
+                var formEl = this;
+                var data = {
+                    typeStructure: (formEl.querySelector('input[name="typeStructure"]:checked') || {}).value || '',
+                    nomStructure: (formEl.nomStructure && formEl.nomStructure.value) || '',
+                    numeroRidet: formEl.numeroRidet ? parseInt(formEl.numeroRidet.value, 10) : null,
+                    adresse: (formEl.adresse && formEl.adresse.value) || '',
+                    bp: formEl.bp && formEl.bp.value ? parseInt(formEl.bp.value, 10) : null,
+                    codePostal: formEl.codePostal && formEl.codePostal.value ? parseInt(formEl.codePostal.value, 10) : null,
+                    commune: (formEl.commune && formEl.commune.value) || '',
+                    telephoneStructure: (formEl.telephoneStructure && formEl.telephoneStructure.value) || '',
+                    emailStructure: (formEl.emailStructure && formEl.emailStructure.value) || '',
+                    responsable: {
+                        nom: (formEl.responsableNom && formEl.responsableNom.value) || '',
+                        prenom: (formEl.responsablePrenom && formEl.responsablePrenom.value) || '',
+                        qualite: (formEl.responsableQualite && formEl.responsableQualite.value) || '',
+                        telephone: (formEl.responsableTelephone && formEl.responsableTelephone.value) || '',
+                        email: (formEl.responsableEmail && formEl.responsableEmail.value) || ''
+                    }
+                };
+                console.log('Inscription partenaire:', data);
+                alert('Demande d\'inscription partenaire envoyée.\n\nLes données seront traitées par l\'équipe. Vous recevrez une réponse après validation.');
+            });
+        })();
+    </script>
+</body>
+</html>

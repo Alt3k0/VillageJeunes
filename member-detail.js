@@ -159,13 +159,15 @@ function openMemberModal(member) {
         roleEl.textContent = member.role || '';
     }
 
-    // Contenu adhérent vs bénévole (validation-inscription : affichage conditionnel)
+    // Contenu adhérent vs bénévole vs partenaire (validation-inscription : affichage conditionnel)
     const contentAdherent = document.getElementById('memberDetailContentAdherent');
     const contentBenevole = document.getElementById('memberDetailContentBenevole');
+    const contentPartenaire = document.getElementById('memberDetailContentPartenaire');
     if (contentAdherent && contentBenevole) {
         if (member.role === 'Bénévole') {
             contentAdherent.style.display = 'none';
             contentBenevole.style.display = 'block';
+            if (contentPartenaire) contentPartenaire.style.display = 'none';
             // Remplir les réponses au formulaire Devenir Bénévole
             var c = member.candidatureBenevole || member;
             var amener = (c.amener && (Array.isArray(c.amener) ? c.amener.join(', ') : String(c.amener))) || '—';
@@ -195,25 +197,55 @@ function openMemberModal(member) {
                 var fullName = [member.nom, member.prenom].filter(Boolean).join(' ').trim() || '—';
                 ficheNomEl.textContent = fullName;
             }
+        } else if (member.role === 'Partenaire') {
+            contentAdherent.style.display = 'none';
+            contentBenevole.style.display = 'none';
+            if (contentPartenaire) {
+                contentPartenaire.style.display = 'block';
+                var p = member.inscriptionPartenaire || member;
+                var r = p.responsable || {};
+                var setPar = function (id, val) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = (val != null && String(val).trim() !== '') ? String(val) : '—';
+                };
+                setPar('memberDetailPartenaireTypeStructure', p.typeStructure);
+                setPar('memberDetailPartenaireNomStructure', p.nomStructure);
+                setPar('memberDetailPartenaireNumeroRidet', p.numeroRidet != null ? String(p.numeroRidet) : null);
+                setPar('memberDetailPartenaireAdresse', p.adresse);
+                setPar('memberDetailPartenaireBp', p.bp != null ? String(p.bp) : null);
+                setPar('memberDetailPartenaireCodePostal', p.codePostal != null ? String(p.codePostal) : null);
+                setPar('memberDetailPartenaireCommune', p.commune);
+                setPar('memberDetailPartenaireTelephone', p.telephoneStructure);
+                setPar('memberDetailPartenaireEmail', p.emailStructure);
+                setPar('memberDetailPartenaireResponsableNom', r.nom);
+                setPar('memberDetailPartenaireResponsablePrenom', r.prenom);
+                setPar('memberDetailPartenaireResponsableQualite', r.qualite);
+                setPar('memberDetailPartenaireResponsableTelephone', r.telephone);
+                setPar('memberDetailPartenaireResponsableEmail', r.email);
+            }
         } else {
             contentAdherent.style.display = 'block';
             contentBenevole.style.display = 'none';
+            if (contentPartenaire) contentPartenaire.style.display = 'none';
         }
     }
 
-    // Section Mot de passe : masquée pour les bénévoles (validation-inscription)
+    // Section Mot de passe : masquée pour les bénévoles et partenaires (validation-inscription)
     const passwordSection = document.getElementById('memberDetailPasswordSection');
     if (passwordSection) {
-        passwordSection.style.display = (member.role === 'Bénévole') ? 'none' : 'block';
+        passwordSection.style.display = (member.role === 'Bénévole' || member.role === 'Partenaire') ? 'none' : 'block';
     }
 
-    // Signatures : une zone (adhérent/partenaire) ou deux zones (bénévole)
+    // Signatures : une zone (adhérent), deux zones (bénévole), aucune (partenaire)
     const signatureSectionAdherent = document.getElementById('memberDetailSignatureSectionAdherent');
     const signatureSectionBenevole = document.getElementById('memberDetailSignatureSectionBenevole');
     if (signatureSectionAdherent && signatureSectionBenevole) {
         if (member.role === 'Bénévole') {
             signatureSectionAdherent.style.display = 'none';
             signatureSectionBenevole.style.display = 'block';
+        } else if (member.role === 'Partenaire') {
+            signatureSectionAdherent.style.display = 'none';
+            signatureSectionBenevole.style.display = 'none';
         } else {
             signatureSectionAdherent.style.display = 'block';
             signatureSectionBenevole.style.display = 'none';

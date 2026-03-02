@@ -1085,13 +1085,15 @@ document.addEventListener('DOMContentLoaded', function() {
         demandesFormStep?.setAttribute('hidden', '');
         demandesBenevoleStep?.setAttribute('hidden', '');
         demandesOverlayEl.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.documentElement.classList.add('demandes-overlay-open');
+        document.body.classList.add('demandes-overlay-open');
     }
 
     function closeDemandesWidget() {
         if (!demandesOverlayEl) return;
         demandesOverlayEl.classList.remove('active');
-        document.body.style.overflow = '';
+        document.documentElement.classList.remove('demandes-overlay-open');
+        document.body.classList.remove('demandes-overlay-open');
         demandesChoiceStep?.removeAttribute('hidden');
         demandesFormStep?.setAttribute('hidden', '');
         demandesBenevoleStep?.setAttribute('hidden', '');

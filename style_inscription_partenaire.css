@@ -1,0 +1,85 @@
+/**
+ * Thème vert (charte graphique Partenaire / Solidarité) pour inscription-partenaire.html
+ * Surcharge les couleurs bleues de styles.css (#1f658e) par le vert #649d50
+ */
+
+.theme-partenaire .form-container {
+    border-color: #649d50;
+}
+
+.theme-partenaire .form-input:focus {
+    border-color: #649d50;
+    box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.2);
+}
+
+.theme-partenaire .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23649d50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+.theme-partenaire .form-select:focus {
+    border-color: #649d50;
+    box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.2);
+}
+
+.theme-partenaire .form-textarea:focus {
+    border-color: #649d50;
+    box-shadow: 0 0 0 2px rgba(100, 157, 80, 0.2);
+}
+
+.theme-partenaire .checkbox-input {
+    accent-color: #649d50;
+}
+
+.theme-partenaire .radio-label input[type="radio"] {
+    accent-color: #649d50;
+}
+
+.theme-partenaire .btn-next,
+.theme-partenaire .btn-previous {
+    border-color: #649d50;
+}
+
+.theme-partenaire .btn-next:hover,
+.theme-partenaire .btn-previous:hover {
+    background-color: #649d50;
+    border-color: #649d50;
+    box-shadow: 0 4px 8px rgba(100, 157, 80, 0.25);
+}
+
+.theme-partenaire .btn-submit {
+    background-color: #649d50;
+}
+
+.theme-partenaire .btn-submit:hover {
+    background-color: #528a42;
+    box-shadow: 0 6px 12px rgba(100, 157, 80, 0.35);
+}
+
+.theme-partenaire .pagination-dot {
+    border-color: #649d50;
+}
+
+.theme-partenaire .pagination-dot.active {
+    background-color: #649d50;
+}
+
+.theme-partenaire .footer-social-link:hover {
+    color: #649d50;
+}
+
+.theme-partenaire .footer-link:hover {
+    color: #649d50;
+}
+
+/* Grille 2 colonnes pour B.P et Code postal */
+.theme-partenaire .form-row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 480px) {
+    .theme-partenaire .form-row-two {
+        grid-template-columns: 1fr;
+    }
+}

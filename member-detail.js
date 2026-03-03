@@ -525,52 +525,51 @@ function openMemberModal(member) {
         totalPointageEl.textContent = tp !== null ? tp : '0';
     }
 
-    // Gestion du paiement (si les éléments existent sur la page)
+    // Gestion du paiement (si les éléments existent : validation-inscription = radio + montant restant ; informations = affichage)
     const montantTotalEl = document.getElementById('memberDetailMontantTotal');
     if (montantTotalEl) {
         var montantTotal = (typeof member.adhesionMontantTotal !== 'undefined') ? member.adhesionMontantTotal : 0;
         montantTotalEl.textContent = montantTotal + ' francs CFP';
     }
-
     const montantPayeEl = document.getElementById('memberDetailMontantPaye');
     if (montantPayeEl) {
         var montantPaye = (typeof member.adhesionMontantPaye !== 'undefined') ? member.adhesionMontantPaye : 0;
         montantPayeEl.textContent = montantPaye + ' francs CFP';
     }
-
     const dateAdhesionEl = document.getElementById('memberDetailDateAdhesion');
     if (dateAdhesionEl) {
         var da = member.dateAdhesion;
         dateAdhesionEl.textContent = da ? formatDateForDisplay(da) : 'Non renseigné';
     }
+    const montantRestantEl = document.getElementById('memberDetailMontantRestant');
+    const montantRestantRow = document.getElementById('memberDetailMontantRestantRow');
+    if (montantRestantEl) {
+        var mra = member.montantRestantAPayer;
+        montantRestantEl.textContent = mra != null && mra !== '' ? mra + ' francs CFP' : '—';
+    }
+    if (montantRestantRow) {
+        var showRestant = member.paiementType === 'partiel' || (member.montantRestantAPayer != null && member.montantRestantAPayer !== '');
+        montantRestantRow.style.display = showRestant ? '' : 'none';
+    }
 
-    const paiementTotalCheck = document.getElementById('paiementTotal');
-    const paiementPartielCheck = document.getElementById('paiementPartiel');
-    const paiementCommentaireSection = document.getElementById('paiementPartielCommentaire');
+    const paiementTotalRadio = document.getElementById('paiementTotal');
+    const paiementPartielRadio = document.getElementById('paiementPartiel');
+    const paiementPartielForm = document.getElementById('paiementPartielForm');
+    const paiementMontantRestantInput = document.getElementById('paiementMontantRestant');
 
-    if (paiementTotalCheck && paiementPartielCheck) {
-        const adhesionEstPayee = (typeof member.adhesionEstPayee !== 'undefined') ? member.adhesionEstPayee : null;
-        const montantTotal = (typeof member.adhesionMontantTotal !== 'undefined') ? member.adhesionMontantTotal : 0;
-        const montantPaye = (typeof member.adhesionMontantPaye !== 'undefined') ? member.adhesionMontantPaye : 0;
-
-        if (adhesionEstPayee === true || (montantTotal > 0 && montantPaye >= montantTotal)) {
-            paiementTotalCheck.checked = true;
-            paiementPartielCheck.checked = false;
-            if (paiementCommentaireSection) {
-                paiementCommentaireSection.style.display = 'none';
-            }
-        } else if (montantPaye > 0 && montantPaye < montantTotal) {
-            paiementTotalCheck.checked = false;
-            paiementPartielCheck.checked = true;
-            if (paiementCommentaireSection) {
-                paiementCommentaireSection.style.display = 'block';
-            }
+    if (paiementTotalRadio && paiementPartielRadio) {
+        var paiementType = member.paiementType;
+        var montantRestantAPayer = member.montantRestantAPayer;
+        if (paiementType === 'partiel' || (montantRestantAPayer != null && montantRestantAPayer !== '')) {
+            paiementPartielRadio.checked = true;
+            paiementTotalRadio.checked = false;
+            if (paiementPartielForm) paiementPartielForm.style.display = 'block';
+            if (paiementMontantRestantInput) paiementMontantRestantInput.value = montantRestantAPayer != null ? String(montantRestantAPayer) : '';
         } else {
-            paiementTotalCheck.checked = false;
-            paiementPartielCheck.checked = false;
-            if (paiementCommentaireSection) {
-                paiementCommentaireSection.style.display = 'none';
-            }
+            paiementTotalRadio.checked = true;
+            paiementPartielRadio.checked = false;
+            if (paiementPartielForm) paiementPartielForm.style.display = 'none';
+            if (paiementMontantRestantInput) paiementMontantRestantInput.value = '';
         }
     }
 
@@ -660,28 +659,23 @@ function setupMemberModal() {
         });
     }
 
-    const savePaiementCommentaireBtn = document.getElementById('savePaiementCommentaire');
-    if (savePaiementCommentaireBtn) {
-        savePaiementCommentaireBtn.addEventListener('click', function () {
-            const commentaireInput = document.getElementById('paiementPartielCommentaireInput');
-            if (!commentaireInput) return;
-
-            let commentaire;
-            try {
-                commentaire = validateString(
-                    commentaireInput.value,
-                    'Commentaire sur le paiement partiel',
-                    VALIDATION.MAX_LENGTH_TEXT,
-                    true
-                );
-            } catch (e) {
-                alert(e instanceof Error ? e.message : 'Données invalides.');
-                return;
+    // Un seul choix possible : Payé en totalité OU Paiement partiel ; si partiel, afficher le formulaire montant restant
+    const paiementTotalRadio = document.getElementById('paiementTotal');
+    const paiementPartielRadio = document.getElementById('paiementPartiel');
+    const paiementPartielForm = document.getElementById('paiementPartielForm');
+    const paiementMontantRestantInput = document.getElementById('paiementMontantRestant');
+    if (paiementTotalRadio && paiementPartielRadio) {
+        function togglePaiementPartielForm() {
+            if (!paiementPartielForm || !paiementMontantRestantInput) return;
+            if (paiementPartielRadio.checked) {
+                paiementPartielForm.style.display = 'block';
+            } else {
+                paiementPartielForm.style.display = 'none';
+                paiementMontantRestantInput.value = '';
             }
-
-            // TODO: Envoyer le commentaire au backend
-            alert('Commentaire sur le paiement partiel enregistré avec succès');
-        });
+        }
+        paiementTotalRadio.addEventListener('change', togglePaiementPartielForm);
+        paiementPartielRadio.addEventListener('change', togglePaiementPartielForm);
     }
 
     const addCommentaireBtn = document.getElementById('memberDetailAddCommentaire');
@@ -743,9 +737,7 @@ function setupMemberModal() {
 
     // Compteurs de caractères sur les champs commentaire (prévenir la troncature)
     if (typeof attachCharCounter === 'function' && typeof VALIDATION !== 'undefined') {
-        var paiementInput = document.getElementById('paiementPartielCommentaireInput');
         var commentInput = document.getElementById('memberDetailCommentaireInput');
-        if (paiementInput) attachCharCounter(paiementInput, VALIDATION.MAX_LENGTH_TEXT);
         if (commentInput) attachCharCounter(commentInput, VALIDATION.MAX_LENGTH_TEXT);
     }
 }

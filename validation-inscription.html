@@ -563,47 +563,24 @@
                 </div>
             </div>
 
-            <!-- Gestion du paiement -->
+            <!-- Gestion du paiement (une seule option : totalité ou partiel ; si partiel = montant restant en CFP) -->
             <div class="member-detail-section">
                 <h3 class="member-detail-section-title">Paiement de l'adhésion</h3>
                 <div class="member-detail-paiement">
-                    <div class="member-detail-paiement-info">
-                        <div class="member-detail-info-item">
-                            <span class="member-detail-label">Montant total :</span>
-                            <span class="member-detail-value" id="memberDetailMontantTotal">{member_adhesion_montant_total} francs CFP</span>
-                        </div>
-                        <div class="member-detail-info-item">
-                            <span class="member-detail-label">Montant payé :</span>
-                            <span class="member-detail-value" id="memberDetailMontantPaye">{member_adhesion_montant_paye} francs CFP</span>
-                        </div>
-                        <div class="member-detail-info-item">
-                            <span class="member-detail-label">Date d'adhésion :</span>
-                            <span class="member-detail-value" id="memberDetailDateAdhesion">{member_date_adhesion}</span>
-                        </div>
-                    </div>
-                    
                     <div class="member-detail-paiement-options">
                         <label class="member-detail-checkbox-label">
-                            <input type="checkbox" class="member-detail-checkbox" id="paiementTotal" name="paiementType" value="total">
+                            <input type="radio" class="member-detail-checkbox" id="paiementTotal" name="paiementType" value="total">
                             <span>Payé en totalité</span>
                         </label>
                         <label class="member-detail-checkbox-label">
-                            <input type="checkbox" class="member-detail-checkbox" id="paiementPartiel" name="paiementType" value="partiel">
+                            <input type="radio" class="member-detail-checkbox" id="paiementPartiel" name="paiementType" value="partiel">
                             <span>Paiement partiel</span>
                         </label>
                     </div>
 
-                    <div class="member-detail-paiement-commentaire" id="paiementPartielCommentaire" style="display: none;">
-                        <label class="member-detail-label">Commentaire sur le paiement partiel :</label>
-                        <textarea 
-                            class="member-detail-commentaire-input" 
-                            id="paiementPartielCommentaireInput" 
-                            placeholder="Ajouter un commentaire sur le paiement partiel..."
-                            rows="3"
-                        ></textarea>
-                        <button type="button" class="member-detail-btn-commentaire" id="savePaiementCommentaire">
-                            Enregistrer le commentaire
-                        </button>
+                    <div class="member-detail-paiement-restant" id="paiementPartielForm" style="display: none;">
+                        <label class="member-detail-label" for="paiementMontantRestant">Montant restant à payer (francs CFP) :</label>
+                        <input type="number" id="paiementMontantRestant" class="member-detail-fiche-input" placeholder="ex. 500" min="0" step="1">
                     </div>
                 </div>
             </div>
@@ -2227,7 +2204,10 @@
                 emailRepresentantLegal: data.member_email_representant_legal, // {member_email_representant_legal}
                 adresseRepresentantLegal: data.member_adresse_representant_legal, // {member_adresse_representant_legal}
                 dateInscription: data.member_date_inscription, // {member_date_inscription}
-                estActif: data.member_est_actif // {member_est_actif}
+                estActif: data.member_est_actif, // {member_est_actif}
+                dateAdhesion: data.member_date_adhesion,
+                paiementType: data.member_paiement_type,
+                montantRestantAPayer: data.member_montant_restant_a_payer != null ? data.member_montant_restant_a_payer : ''
             };
         }
 
@@ -2405,6 +2385,18 @@
                             }
                             const rawSignature = getSignatureData();
                             signatureData = validateSignature(rawSignature, true);
+                            var paiementTotal = document.getElementById('paiementTotal');
+                            var paiementPartiel = document.getElementById('paiementPartiel');
+                            var montantRestantInput = document.getElementById('paiementMontantRestant');
+                            if (paiementTotal && paiementPartiel && !paiementTotal.checked && !paiementPartiel.checked) {
+                                throw new Error('Veuillez choisir « Payé en totalité » ou « Paiement partiel ».');
+                            }
+                            if (paiementPartiel && paiementPartiel.checked) {
+                                var val = montantRestantInput ? montantRestantInput.value.trim() : '';
+                                if (!val || isNaN(parseInt(val, 10)) || parseInt(val, 10) < 0) {
+                                    throw new Error('Veuillez saisir le montant restant à payer (francs CFP), par ex. 500.');
+                                }
+                            }
                         }
                     } catch (e) {
                         alert(e instanceof Error ? e.message : 'Données invalides.');
@@ -2420,7 +2412,17 @@
                     const doubleConfirmMessage = 'Confirmez une dernière fois la validation de cette inscription.';
                     if (!confirm(doubleConfirmMessage)) return;
 
-                    validateInscription(memberId, password, signatureData, memberRole);
+                    var paiementPayload = null;
+                    if (memberRole === 'Adhérent') {
+                        var pt = document.getElementById('paiementTotal');
+                        var pp = document.getElementById('paiementPartiel');
+                        var mri = document.getElementById('paiementMontantRestant');
+                        var typePaiement = (pt && pt.checked) ? 'total' : (pp && pp.checked) ? 'partiel' : 'total';
+                        var montantRestant = (typePaiement === 'partiel' && mri && mri.value.trim() !== '') ? parseInt(mri.value.trim(), 10) : null;
+                        var dateAdhesion = new Date().toISOString().slice(0, 10);
+                        paiementPayload = { paiementType: typePaiement, montantRestantAPayer: montantRestant, dateAdhesion: dateAdhesion };
+                    }
+                    validateInscription(memberId, password, signatureData, memberRole, paiementPayload);
                 }
             });
         }
@@ -2453,8 +2455,8 @@
             return `${prefix}${String(nextNum).padStart(4, '0')}`;
         }
 
-        // Valider une inscription (memberRole déjà validé par l'appelant)
-        async function validateInscription(memberId, password, signatureData, memberRole) {
+        // Valider une inscription (memberRole déjà validé par l'appelant ; paiementPayload pour Adhérent : { paiementType, montantRestantAPayer, dateAdhesion })
+        async function validateInscription(memberId, password, signatureData, memberRole, paiementPayload) {
             try {
                 const overlay = document.getElementById('memberDetailOverlay');
                 if (!overlay) {
@@ -2476,6 +2478,11 @@
                 } else {
                     body.password = password;
                     body.signature = signatureData;
+                    if (paiementPayload) {
+                        body.paiementType = paiementPayload.paiementType;
+                        body.montantRestantAPayer = paiementPayload.montantRestantAPayer;
+                        body.dateAdhesion = paiementPayload.dateAdhesion;
+                    }
                 }
 
                 const response = await fetch(`/api/staff/inscriptions/${memberId}/validate`, {

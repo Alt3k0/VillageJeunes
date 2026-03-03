@@ -59,6 +59,27 @@ body {
     box-sizing: border-box;
 }
 
+/* Cacher header, footer et menu latéral quand un overlay/widget modal est ouvert (modale plein focus) */
+body.profile-overlay-open .header,
+body.profile-overlay-open .footer,
+body.profile-overlay-open .sidebar-menu,
+body.profile-overlay-open .menu-overlay,
+body.demandes-overlay-open .header,
+body.demandes-overlay-open .footer,
+body.demandes-overlay-open .sidebar-menu,
+body.demandes-overlay-open .menu-overlay,
+body.schedule-widget-open .header,
+body.schedule-widget-open .footer,
+body.schedule-widget-open .sidebar-menu,
+body.schedule-widget-open .menu-overlay,
+body.add-activity-overlay-open .header,
+body.add-activity-overlay-open .footer,
+body.add-activity-overlay-open .sidebar-menu,
+body.add-activity-overlay-open .menu-overlay {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .header-top {
     display: flex;
     align-items: center;
@@ -378,6 +399,13 @@ body {
 
 .add-activity-overlay.active {
     display: flex;
+    height: 100%;
+}
+
+/* Widget à la taille du contenu, hauteur max 80vh (comme Faire une demande) */
+.add-activity-overlay.active .add-activity-widget {
+    height: auto;
+    max-height: 80vh;
 }
 
 .add-activity-widget {
@@ -844,8 +872,63 @@ body {
     box-shadow: 0 0 0 2px rgba(30, 30, 29, 0.2);
 }
 
-/* Légende des salles */
-.salles-legend {
+/* Grands écrans : calendriers (activités + salles) à 70 % de la largeur, centrés et responsive */
+@media (min-width: 1440px) {
+    .calendar-container {
+        width: 70%;
+        max-width: min(70vw, 960px);
+        margin-inline: auto;
+        padding: clamp(0.75rem, 1.2vw, 1.5rem);
+        gap: clamp(0.75rem, 1.2vw, 1.5rem);
+    }
+
+    .calendar-grid-wrapper {
+        min-height: clamp(180px, 18vw, 320px);
+    }
+
+    .calendar-header {
+        gap: clamp(0.75rem, 1.2vw, 1.25rem);
+        padding: clamp(0.5rem, 0.8vw, 0.75rem) 0;
+    }
+
+    .calendar-nav-arrow {
+        width: clamp(1.75rem, 2.5vw, 2.5rem);
+        height: clamp(1.75rem, 2.5vw, 2.5rem);
+        font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    }
+
+    .calendar-select {
+        height: clamp(2rem, 2.8vw, 2.25rem);
+        font-size: clamp(0.875rem, 1.2vw, 1.05rem);
+    }
+
+    .calendar-grid {
+        gap: clamp(0.5rem, 0.8vw, 0.75rem);
+        padding: clamp(0.5rem, 0.8vw, 0.75rem);
+    }
+
+    .calendar-weekday {
+        font-size: clamp(0.75rem, 1vw, 0.9rem);
+    }
+
+    .calendar-day {
+        min-width: clamp(2rem, 2.8vw, 2.5rem);
+        min-height: clamp(2rem, 2.8vw, 2.5rem);
+        font-size: clamp(0.8rem, 1.1vw, 1rem);
+    }
+
+    /* Légendes alignées sur la largeur des calendriers */
+    .salles-legend,
+    .activites-legend {
+        width: 70%;
+        max-width: min(70vw, 960px);
+        margin-inline: auto;
+    }
+}
+
+/* Légende des salles et légende des activités (mêmes propriétés) */
+.salles-legend,
+.activites-legend {
     background-color: #F7F7F7;
     border-radius: clamp(1rem, 2vw, 2rem);
     padding: clamp(1.5rem, 3vw, 3rem);
@@ -1268,17 +1351,19 @@ body {
     right: clamp(18px, 2.2vw, 35px);
 }
 
+/* Grille horaire : 20px par heure (référence barres 6h–20h), même échelle que le JS pour position/durée */
 .schedule-timeline {
+    --schedule-padding-top: 10px;
+    --schedule-padding-bottom: 15px;
+    --schedule-pixels-per-hour: 20px;
     position: relative;
     width: 100%;
-    min-height: clamp(220px, 29vw, 450px);
-    max-height: clamp(220px, 29vw, 450px);
-    height: clamp(220px, 29vw, 450px);
+    height: 305px;
     margin-top: clamp(10px, 1.2vw, 20px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding-top: clamp(8px, 1vw, 15px);
-    padding-bottom: clamp(15px, 2vw, 25px);
+    padding-top: var(--schedule-padding-top);
+    padding-bottom: var(--schedule-padding-bottom);
     padding-left: clamp(40px, 5vw, 60px);
 }
 
@@ -1339,36 +1424,37 @@ body {
     white-space: nowrap;
 }
 
+/* Barres horaires alignées sur la grille JS : top = 10 + (heure - 6) × 20px */
 .schedule-time-marker[data-hour="6"] {
-    top: clamp(8px, 1vw, 15px);
+    top: 10px;
 }
 
 .schedule-time-marker[data-hour="8"] {
-    top: clamp(40px, 5vw, 75px);
+    top: 50px;
 }
 
 .schedule-time-marker[data-hour="10"] {
-    top: clamp(72px, 9vw, 135px);
+    top: 90px;
 }
 
 .schedule-time-marker[data-hour="12"] {
-    top: clamp(104px, 13vw, 195px);
+    top: 130px;
 }
 
 .schedule-time-marker[data-hour="14"] {
-    top: clamp(136px, 17vw, 255px);
+    top: 170px;
 }
 
 .schedule-time-marker[data-hour="16"] {
-    top: clamp(168px, 21vw, 315px);
+    top: 210px;
 }
 
 .schedule-time-marker[data-hour="18"] {
-    top: clamp(200px, 25vw, 375px);
+    top: 250px;
 }
 
 .schedule-time-marker[data-hour="20"] {
-    top: clamp(232px, 29vw, 435px);
+    top: 290px;
 }
 
 .activity-delete-btn {
@@ -1443,8 +1529,9 @@ body {
     position: relative;
     z-index: 2;
     opacity: 1;
-    padding: clamp(4px, 0.5vw, 6px) clamp(6px, 0.8vw, 10px);
-    gap: clamp(2px, 0.3vw, 4px);
+    /* Padding limité pour ne pas superposer le nom sur grands écrans (au-dessus de ~1100px) */
+    padding: clamp(2px, 0.2vw, 4px) clamp(4px, 0.5vw, 8px);
+    gap: clamp(1px, 0.15vw, 2px);
 }
 
 .schedule-activity-title {
@@ -1568,17 +1655,16 @@ body {
 .activity-detail-overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0px;
+    inset: 0;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: clamp(1rem, 2vh, 2rem);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .activity-detail-overlay.active {
@@ -1597,7 +1683,8 @@ body {
                 0px 0px 0px 1px rgba(255, 255, 255, 0.2) inset;
     width: 100%;
     max-width: clamp(320px, 80vw, 800px);
-    min-height: clamp(400px, 52vw, 800px);
+    min-height: min(clamp(400px, 52vw, 800px), calc(100vh - 2rem));
+    max-height: calc(100vh - 2rem);
     padding: clamp(25px, 3vw, 50px) clamp(20px, 2.4vw, 40px);
     display: flex;
     flex-direction: column;
@@ -1605,7 +1692,8 @@ body {
     align-items: center;
     position: relative;
     animation: fadeIn 0.3s ease;
-    top: 5rem;
+    margin: auto;
+    overflow-y: auto;
 }
 
 .activity-detail-close {
@@ -1806,11 +1894,8 @@ body {
 .activity-detail-register-wrapper {
     width: 100%;
     max-width: clamp(220px, 55vw, 560px);
-    border: 2px solid #afb3b6;
-    border-radius: clamp(12px, 1.5vw, 24px);
     padding: clamp(4px, 0.5vw, 8px);
     margin-top: clamp(6px, 0.8vw, 12px);
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.08);
 }
 
 .activity-detail-description-box {
@@ -2607,7 +2692,8 @@ body {
     }
 
     .schedule-activity-text {
-        padding: clamp(3px, 0.4vw, 5px) clamp(6px, 0.8vw, 10px);
+        padding: clamp(2px, 0.2vw, 4px) clamp(4px, 0.5vw, 8px);
+        gap: clamp(1px, 0.15vw, 2px);
     }
 
 

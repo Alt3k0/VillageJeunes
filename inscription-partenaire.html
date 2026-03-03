@@ -250,6 +250,7 @@
                         email: (formEl.responsableEmail && formEl.responsableEmail.value) || ''
                     }
                 };
+                try { localStorage.setItem('partenaireProfile', JSON.stringify(data)); } catch (e) {}
                 console.log('Inscription partenaire:', data);
                 alert('Demande d\'inscription partenaire envoyée.\n\nLes données seront traitées par l\'équipe. Vous recevrez une réponse après validation.');
             });

@@ -10,6 +10,15 @@ let currentDateSalles = new Date(2026, 1, 25);
 let selectedDate = new Date(2026, 1, 25);
 
 const salles = ['Salle du Vent', 'Salle du Feu', "Salle de l'Eau", 'Salle de la Terre + patio', 'Salle de formation', 'Accueil'];
+/** Mapping nom de salle → classe CSS pour le calendrier salles */
+const salleNameToClass = {
+    'Salle du Vent': 'salle-vent',
+    'Salle du Feu': 'salle-feu',
+    "Salle de l'Eau": 'salle-eau',
+    'Salle de la Terre + patio': 'salle-terre-patio',
+    'Salle de formation': 'salle-formation',
+    'Accueil': 'salle-accueil'
+};
 const salleToColor = {
     "Salle de l'Eau": '#1f658e',
     'Salle de la Terre + patio': '#649d50',
@@ -295,16 +304,19 @@ function updateViewTitle() {
 function toggleCalendars() {
     const calActivites = document.getElementById('calendarActivites');
     const calSalles = document.getElementById('calendarSalles');
+    const activitesLegend = document.getElementById('activitesLegend');
     const sallesLegend = document.getElementById('sallesLegend');
     const searchContainer = document.getElementById('searchContainer');
     if (currentView === 'activites') {
         if (calActivites) calActivites.style.display = 'block';
         if (calSalles) calSalles.style.display = 'none';
+        if (activitesLegend) activitesLegend.style.display = 'block';
         if (sallesLegend) sallesLegend.style.display = 'none';
         if (searchContainer) searchContainer.style.display = 'block';
     } else {
         if (calActivites) calActivites.style.display = 'none';
         if (calSalles) calSalles.style.display = 'block';
+        if (activitesLegend) activitesLegend.style.display = 'none';
         if (sallesLegend) sallesLegend.style.display = 'block';
         if (searchContainer) searchContainer.style.display = 'none';
     }
@@ -317,9 +329,25 @@ function updateSelectors() {
     if (ys) ys.value = currentDate.getFullYear();
 }
 
+/** Retourne les classes CSS salle(s) pour une date à partir des activités (lieu) */
+function getSalleClassesForDate(date) {
+    const activities = getActivitiesForDate(date);
+    if (!activities.length) return [];
+    const locations = [...new Set(activities.map(a => (a.location || '').trim()).filter(Boolean))];
+    if (locations.length === 0) return [];
+    if (locations.length >= 2) return ['multiple-salles'];
+    const salleClass = salleNameToClass[locations[0]];
+    return salleClass ? [salleClass] : [];
+}
+
 function updateCalendarSalles() {
     const grid = document.getElementById('calendarGridSalles');
     if (!grid) return;
+    const monthSelect = document.getElementById('monthSelectSalles');
+    const yearSelect = document.getElementById('yearSelectSalles');
+    if (monthSelect) monthSelect.value = currentDateSalles.getMonth();
+    if (yearSelect) yearSelect.value = currentDateSalles.getFullYear();
+
     grid.innerHTML = '';
     const year = currentDateSalles.getFullYear();
     const month = currentDateSalles.getMonth();
@@ -329,31 +357,39 @@ function updateCalendarSalles() {
     const startingDayOfWeek = (firstDay.getDay() + 6) % 7;
     const prevMonth = new Date(year, month, 0);
     const daysInPrevMonth = prevMonth.getDate();
-    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-        const prevDay = daysInPrevMonth - i;
-        const dayEl = document.createElement('div');
-        dayEl.className = 'calendar-day other-month';
-        dayEl.textContent = prevDay;
-        dayEl.style.cursor = 'pointer';
-        grid.appendChild(dayEl);
-    }
-    for (let day = 1; day <= daysInMonth; day++) {
+
+    function addDayEl(dayNum, isOtherMonth, targetYear, targetMonth) {
+        const date = new Date(targetYear, targetMonth, dayNum);
         const dayEl = document.createElement('div');
         dayEl.className = 'calendar-day';
-        dayEl.textContent = day;
+        dayEl.textContent = dayNum;
         dayEl.style.cursor = 'pointer';
-        if (selectedDate.getDate() === day && selectedDate.getMonth() === month && selectedDate.getFullYear() === year) {
-            dayEl.classList.add('selected');
-        }
+        dayEl.style.pointerEvents = 'auto';
+        if (isOtherMonth) dayEl.classList.add('other-month');
+        const isSelected = date.getDate() === selectedDate.getDate() && date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear();
+        if (isSelected) dayEl.classList.add('selected');
+        getSalleClassesForDate(date).forEach(c => dayEl.classList.add(c));
+        dayEl.addEventListener('click', function() {
+            if (isOtherMonth) {
+                currentDateSalles.setFullYear(targetYear);
+                currentDateSalles.setMonth(targetMonth);
+            }
+            selectDate(new Date(targetYear, targetMonth, dayNum));
+            updateCalendarSalles();
+        });
         grid.appendChild(dayEl);
+    }
+
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+        const prevDay = daysInPrevMonth - i;
+        addDayEl(prevDay, true, month === 0 ? year - 1 : year, month === 0 ? 11 : month - 1);
+    }
+    for (let day = 1; day <= daysInMonth; day++) {
+        addDayEl(day, false, year, month);
     }
     const total = grid.children.length;
     for (let day = 1; day <= 42 - total; day++) {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'calendar-day other-month';
-        dayEl.textContent = day;
-        dayEl.style.cursor = 'pointer';
-        grid.appendChild(dayEl);
+        addDayEl(day, true, month === 11 ? year + 1 : year, month === 11 ? 0 : month + 1);
     }
 }
 
@@ -378,7 +414,8 @@ function selectDate(date) {
             currentDateSalles.setFullYear(date.getFullYear());
             currentDateSalles.setMonth(date.getMonth());
         }
-        setTimeout(() => showSallesPopup(date), 0);
+        showSallesPopup(date);
+        setTimeout(() => showActivityPopup(date), 0);
     }
 }
 
@@ -514,7 +551,8 @@ function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
                 
                 const text = document.createElement('span');
                 text.className = 'schedule-activity-text';
-                text.textContent = `${activity.title} : ${formatDuration(durationHours)}`;
+                // Hauteur insuffisante (ex. ≤ 40px) : n'afficher que le nom, pas la durée
+                text.textContent = height >= 40 ? `${activity.title} : ${formatDuration(durationHours)}` : activity.title;
                 block.appendChild(text);
             } else {
                 // Si l'activité est complètement en dehors du timeline, ne pas la créer
@@ -553,7 +591,8 @@ function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
                 
                 const text = document.createElement('span');
                 text.className = 'schedule-activity-text';
-                text.textContent = `${activity.title} : ${formatDuration(durationHours)}`;
+                // Hauteur insuffisante (ex. ≤ 40px) : n'afficher que le nom, pas la durée
+                text.textContent = height >= 40 ? `${activity.title} : ${formatDuration(durationHours)}` : activity.title;
                 block.appendChild(text);
             } else {
                 // Si l'activité est complètement en dehors du timeline, ne pas la créer
@@ -889,6 +928,7 @@ function showActivityDetail(activity, context = 'schedule', activityList = []) {
     displayActivityInDetail(activity);
     
     overlay.classList.add('active');
+    document.body.classList.add('schedule-widget-open');
 }
 
 // Afficher une activité dans le widget de détail (salle en lecture seule)
@@ -960,6 +1000,7 @@ function navigateToNextActivity() {
 function closeActivityDetail() {
     const overlay = document.getElementById('activityDetailOverlay');
     if (overlay) overlay.classList.remove('active');
+    document.body.classList.remove('schedule-widget-open');
 }
 
 // --- Widget Je suis intéressé ---
@@ -1009,6 +1050,7 @@ function setupInteretWidget() {
         window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         overlay?.classList.remove('active');
         document.getElementById('activityDetailOverlay')?.classList.remove('active');
+        document.body.classList.remove('schedule-widget-open');
         alert('Votre demande a été envoyée. Le responsable d\'activité vous recontactera.');
     });
 }
@@ -1337,10 +1379,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Gestion du widget de profil adhérent (fiche complète, menus = inscription)
     const profileOverlay = document.getElementById('profileOverlay');
+    const profileBackdrop = document.getElementById('profileOverlayBackdrop');
     const closeProfileButton = document.getElementById('closeProfile');
     const profileIcon = document.getElementById('profileIcon');
     
-    function closeProfile() { if (profileOverlay) { profileOverlay.classList.remove('active'); document.body.style.overflow = ''; } }
+    function closeProfile() {
+        if (profileOverlay) { profileOverlay.classList.remove('active'); profileOverlay.hidden = true; }
+        if (profileBackdrop) { profileBackdrop.classList.remove('active'); profileBackdrop.hidden = true; profileBackdrop.setAttribute('aria-hidden', 'true'); }
+        document.body.classList.remove('profile-overlay-open');
+        document.body.style.overflow = '';
+    }
     
     const profileData = {
         lastName: 'Martin',
@@ -1547,7 +1595,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setProfileMobilite(profileData.mobilite);
         const mineurSection = document.getElementById('profileMineurSection');
         if (mineurSection) mineurSection.style.display = profileData.parentNom ? 'block' : 'none';
+        if (profileBackdrop) {
+            profileBackdrop.hidden = false;
+            profileBackdrop.setAttribute('aria-hidden', 'false');
+            profileBackdrop.classList.add('active');
+        }
+        profileOverlay.hidden = false;
         profileOverlay.classList.add('active');
+        document.body.classList.add('profile-overlay-open');
         document.body.style.overflow = 'hidden';
     }
 

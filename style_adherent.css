@@ -223,6 +223,20 @@ body.demandes-overlay-open {
     display: flex;
 }
 
+/* Adhérent et partenaire : l'overlay Faire une demande prend 100vh */
+body[data-user-role="adherent"] .demandes-adherent-overlay.active,
+body[data-user-role="partenaire"] .demandes-adherent-overlay.active {
+    top: 0;
+    height: 100vh;
+}
+
+/* Adhérent et partenaire : widget à la taille du contenu, hauteur max 80vh */
+body[data-user-role="adherent"] .demandes-adherent-overlay.active .demandes-adherent-widget,
+body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-adherent-widget {
+    height: auto;
+    max-height: 80vh;
+}
+
 .demandes-adherent-widget {
     background: #FFFFFF;
     border-radius: clamp(12px, 1.5vw, 24px);
@@ -235,6 +249,7 @@ body.demandes-overlay-open {
     margin: auto;
     overflow-y: auto;
 }
+
 
 .demandes-adherent-close {
     position: absolute;
@@ -630,23 +645,17 @@ body.demandes-overlay-open {
     border: none;
 }
 
-/* Widget Profil adhérent (fiche complète) */
+/* Widget Profil adhérent (fiche complète) – backdrop en sibling (voir profile-overlay-backdrop dans style_staff) */
+/* Overlay au-dessus du backdrop (z-index 1002) pour couvrir toute la page et laisser header/footer en arrière-plan flouté */
 .profile-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1001;
+    z-index: 1002;
     align-items: center;
     justify-content: center;
     padding: clamp(1rem, 2vw, 2rem);
     overflow-y: auto;
-}
-
-.profile-overlay::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
 }
 
 .profile-overlay.active {
@@ -1045,18 +1054,21 @@ body.demandes-overlay-open {
     }
 }
 
-/* Activity detail overlay - responsive adhérent (aligné staff) */
+/* Activity detail overlay - responsive adhérent (aligné staff : centrage, hauteur fenêtre, défilement) */
 @media (max-width: 768px) {
     .activity-detail-overlay {
-        padding: clamp(1rem, 3vw, 1.5rem);
-        align-items: flex-start;
-        justify-content: flex-start;
+        padding: clamp(1rem, 2vh, 1.5rem);
+        overflow-y: auto;
+        overflow-x: hidden;
+        align-items: center;
+        justify-content: center;
     }
 
     .activity-detail-card {
         width: 100%;
         max-width: 100%;
-        max-height: calc(100vh - clamp(16vh, 24vw, 30vh));
+        max-height: calc(100vh - 2rem);
+        margin: auto;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -1064,11 +1076,11 @@ body.demandes-overlay-open {
 
 @media (max-width: 480px) {
     .activity-detail-overlay {
-        padding: clamp(0.75rem, 2vw, 1rem);
+        padding: clamp(0.75rem, 2vh, 1rem);
     }
 
     .activity-detail-card {
-        max-height: calc(100vh - clamp(20vh, 28vw, 35vh));
+        max-height: calc(100vh - 2rem);
         padding: clamp(18px, 4vw, 24px);
     }
 }

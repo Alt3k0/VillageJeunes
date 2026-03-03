@@ -621,6 +621,7 @@ function setupActivityWidgets() {
         closeActivityDetail.addEventListener('click', function() {
             if (activityDetailOverlay) {
                 activityDetailOverlay.classList.remove('active');
+                document.body.classList.remove('schedule-widget-open');
             }
         });
     }
@@ -629,6 +630,7 @@ function setupActivityWidgets() {
         activityDetailOverlay.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('active');
+                document.body.classList.remove('schedule-widget-open');
             }
         });
     }
@@ -693,6 +695,7 @@ function setupActivityWidgets() {
                 appelOverlay.classList.remove('active');
             } else if (activityDetailOverlay && activityDetailOverlay.classList.contains('active')) {
                 activityDetailOverlay.classList.remove('active');
+                document.body.classList.remove('schedule-widget-open');
             } else {
                 closeActivityPopup();
             }
@@ -819,6 +822,7 @@ function showActivityDetail(activity, context = 'schedule', activityList = []) {
     displayActivityInDetail(activity);
     
     overlay.classList.add('active');
+    document.body.classList.add('schedule-widget-open');
 }
 
 // Afficher une activité dans le widget de détail
@@ -1028,6 +1032,7 @@ function setupAppelWidget() {
 
             overlay?.classList.remove('active');
             document.getElementById('activityDetailOverlay')?.classList.remove('active');
+            document.body.classList.remove('schedule-widget-open');
             alert(`Appel validé : ${presents.length} présent(s) sur ${participants.length} inscrit(s).`);
         });
     }
@@ -1174,6 +1179,7 @@ function toggleCalendars() {
     const calendarActivites = document.getElementById('calendarActivites');
     const calendarSalles = document.getElementById('calendarSalles');
     const sallesNavigation = document.getElementById('sallesNavigation');
+    const activitesLegend = document.getElementById('activitesLegend');
     const sallesLegend = document.getElementById('sallesLegend');
     const searchContainer = document.getElementById('searchContainer');
     const mainNavigation = document.querySelector('.view-navigation');
@@ -1182,14 +1188,16 @@ function toggleCalendars() {
         calendarActivites.style.display = 'block';
         calendarSalles.style.display = 'none';
         sallesNavigation.style.display = 'none';
-        sallesLegend.style.display = 'none';
+        if (activitesLegend) activitesLegend.style.display = 'block';
+        if (sallesLegend) sallesLegend.style.display = 'none';
         searchContainer.style.display = 'block';
         if (mainNavigation) mainNavigation.style.display = 'flex';
     } else {
         calendarActivites.style.display = 'none';
         calendarSalles.style.display = 'block';
         sallesNavigation.style.display = 'flex';
-        sallesLegend.style.display = 'block';
+        if (activitesLegend) activitesLegend.style.display = 'none';
+        if (sallesLegend) sallesLegend.style.display = 'block';
         searchContainer.style.display = 'none';
         if (mainNavigation) mainNavigation.style.display = 'none'; // Cacher la navigation principale
         updateCalendarSalles();
@@ -1537,14 +1545,6 @@ function showActivityPopup(date) {
             }
         }
         
-        // Cacher la légende des salles si elle est visible (seulement si on est en vue salles)
-        if (currentView === 'salles') {
-            const sallesLegend = document.getElementById('sallesLegend');
-            if (sallesLegend) {
-                sallesLegend.style.display = 'none';
-            }
-        }
-        
         console.log('Widget affiché', { activitiesCount: activities.length, date: formatDateShort(date), isToday });
         });
     });
@@ -1800,12 +1800,6 @@ function showSallesPopup(date) {
             }
         }
         
-        // Cacher la légende des salles
-        const sallesLegend = document.getElementById('sallesLegend');
-        if (sallesLegend) {
-            sallesLegend.style.display = 'none';
-        }
-        
         console.log('Widget salles affiché', { sallesCount: sallesReservations.length, date: formatDateShort(date), isToday });
         });
     });
@@ -1866,17 +1860,12 @@ function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
             const paddingTop = 10;
             const paddingBottom = 15;
             const timeline = document.getElementById('scheduleTimeline');
-            // Utiliser une hauteur par défaut si le timeline n'a pas encore de hauteur (pendant le rendu initial)
-            // Hauteur par défaut basée sur les heures affichées (6h à 22h = 16h)
-            const defaultTimelineHeight = (22 - 6) * pixelsPerHour + paddingTop + paddingBottom;
+            // Hauteur utile = même grille que les barres (6h=10px, 20h=290px) → 305px
+            const defaultTimelineHeight = (20 - 6) * pixelsPerHour + paddingTop + paddingBottom;
             let timelineHeight = defaultTimelineHeight;
-            if (timeline) {
-                // Essayer d'obtenir la hauteur réelle, sinon utiliser la hauteur par défaut
-                timelineHeight = timeline.offsetHeight || timeline.scrollHeight || defaultTimelineHeight;
-                // Si la hauteur est toujours 0 ou très petite, utiliser la hauteur par défaut
-                if (timelineHeight < 100) {
-                    timelineHeight = defaultTimelineHeight;
-                }
+            if (timeline && timeline.offsetHeight > 0) {
+                timelineHeight = timeline.offsetHeight - paddingTop;
+                if (timelineHeight < 100) timelineHeight = defaultTimelineHeight;
             }
             const minHeight = 28; // Hauteur minimale pour la lisibilité
             const topPosition = paddingTop + Math.max(0, (startHour - 6) * pixelsPerHour + (startMinute / 60) * pixelsPerHour);
@@ -1909,13 +1898,13 @@ function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
                 titleSpan.textContent = activity.title;
                 textContainer.appendChild(titleSpan);
 
-                if (height >= 32) {
+                // Hauteur insuffisante (ex. ≤ 40px) : n'afficher que le nom, pas la durée
+                const minHeightForDuration = 40;
+                if (height >= minHeightForDuration) {
                     const durationSpan = document.createElement('span');
                     durationSpan.className = 'schedule-activity-duration';
                     durationSpan.textContent = formatDuration(durationHours);
                     textContainer.appendChild(durationSpan);
-                } else {
-                    titleSpan.textContent = `${activity.title} (${formatDuration(durationHours)})`;
                 }
 
                 // Salle et responsable si le bloc est assez haut (≥ 48px)
@@ -2103,14 +2092,6 @@ function closeActivityPopup() {
     const widget = document.getElementById('scheduleWidget');
     if (widget) {
         widget.classList.remove('active');
-    }
-    
-    // Réafficher la légende des salles si on est en vue salles
-    if (currentView === 'salles') {
-        const sallesLegend = document.getElementById('sallesLegend');
-        if (sallesLegend) {
-            sallesLegend.style.display = 'block';
-        }
     }
 }
 
@@ -2499,6 +2480,15 @@ function setupAddActivityWidget() {
         return;
     }
 
+    // Remplir la liste de suggestions du responsable (animateurs + saisie libre possible)
+    const responsibleDatalist = document.getElementById('activityResponsibleList');
+    if (responsibleDatalist && Array.isArray(ANIMATEURS)) {
+        responsibleDatalist.innerHTML = ANIMATEURS.map(a => {
+            const safe = String(a).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+            return `<option value="${safe}">`;
+        }).join('');
+    }
+
     // Compteurs de caractères (prévenir la troncature)
     if (typeof attachCharCounter === 'function' && typeof VALIDATION !== 'undefined') {
         const nameInput = document.getElementById('activityName');
@@ -2510,6 +2500,7 @@ function setupAddActivityWidget() {
     // Ouvrir le widget
     addButton.addEventListener('click', () => {
         overlay.classList.add('active');
+        document.body.classList.add('add-activity-overlay-open');
         // Définir la date par défaut à aujourd'hui
         const today = new Date();
         const dateInput = document.getElementById('activityDate');
@@ -2524,6 +2515,7 @@ function setupAddActivityWidget() {
     // Fermer le widget
     function closeWidget() {
         overlay.classList.remove('active');
+        document.body.classList.remove('add-activity-overlay-open');
         form.reset();
     }
     

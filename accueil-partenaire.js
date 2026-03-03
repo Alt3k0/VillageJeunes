@@ -162,7 +162,8 @@ function showScheduleForDate(date) {
     const timeline = document.getElementById('scheduleTimeline');
     if (!widget || !dateText || !timeline) return;
     dateText.textContent = formatDateShort(date);
-    timeline.innerHTML = '';
+    // Ne retirer que les blocs d'activités (garder les barres horaires .schedule-time-marker)
+    timeline.querySelectorAll('.schedule-activity').forEach(function (el) { el.remove(); });
     const activities = getActivitiesForDate(date);
     if (activities.length === 0) {
         const noMsg = document.createElement('div');
@@ -186,13 +187,15 @@ function showScheduleForDate(date) {
                     block.className = 'schedule-activity';
                     const pixelsPerHour = 20;
                     const paddingTop = 10;
+                    const height = durationHours * pixelsPerHour;
                     block.style.top = (paddingTop + (startHour - 6) * pixelsPerHour + (startMin / 60) * pixelsPerHour) + 'px';
-                    block.style.height = (durationHours * pixelsPerHour) + 'px';
+                    block.style.height = height + 'px';
                     const rgb = hexToRgb(act.categoryColor || '#649d50');
                     if (rgb) block.style.backgroundColor = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.5)';
                     const text = document.createElement('span');
                     text.className = 'schedule-activity-text';
-                    text.textContent = act.title + ' – ' + (act.location || '') + ' : ' + formatDuration(durationHours);
+                    // Hauteur insuffisante (ex. ≤ 40px) : n'afficher que le nom, pas la durée ni la salle
+                    text.textContent = height >= 40 ? (act.title + ' – ' + (act.location || '') + ' : ' + formatDuration(durationHours)) : act.title;
                     block.appendChild(text);
                     timeline.appendChild(block);
                 }
@@ -439,7 +442,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateCalendarSalles();
     updateSelectorsSalles();
-    showScheduleForDate(selectedDate);
+    /* Ne pas ouvrir le widget au chargement : header/footer restent visibles ; le widget s'ouvre au clic sur une date */
+    /* showScheduleForDate(selectedDate); */
 
     const prevMonthSalles = document.getElementById('prevMonthSalles');
     const nextMonthSalles = document.getElementById('nextMonthSalles');
@@ -462,4 +466,91 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setupReserverSalleSignature();
     setupDemandesPartenaireWidget();
+    setupProfilePartenaire();
 });
+
+function getPartenaireProfileData() {
+    try {
+        const saved = localStorage.getItem('partenaireProfile');
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data && (data.nomStructure || data.responsable)) return data;
+        }
+    } catch (e) {}
+    return {
+        typeStructure: 'Association',
+        nomStructure: 'Ma structure',
+        numeroRidet: 12345,
+        adresse: '1 rue Example',
+        bp: 123,
+        codePostal: 98800,
+        commune: 'Nouméa',
+        telephoneStructure: '00 00 00 00',
+        emailStructure: 'structure@example.nc',
+        responsable: {
+            nom: 'Dupont',
+            prenom: 'Marie',
+            qualite: 'Présidente',
+            telephone: '00 00 00 01',
+            email: 'marie.dupont@example.nc'
+        }
+    };
+}
+
+function setupProfilePartenaire() {
+    const profileOverlay = document.getElementById('profilePartenaireOverlay');
+    const profileBackdrop = document.getElementById('profilePartenaireBackdrop');
+    const profileIcon = document.getElementById('profileIcon');
+    const closeBtn = document.getElementById('closeProfilePartenaire');
+
+    function setVal(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value !== undefined && value !== null && value !== '' ? String(value) : '—';
+    }
+
+    function openProfile() {
+        const data = getPartenaireProfileData();
+        const resp = data.responsable || {};
+        setVal('profilePartenaireDisplayName', data.nomStructure || '—');
+        setVal('profilePartenaireStructureType', data.typeStructure || '—');
+        setVal('profilePartenaireTypeStructure', data.typeStructure);
+        setVal('profilePartenaireNomStructure', data.nomStructure);
+        setVal('profilePartenaireNumeroRidet', data.numeroRidet);
+        setVal('profilePartenaireAdresse', data.adresse);
+        setVal('profilePartenaireBp', data.bp);
+        setVal('profilePartenaireCodePostal', data.codePostal);
+        setVal('profilePartenaireCommune', data.commune);
+        setVal('profilePartenaireTelephoneStructure', data.telephoneStructure);
+        setVal('profilePartenaireEmailStructure', data.emailStructure);
+        setVal('profilePartenaireResponsableNom', resp.nom);
+        setVal('profilePartenaireResponsablePrenom', resp.prenom);
+        setVal('profilePartenaireResponsableQualite', resp.qualite);
+        setVal('profilePartenaireResponsableTelephone', resp.telephone);
+        setVal('profilePartenaireResponsableEmail', resp.email);
+        if (profileBackdrop) {
+            profileBackdrop.hidden = false;
+            profileBackdrop.setAttribute('aria-hidden', 'false');
+            profileBackdrop.classList.add('active');
+        }
+        if (profileOverlay) {
+            profileOverlay.classList.add('active');
+            document.body.classList.add('profile-overlay-open');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeProfile() {
+        if (profileOverlay) profileOverlay.classList.remove('active');
+        if (profileBackdrop) {
+            profileBackdrop.classList.remove('active');
+            profileBackdrop.hidden = true;
+            profileBackdrop.setAttribute('aria-hidden', 'true');
+        }
+        document.body.classList.remove('profile-overlay-open');
+        document.body.style.overflow = '';
+    }
+
+    if (profileIcon) profileIcon.addEventListener('click', function(e) { e.stopPropagation(); openProfile(); });
+    if (closeBtn) closeBtn.addEventListener('click', closeProfile);
+    if (profileOverlay) profileOverlay.addEventListener('click', function(e) { if (e.target === profileOverlay) closeProfile(); });
+}

@@ -207,7 +207,30 @@
             </div>
         </div>
 
-        <!-- Légende des couleurs pour les salles -->
+        <!-- Légende des couleurs pour les activités (affichée en vue Activités, juste sous l'emploi du temps) -->
+        <div class="activites-legend" id="activitesLegend">
+            <h3 class="legend-title">Légende des activités :</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f658e;"></div>
+                    <span>Numérique</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f08d35;"></div>
+                    <span>Arts vivants</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>Projet pro</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #649d50;"></div>
+                    <span>Solidarité</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Légende des couleurs pour les salles (affichée en vue Salles, juste sous l'emploi du temps) -->
         <div class="salles-legend" id="sallesLegend" style="display: none;">
             <h3 class="legend-title">Légende des salles :</h3>
             <div class="legend-items">
@@ -464,6 +487,8 @@
         </div>
     </main>
 
+    <!-- Couche de flou (sibling de l'overlay pour que backdrop-filter blur la page, header et footer inclus) -->
+    <div class="profile-overlay-backdrop" id="profileOverlayBackdrop" hidden aria-hidden="true"></div>
     <!-- Widget Profil adhérent (fiche complète, champs modifiables : surnom, médical, situation pro, permis) -->
     <div class="profile-overlay" id="profileOverlay">
         <div class="profile-widget">

@@ -73,7 +73,53 @@
             </div>
         </div>
 
-        <!-- Légende des salles -->
+        <!-- Widget emploi du temps (salles occupées pour la date cliquée) -->
+        <div class="schedule-widget" id="scheduleWidget">
+            <div class="schedule-widget-card">
+                <button class="schedule-close-button" id="closeScheduleWidget">
+                    <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="schedule-title">Salles occupées</h2>
+                <div class="schedule-date-navigator">
+                    <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
+                    <span class="schedule-date-text" id="scheduleDateText">—</span>
+                    <div class="schedule-nav-arrow next" id="nextDay">›</div>
+                </div>
+                <div class="schedule-timeline" id="scheduleTimeline">
+                    <!-- Marqueurs d'heure (même grille que staff : 20px/h, 6h–20h) -->
+                    <div class="schedule-time-marker" data-hour="6">
+                        <span class="schedule-time-label">6h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="8">
+                        <span class="schedule-time-label">8h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="10">
+                        <span class="schedule-time-label">10h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="12">
+                        <span class="schedule-time-label">12h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="14">
+                        <span class="schedule-time-label">14h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="16">
+                        <span class="schedule-time-label">16h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="18">
+                        <span class="schedule-time-label">18h</span>
+                    </div>
+                    <div class="schedule-time-marker" data-hour="20">
+                        <span class="schedule-time-label">20h</span>
+                    </div>
+                    <!-- Les créneaux salles seront ajoutés dynamiquement ici -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Légende des salles (toujours affichée, juste sous l'emploi du temps) -->
         <div class="salles-legend" id="sallesLegend">
             <h3 class="legend-title">Légende des salles :</h3>
             <div class="legend-items">
@@ -101,25 +147,6 @@
                     <div class="legend-color" style="background-color: #e6b800;"></div>
                     <span>Accueil</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Widget emploi du temps (salles occupées pour la date cliquée) -->
-        <div class="schedule-widget" id="scheduleWidget">
-            <div class="schedule-widget-card">
-                <button class="schedule-close-button" id="closeScheduleWidget">
-                    <svg class="schedule-close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
-                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-                <h2 class="schedule-title">Salles occupées</h2>
-                <div class="schedule-date-navigator">
-                    <div class="schedule-nav-arrow prev" id="prevDay">‹</div>
-                    <span class="schedule-date-text" id="scheduleDateText">—</span>
-                    <div class="schedule-nav-arrow next" id="nextDay">›</div>
-                </div>
-                <div class="schedule-timeline" id="scheduleTimeline"></div>
             </div>
         </div>
 
@@ -280,6 +307,97 @@
                         <button type="submit" class="demandes-form-btn demandes-form-submit" id="reserverSalleSubmit">Envoyer la demande</button>
                     </div>
                 </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Couche de flou (sibling de l'overlay pour que backdrop-filter blur la page) -->
+        <div class="profile-overlay-backdrop" id="profilePartenaireBackdrop" hidden aria-hidden="true"></div>
+        <!-- Widget Profil partenaire (même style qu'accueil-adherent, données inscription-partenaire) -->
+        <div class="profile-overlay" id="profilePartenaireOverlay">
+            <div class="profile-widget">
+                <button class="profile-close" id="closeProfilePartenaire">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#d32f2f"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="#F7F7F7" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="profile-title">Mon profil</h2>
+
+                <div class="profile-header">
+                    <div class="profile-photo" id="profilePartenairePhoto">Structure</div>
+                    <div class="profile-header-info">
+                        <div class="profile-name" id="profilePartenaireDisplayName">—</div>
+                        <div class="profile-number" id="profilePartenaireStructureType">—</div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 class="profile-section-title">Structure</h3>
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <span class="profile-label">Type :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireTypeStructure">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Nom :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireNomStructure">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">N° RIDET :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireNumeroRidet">—</span>
+                        </div>
+                        <div class="profile-info-item full-width">
+                            <span class="profile-label">Adresse :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireAdresse">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">B.P :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireBp">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Code postal :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireCodePostal">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Commune :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireCommune">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Téléphone :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireTelephoneStructure">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Email :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireEmailStructure">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 class="profile-section-title">Responsable</h3>
+                    <div class="profile-info-grid">
+                        <div class="profile-info-item">
+                            <span class="profile-label">Nom :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireResponsableNom">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Prénom :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireResponsablePrenom">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Qualité :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireResponsableQualite">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Téléphone :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireResponsableTelephone">—</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-label">Email :</span>
+                            <span class="profile-value profile-readonly" id="profilePartenaireResponsableEmail">—</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

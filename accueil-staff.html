@@ -282,7 +282,30 @@
             </div>
         </div>
 
-        <!-- Légende des couleurs pour les salles -->
+        <!-- Légende des couleurs pour les activités (affichée en vue Activités, juste sous l'emploi du temps) -->
+        <div class="activites-legend" id="activitesLegend">
+            <h3 class="legend-title">Légende des activités :</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f658e;"></div>
+                    <span>Numérique</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f08d35;"></div>
+                    <span>Arts vivants</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>Projet pro</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #649d50;"></div>
+                    <span>Solidarité</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Légende des couleurs pour les salles (affichée en vue Salles, juste sous l'emploi du temps) -->
         <div class="salles-legend" id="sallesLegend" style="display: none;">
             <h3 class="legend-title">Légende des salles :</h3>
             <div class="legend-items">
@@ -460,22 +483,13 @@
                             </select>
                     </div>
 
-                    <!-- Responsable - pleine largeur -->
+                    <!-- Responsable - pleine largeur (sélection ou saisie libre pour un externe) -->
                     <div class="form-group responsible">
                         <label for="activityResponsible" class="form-label">Bénévole/Animateur responsable *</label>
-                        <select id="activityResponsible" class="form-select" required>
-                            <option value="">Sélectionner un animateur</option>
-                            <option value="Animateur 1">Animateur 1</option>
-                            <option value="Animateur 2">Animateur 2</option>
-                            <option value="Animateur 3">Animateur 3</option>
-                            <option value="Animateur 4">Animateur 4</option>
-                            <option value="Animateur 5">Animateur 5</option>
-                            <option value="Animateur 6">Animateur 6</option>
-                            <option value="Animateur 7">Animateur 7</option>
-                            <option value="Animateur 8">Animateur 8</option>
-                            <option value="Animateur 9">Animateur 9</option>
-                            <option value="Animateur 10">Animateur 10</option>
-                        </select>
+                        <input type="text" id="activityResponsible" class="form-input" list="activityResponsibleList" placeholder="Sélectionner ou saisir un nom (ex. externe)" required autocomplete="off">
+                        <datalist id="activityResponsibleList">
+                            <!-- Options remplies par JS depuis ANIMATEURS -->
+                        </datalist>
                     </div>
 
                     <!-- Description - pleine largeur -->

@@ -867,21 +867,77 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
     cursor: pointer;
 }
 
-.profile-save-btn {
-    width: 100%;
+.profile-actions {
+    margin-top: 12px;
+}
+
+/* Un seul des deux blocs visible : Modifier OU Annuler/Valider */
+.profile-actions .profile-edit-buttons {
+    display: none;
+}
+
+.profile-actions.profile-actions--editing .profile-edit-btn {
+    display: none;
+}
+
+.profile-actions.profile-actions--editing .profile-edit-buttons {
+    display: grid;
+}
+
+.profile-edit-btn,
+.profile-cancel-btn,
+.profile-validate-btn {
     padding: clamp(12px, 1.5vw, 16px);
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-    border: none;
     border-radius: clamp(8px, 1vw, 12px);
-    color: #F7F7F7;
     font-size: clamp(14px, 1.5vw, 16px);
     font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
+    border: none;
 }
 
-.profile-save-btn:hover {
+.profile-edit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    color: #F7F7F7;
+}
+
+.profile-edit-btn:hover {
     opacity: 0.95;
+}
+
+.profile-edit-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.profile-cancel-btn {
+    background: #e8e8e8;
+    color: #333;
+}
+
+.profile-cancel-btn:hover {
+    background: #ddd;
+}
+
+.profile-validate-btn {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    color: #F7F7F7;
+}
+
+.profile-validate-btn:hover {
+    opacity: 0.95;
+}
+
+/* Champs en lecture seule (avant clic sur Modifier) */
+.profile-widget:not(.profile-widget--editing) .profile-editable {
+    background: #f5f5f5;
+    cursor: default;
+}
+
+.profile-widget:not(.profile-widget--editing) .profile-checkbox {
+    pointer-events: none;
+    opacity: 0.85;
 }
 
 /* ========== Responsive : Tablette et Mobile (esthétique widget info staff) ========== */
@@ -1023,7 +1079,9 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
         font-size: 16px; /* Évite le zoom iOS sur focus */
     }
 
-    .profile-save-btn {
+    .profile-edit-btn,
+    .profile-cancel-btn,
+    .profile-validate-btn {
         padding: clamp(14px, 3vw, 18px);
         font-size: clamp(14px, 3.5vw, 16px);
     }

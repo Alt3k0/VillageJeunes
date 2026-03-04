@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style_adherent.css">
+    <link rel="stylesheet" href="Test_fond/fond.css">
 </head>
 <body data-user-role="adherent">
     <!-- data-user-role : "adherent" (défaut) | "benevole" (si id_rôle = bénévole en BDD) | "partenaire" (réservé) -->
@@ -674,7 +675,13 @@
                 </div>
             </div>
 
-            <button type="button" class="profile-save-btn" id="profileSaveBtn">Enregistrer les modifications</button>
+            <div class="profile-actions">
+                <button type="button" class="profile-edit-btn" id="profileEditBtn">Modifier</button>
+                <div class="profile-edit-buttons" id="profileEditButtons" hidden>
+                    <button type="button" class="profile-cancel-btn" id="profileCancelBtn">Annuler</button>
+                    <button type="button" class="profile-validate-btn" id="profileValidateBtn">Valider</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -695,6 +702,7 @@
         </div>
     </footer>
 
+    <script src="Test_fond/fond.js"></script>
     <script src="config.js"></script>
     <script src="form-data.js"></script>
     <script src="accueil-adherent.js"></script>

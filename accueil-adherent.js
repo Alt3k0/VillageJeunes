@@ -1542,6 +1542,60 @@ document.addEventListener('DOMContentLoaded', function() {
         list.forEach(e => { sel.innerHTML += `<option value="${e}">${e}</option>`; });
     }
 
+    function setProfileEditMode(editing) {
+        var widget = document.querySelector('#profileOverlay .profile-widget');
+        var actionsEl = document.querySelector('.profile-actions');
+        var editBtn = document.getElementById('profileEditBtn');
+        var editButtons = document.getElementById('profileEditButtons');
+        var editables = document.querySelectorAll('#profileOverlay .profile-editable, #profileOverlay .profile-checkbox');
+        if (widget) widget.classList.toggle('profile-widget--editing', !!editing);
+        if (actionsEl) actionsEl.classList.toggle('profile-actions--editing', !!editing);
+        if (editBtn) editBtn.hidden = !!editing;
+        if (editButtons) editButtons.hidden = !editing;
+        editables.forEach(function (el) {
+            var isTextInput = el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'email' || el.type === 'tel');
+            if (el.tagName === 'SELECT' || (el.tagName === 'INPUT' && el.type === 'checkbox')) {
+                el.disabled = !editing;
+            } else if (isTextInput || el.tagName === 'TEXTAREA') {
+                el.readOnly = !editing;
+            }
+        });
+    }
+
+    function fillProfileFormFromData() {
+        setProfileValue('profileProvince', profileData.province);
+        setProfileValue('profileNickname', profileData.nickname);
+        setProfileValue('profileMedicalInfo', profileData.medicalInfo);
+        setProfileValue('profileEstEtudiant', profileData.estEtudiant);
+        setProfileValue('profileTypeEtablissement', profileData.typeEtablissement);
+        setProfileValue('profileRechercheEmploi', profileData.rechercheEmploi);
+        setProfileValue('profileActivitePayee', profileData.activitePayee);
+        setProfileValue('profileAsso', profileData.asso);
+        setProfileValue('profileAutreActivite', profileData.autreActivite);
+        setProfilePermis(profileData.permis);
+        setProfileMobilite(profileData.mobilite);
+        var comm = document.getElementById('profileCommune');
+        if (comm) comm.value = profileData.commune || '';
+        loadProfileQuartiers(profileData.province, profileData.commune);
+        loadProfileEtablissements(profileData.typeEtablissement);
+        setTimeout(function () {
+            var qs = document.getElementById('profileQuartier');
+            var qi = document.getElementById('profileQuartierInput');
+            var ds = document.getElementById('profileDistrict');
+            var di = document.getElementById('profileDistrictInput');
+            if (profileData.province === 'Îles Loyauté' && ds) ds.value = profileData.district || '';
+            else if (qs && profileData.quartier) { if (qs.options.length) qs.value = profileData.quartier; else if (qi) qi.value = profileData.quartier || ''; }
+            if (di && profileData.district) di.value = profileData.district || '';
+            if (profileData.typeEtablissement === 'EtudesSup') {
+                var ei = document.getElementById('profileEtudesSup');
+                if (ei) ei.value = profileData.etudesSup || '';
+            } else {
+                var es = document.getElementById('profileEtablissement');
+                if (es) es.value = profileData.etablissement || '';
+            }
+        }, 80);
+    }
+
     function showProfile() {
         if (!profileOverlay) return;
         initProfileSelects();
@@ -1595,6 +1649,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setProfileMobilite(profileData.mobilite);
         const mineurSection = document.getElementById('profileMineurSection');
         if (mineurSection) mineurSection.style.display = profileData.parentNom ? 'block' : 'none';
+        setProfileEditMode(false);
         if (profileBackdrop) {
             profileBackdrop.hidden = false;
             profileBackdrop.setAttribute('aria-hidden', 'false');
@@ -1634,7 +1689,15 @@ document.addEventListener('DOMContentLoaded', function() {
         profileData.permis = getProfilePermisValues();
         console.log('Profil enregistré:', profileData);
         alert('Modifications enregistrées.');
+        setProfileEditMode(false);
     }
+
+    document.getElementById('profileEditBtn')?.addEventListener('click', function () { setProfileEditMode(true); });
+    document.getElementById('profileCancelBtn')?.addEventListener('click', function () {
+        fillProfileFormFromData();
+        setProfileEditMode(false);
+    });
+    document.getElementById('profileValidateBtn')?.addEventListener('click', function () { saveProfile(); });
 
     document.getElementById('profileProvince')?.addEventListener('change', function() {
         profileData.province = this.value;
@@ -1656,9 +1719,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (profileIcon) profileIcon.addEventListener('click', function(e) { e.stopPropagation(); showProfile(); });
     if (closeProfileButton) closeProfileButton.addEventListener('click', closeProfile);
     if (profileOverlay) profileOverlay.addEventListener('click', function(e) { if (e.target === profileOverlay) closeProfile(); });
-    
-    const profileSaveBtn = document.getElementById('profileSaveBtn');
-    if (profileSaveBtn) profileSaveBtn.addEventListener('click', saveProfile);
     
     // Gestion du widget de messagerie
     const messageOverlay = document.getElementById('messageOverlay');

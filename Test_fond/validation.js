@@ -18,15 +18,8 @@
         MEMBER_ROLES: Object.freeze(['Adhérent', 'Bénévole', 'Partenaire']),
     });
 
-    /**
-     * Caractères autorisés pour les champs texte (noms, adresses, etc.)
-     * Autorise : lettres (dont accentuées), chiffres, espaces, apostrophe, tiret, ponctuation courante.
-     * Interdit : < > " \ ; = -- /* */ et caractères de contrôle (prévention XSS / injection).
-     */
     const REGEX_SAFE_TEXT = /^[\p{L}\p{N}\p{M}\s'\-.,!?():/]*$/u;
-    /** Texte long (textarea) : idem + retours à la ligne (pas de ; pour éviter injection) */
     const REGEX_SAFE_TEXT_MULTILINE = /^[\p{L}\p{N}\p{M}\s'\-.,!?():/\n\r]*$/u;
-    /** Téléphone : chiffres et espaces uniquement */
     const REGEX_TELEPHONE = /^[0-9\s]*$/;
 
     function getFormValue(selector) {
@@ -40,10 +33,6 @@
         }
     }
 
-    /**
-     * Vérifie que la chaîne ne contient que des caractères autorisés (prévention XSS / injection).
-     * Lance une erreur si des caractères non autorisés sont présents.
-     */
     function validateSafeText(value, label, maxLength, required, options) {
         const opts = options || {};
         const allowMultiline = !!opts.allowMultiline;
@@ -64,9 +53,6 @@
         return str;
     }
 
-    /**
-     * Téléphone : chiffres et espaces uniquement, longueur limitée.
-     */
     function validateTelephone(value, label, required) {
         const str = value != null ? String(value).trim() : '';
         if (required && str.length === 0) {
@@ -81,9 +67,6 @@
         return str;
     }
 
-    /**
-     * Retourne la somme des longueurs de tous les champs texte du formulaire (éviter surcharge mémoire).
-     */
     function getTotalFormTextLength(formSelector) {
         const form = typeof formSelector === 'string' ? document.querySelector(formSelector) : formSelector;
         if (!form) return 0;
@@ -181,109 +164,6 @@
         return str;
     }
 
-    function validatePassword(value, required) {
-        const str = value != null ? String(value).trim() : '';
-        if (required && str.length === 0) {
-            throw new Error('Le mot de passe est obligatoire.');
-        }
-        if (str.length > 0 && str.length < VALIDATION.PASSWORD_MIN) {
-            throw new Error(`Le mot de passe doit contenir au moins ${VALIDATION.PASSWORD_MIN} caractères.`);
-        }
-        if (str.length > VALIDATION.PASSWORD_MAX) {
-            throw new Error(`Le mot de passe ne doit pas dépasser ${VALIDATION.PASSWORD_MAX} caractères.`);
-        }
-        return str;
-    }
-
-    function validateSearchTerm(value) {
-        const str = value != null ? String(value).trim() : '';
-        if (str.length > VALIDATION.MAX_LENGTH_SHORT) {
-            throw new Error('La recherche ne doit pas dépasser ' + VALIDATION.MAX_LENGTH_SHORT + ' caractères.');
-        }
-        return str;
-    }
-
-    function validateMemberRole(value) {
-        const str = value != null ? String(value).trim() : '';
-        if (str.length === 0) return VALIDATION.MEMBER_ROLES[0];
-        if (!VALIDATION.MEMBER_ROLES.includes(str)) {
-            throw new Error('Rôle invalide. Valeurs attendues : ' + VALIDATION.MEMBER_ROLES.join(', ') + '.');
-        }
-        return str;
-    }
-
-    /**
-     * Tronque une chaîne à maxLength (pour affichage/stockage sans lever d'erreur).
-     */
-    function safeTruncate(value, maxLength) {
-        const str = value != null ? String(value).trim() : '';
-        if (str.length <= maxLength) return str;
-        return str.slice(0, maxLength);
-    }
-
-    /**
-     * Attache un compteur de caractères (X / max) sous un input/textarea.
-     * Préviens l'utilisateur avant troncature. Option : warnThreshold (0-1) pour ajouter une classe "warn" au-delà.
-     */
-    function attachCharCounter(inputOrSelector, maxLength, options) {
-        if (maxLength == null || maxLength <= 0) return;
-        const input = typeof inputOrSelector === 'string'
-            ? document.querySelector(inputOrSelector)
-            : inputOrSelector;
-        if (!input || !input.nodeName) return;
-        const opts = options || {};
-        const warnThreshold = opts.warnThreshold != null ? opts.warnThreshold : 0.9;
-        const counterClass = opts.counterClass || 'char-counter';
-
-        let counterEl = input.parentNode.querySelector('.' + counterClass);
-        if (!counterEl) {
-            counterEl = document.createElement('span');
-            counterEl.className = counterClass;
-            counterEl.setAttribute('aria-live', 'polite');
-            input.parentNode.appendChild(counterEl);
-        }
-
-        function update() {
-            const len = (input.value || '').length;
-            counterEl.textContent = len + ' / ' + maxLength;
-            if (len >= warnThreshold * maxLength) {
-                counterEl.classList.add(counterClass + '--warn');
-            } else {
-                counterEl.classList.remove(counterClass + '--warn');
-            }
-        }
-
-        input.addEventListener('input', update);
-        input.addEventListener('change', update);
-        update();
-    }
-
-    /**
-     * Affiche un message d'aide sous un champ (ex. "Chiffres uniquement").
-     */
-    function setInputHint(inputOrSelector, hintText) {
-        const input = typeof inputOrSelector === 'string'
-            ? document.querySelector(inputOrSelector)
-            : inputOrSelector;
-        if (!input || !input.nodeName || !hintText) return;
-        const hintClass = 'input-hint';
-        let hintEl = input.parentNode.querySelector('.' + hintClass);
-        if (!hintEl) {
-            hintEl = document.createElement('span');
-            hintEl.className = hintClass;
-            input.parentNode.appendChild(hintEl);
-        }
-        hintEl.textContent = hintText;
-    }
-
-    (function injectCharCounterStyles() {
-        if (document.getElementById('validation-ux-styles')) return;
-        const style = document.createElement('style');
-        style.id = 'validation-ux-styles';
-        style.textContent = '.char-counter{display:block;font-size:0.8rem;color:#6e6f75;margin-top:0.25rem;}.char-counter--warn{color:#c0392b;}.input-hint{display:block;font-size:0.8rem;color:#6e6f75;margin-top:0.25rem;}';
-        document.head.appendChild(style);
-    })();
-
     global.VALIDATION = VALIDATION;
     global.getFormValue = getFormValue;
     global.validateSafeText = validateSafeText;
@@ -295,11 +175,25 @@
     global.validateStringArray = validateStringArray;
     global.validateDateString = validateDateString;
     global.validateSignature = validateSignature;
-    global.validatePassword = validatePassword;
-    global.validateSearchTerm = validateSearchTerm;
-    global.validateMemberRole = validateMemberRole;
-    global.safeTruncate = safeTruncate;
+
+    function attachCharCounter(inputOrSelector, maxLength) {
+        if (maxLength == null || maxLength <= 0) return;
+        const input = typeof inputOrSelector === 'string' ? document.querySelector(inputOrSelector) : inputOrSelector;
+        if (!input || !input.parentNode) return;
+        let counterEl = input.parentNode.querySelector('.char-counter');
+        if (!counterEl) {
+            counterEl = document.createElement('span');
+            counterEl.className = 'char-counter';
+            counterEl.setAttribute('aria-live', 'polite');
+            input.parentNode.appendChild(counterEl);
+        }
+        function update() {
+            counterEl.textContent = (input.value || '').length + ' / ' + maxLength;
+        }
+        input.addEventListener('input', update);
+        input.addEventListener('change', update);
+        update();
+    }
     global.attachCharCounter = attachCharCounter;
-    global.setInputHint = setInputHint;
 
 })(typeof window !== 'undefined' ? window : this);

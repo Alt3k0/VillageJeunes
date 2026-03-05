@@ -320,6 +320,13 @@ function toggleCalendars() {
         if (sallesLegend) sallesLegend.style.display = 'block';
         if (searchContainer) searchContainer.style.display = 'none';
     }
+    // Si l'emploi du temps est ouvert, mettre à jour titre et contenu (Planning salles / Activités)
+    const scheduleWidget = document.getElementById('scheduleWidget');
+    if (scheduleWidget && scheduleWidget.classList.contains('active')) {
+        const titleEl = document.getElementById('scheduleTitle');
+        if (titleEl) titleEl.textContent = currentView === 'salles' ? 'Planning des salles' : 'Activités';
+        showActivityPopup(selectedDate);
+    }
 }
 
 function updateSelectors() {
@@ -419,7 +426,7 @@ function selectDate(date) {
     }
 }
 
-// Afficher le widget d'emploi du temps
+// Afficher le widget d'emploi du temps (titre et contenu selon vue : Activités ou Planning salles)
 function showActivityPopup(date) {
     const dateKey = formatDateKey(date);
     const activities = getActivitiesForDate(date);
@@ -427,8 +434,12 @@ function showActivityPopup(date) {
     const widget = document.getElementById('scheduleWidget');
     const dateText = document.getElementById('scheduleDateText');
     const timeline = document.getElementById('scheduleTimeline');
+    const titleEl = document.getElementById('scheduleTitle');
     
     if (!widget || !dateText || !timeline) return;
+    
+    // Titre selon la vue : "Activités" ou "Planning salles"
+    if (titleEl) titleEl.textContent = currentView === 'salles' ? 'Planning des salles' : 'Activités';
     
     dateText.textContent = formatDateShort(date);
     
@@ -437,17 +448,34 @@ function showActivityPopup(date) {
     const noMsgs = timeline.querySelectorAll('.no-activity-message');
     noMsgs.forEach(m => m.remove());
     
-    if (activities.length > 0) {
-        activities.forEach((act) => {
-            const block = createActivityBlock(act, 0, 1);
-            if (block) timeline.appendChild(block);
-        });
+    if (currentView === 'salles') {
+        // Vue Salles occupées : afficher les créneaux par salle (même données activités, affichage par lieu)
+        if (activities.length > 0) {
+            activities.forEach((act) => {
+                const block = createSalleBlock(act, 0, 1);
+                if (block) timeline.appendChild(block);
+            });
+        } else {
+            const noMsg = document.createElement('div');
+            noMsg.className = 'schedule-activity no-activity-message';
+            noMsg.style.cssText = 'position:relative;top:50%;left:50%;transform:translate(-50%,-50%);color:#6e6f75;';
+            noMsg.textContent = 'Aucun créneau occupé pour cette date';
+            timeline.appendChild(noMsg);
+        }
     } else {
-        const noMsg = document.createElement('div');
-        noMsg.className = 'schedule-activity no-activity-message';
-        noMsg.style.cssText = 'position:relative;top:50%;left:50%;transform:translate(-50%,-50%);color:#6e6f75;';
-        noMsg.textContent = 'Aucune activité prévue pour cette date';
-        timeline.appendChild(noMsg);
+        // Vue Activités : afficher les activités
+        if (activities.length > 0) {
+            activities.forEach((act) => {
+                const block = createActivityBlock(act, 0, 1);
+                if (block) timeline.appendChild(block);
+            });
+        } else {
+            const noMsg = document.createElement('div');
+            noMsg.className = 'schedule-activity no-activity-message';
+            noMsg.style.cssText = 'position:relative;top:50%;left:50%;transform:translate(-50%,-50%);color:#6e6f75;';
+            noMsg.textContent = 'Aucune activité prévue pour cette date';
+            timeline.appendChild(noMsg);
+        }
     }
     
     const today = new Date();
@@ -622,6 +650,71 @@ function createActivityBlock(activity, columnIndex = 0, totalColumns = 1) {
         const activities = getActivitiesForDate(selectedDate);
         showActivityDetail(activityData, 'schedule', activities);
     });
+    
+    return block;
+}
+
+// Créer un bloc "salle prise" pour le timeline Planning salles (couleur salle + durée de réservation, pas de clic)
+function createSalleBlock(activity, columnIndex = 0, totalColumns = 1) {
+    const block = document.createElement('div');
+    block.className = 'schedule-activity schedule-salle-block';
+    block.style.cursor = 'default';
+    block.setAttribute('data-column', columnIndex);
+    block.setAttribute('data-total-columns', totalColumns);
+    block.style.setProperty('--activity-col', columnIndex);
+    block.style.setProperty('--activity-total', totalColumns);
+    
+    const salleName = activity.location || 'Salle';
+    const salleColor = salleToColor[salleName] || '#6e6f75';
+    
+    const timeParts = activity.time.split(' - ');
+    let durationHours = 1;
+    if (timeParts.length === 2) {
+        const startMatch = timeParts[0].match(/(\d+)h(\d+)?/);
+        const endMatch = timeParts[1].match(/(\d+)h(\d+)?/);
+        if (startMatch && endMatch) {
+            const startHour = parseInt(startMatch[1]);
+            const startMinute = startMatch[2] ? parseInt(startMatch[2]) : 0;
+            const endHour = parseInt(endMatch[1]);
+            const endMinute = endMatch[2] ? parseInt(endMatch[2]) : 0;
+            const startTotalMinutes = startHour * 60 + startMinute;
+            const endTotalMinutes = endHour * 60 + endMinute;
+            durationHours = (endTotalMinutes - startTotalMinutes) / 60;
+        }
+    }
+    
+    const pixelsPerHour = 20;
+    const paddingTop = 10;
+    const timelineHeight = 300;
+    let startHour = 6, startMinute = 0;
+    if (timeParts.length === 2) {
+        const startMatch = timeParts[0].match(/(\d+)h(\d+)?/);
+        if (startMatch) {
+            startHour = parseInt(startMatch[1]);
+            startMinute = startMatch[2] ? parseInt(startMatch[2]) : 0;
+        }
+    } else {
+        const timeMatch = activity.time.match(/(\d+)h(\d+)?/);
+        if (timeMatch) {
+            startHour = parseInt(timeMatch[1]);
+            startMinute = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
+        }
+    }
+    
+    const topPosition = paddingTop + Math.max(0, (startHour - 6) * pixelsPerHour + (startMinute / 60) * pixelsPerHour);
+    const height = Math.min(durationHours * pixelsPerHour, timelineHeight - topPosition);
+    if (topPosition >= timelineHeight || height <= 0) return null;
+    
+    block.style.top = `${topPosition}px`;
+    block.style.height = `${height}px`;
+    const rgb = hexToRgb(salleColor);
+    if (rgb) block.style.backgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+    else { block.style.backgroundColor = salleColor; block.style.opacity = '0.5'; }
+    
+    const text = document.createElement('span');
+    text.className = 'schedule-activity-text';
+    text.textContent = height >= 40 ? `${salleName} · ${formatDuration(durationHours)}` : salleName;
+    block.appendChild(text);
     
     return block;
 }

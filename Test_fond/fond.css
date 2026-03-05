@@ -1,0 +1,45 @@
+/**
+ * Fonds par type d'utilisateur – Vill'Age Jeunes
+ * Même fond « lampe à lave » partout (adherent, benevole, partenaire, staff).
+ */
+
+/* Tous les types : fond transparent + stacking context pour laisser voir la lampe à lave */
+body.fond-adherent,
+body.fond-benevole,
+body.fond-partenaire,
+body.fond-staff {
+  z-index: 0;
+  background-color: transparent;
+  background-image: none;
+}
+
+/* Contenu au-dessus de la lampe à lave (sinon la lave les recouvre sur index/connexion) */
+body.fond-adherent > *:not(.fond-lava-wrap),
+body.fond-benevole > *:not(.fond-lava-wrap),
+body.fond-partenaire > *:not(.fond-lava-wrap),
+body.fond-staff > *:not(.fond-lava-wrap) {
+  z-index: 1;
+}
+
+/* Conteneur lampe à lave : base + blobs, derrière le contenu */
+.fond-lava-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(160deg, #f5f7f9 0%, #eef1f5 50%, #e8ecf1 100%);
+}
+
+/* Blobs un peu plus gros, floutés, apaisants */
+.fond-lava-blob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+  transform: translate(-50%, -50%);
+}

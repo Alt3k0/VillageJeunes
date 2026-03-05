@@ -234,7 +234,7 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active {
 body[data-user-role="adherent"] .demandes-adherent-overlay.active .demandes-adherent-widget,
 body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-adherent-widget {
     height: auto;
-    max-height: 80vh;
+    max-height: fit-content;
 }
 
 .demandes-adherent-widget {
@@ -242,7 +242,7 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
     border-radius: clamp(12px, 1.5vw, 24px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: clamp(260px, 75vw, 380px);
+    max-width: clamp(260px, 65vw, 30rem);
     max-height: 65vh;
     padding: clamp(1.1rem, 2vw, 1.75rem);
     position: relative;
@@ -277,9 +277,7 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
     height: 100%;
 }
 
-.demandes-adherent-step {
-    padding-right: clamp(2.5rem, 4vw, 3.5rem);
-}
+
 
 .demandes-adherent-title {
     font-family: 'Archivo Black', sans-serif;
@@ -1171,10 +1169,10 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
 @media (orientation: portrait) {
     .demandes-adherent-widget,
     .demandes-adherent-widget.reserver-salle-widget {
-        max-height: 70vh;
+        max-height: fit-content;
     }
     .demandes-adherent-step.reserver-salle-step-content {
-        max-height: 70vh;
+        max-height: fit-content;
     }
 }
 
@@ -1254,6 +1252,7 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
     gap: clamp(0.75rem, 1.5vw, 1.25rem);
     margin-bottom: 1rem;
 }
+
 @media (max-width: 500px) {
     .reserver-salle-signature-fields {
         grid-template-columns: 1fr;
@@ -1309,4 +1308,12 @@ body[data-user-role="partenaire"] .demandes-adherent-overlay.active .demandes-ad
 }
 .reserver-salle-form .demandes-form-actions {
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+@media (min-width: 769px) and (orientation: portrait) {
+    .demandes-adherent-widget{
+        scale: 1.2;
+        max-height: fit-content;
+        width: 60vw;
+    }
 }

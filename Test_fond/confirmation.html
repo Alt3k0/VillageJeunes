@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmation - VILL'AGE JEUNES</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Archivo+Black&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="/public/styles/styles.css" />
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #F7F7F7;
+      padding: 7.6vh 3.25vw;
+      margin: 0;
+      font-family: "Rubik", Arial, sans-serif;
+    }
+
+    .confirmation-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0;
+      flex: 1;
+    }
+
+    .confirmation-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .confirmation-box {
+      width: 100%;
+      background-color: #F7F7F7;
+      border: 2px solid #649d50;
+      border-radius: 20px;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .confirmation-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1e1e1d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .confirmation-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1e1e1d;
+      text-align: left;
+    }
+
+    .confirmation-text strong {
+      font-weight: 700;
+    }
+
+    .emoji {
+      font-size: 24px;
+    }
+
+    .pay-info {
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid rgba(100, 157, 80, 0.25);
+    }
+
+    .pay-info h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e1e1d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pay-info .small {
+      font-size: 13px;
+      color: #6e6f75;
+      margin-top: 8px;
+    }
+
+    .pay-method {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(30, 30, 29, 0.15);
+    }
+
+    .pay-method-title {
+      font-weight: 800;
+      margin: 0 0 6px 0;
+    }
+
+    .pay-info ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .pay-info li {
+      margin: 6px 0;
+    }
+
+    .confirmation-text a {
+      color: #649d50;
+      font-weight: 700;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .btn-connexion {
+      width: 100%;
+      height: 7.375vh;
+      min-height: 59px;
+      padding: 2.5vh;
+      border-radius: 1.5vh;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .btn-connexion-primary {
+      background-color: #649d50;
+      color: #F7F7F7;
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+      body {
+        padding: 2.5vh 5vw;
+      }
+
+      .confirmation-container {
+        max-width: 90%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 2.5vh 3.75vw;
+      }
+
+      .confirmation-container {
+        max-width: 100%;
+      }
+
+      .confirmation-box {
+        padding: 30px 20px;
+      }
+
+      .confirmation-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="confirmation-container">
+    <!-- Logo -->
+    <div class="logo-container" style="cursor: pointer;" onclick="window.location.href='index.html'">
+      <img src="/public/assets/LogoRond.svg" alt="VILL'AGE JEUNES" class="logo-svg" />
+      <div class="logo" style="display: none;">
+        <span class="logo-text">VILL'AGE<br />JEUNES</span>
+      </div>
+    </div>
+
+    <!-- Boîte de confirmation -->
+    <div class="confirmation-box">
+      <h1 class="confirmation-title">
+        MERCI POUR TON INSCRIPTION!
+        <span class="emoji">🎉</span>
+      </h1>
+
+      <div class="confirmation-text">
+        <p>
+          Ton aventure commence maintenant. Pour finaliser ton inscription, passe à l'accueil de Vill'Age Jeunes
+          et règle le montant de <strong>1000 FCFP</strong>.
+        </p>
+
+        <!-- Paiement (Clic&Mouv / Pass Culture) -->
+        <div class="pay-info" aria-label="Informations de paiement Clic&Mouv et pass Culture">
+          <h2>💳 Dsipositifs de paiement possibles</h2>
+
+          <div class="pay-method">
+            <p class="pay-method-title">✅ Clic&amp;Mouv’</p>
+
+            <p>
+              Tu as entre <strong>11 et 17 ans</strong> et tu es <strong>scolarisé en Province Sud</strong> ?
+              Alors tu peux utiliser <strong>Clic&amp;Mouv’</strong> pour régler ton adhésion !
+            </p>
+            </br>
+            <p>
+              La Province Sud t’offre un crédit de <strong>15 000 F CFP</strong> via l’application,
+              utilisable pour des activités culturelles, sportives et de loisirs.
+            </p>
+          </div>
+
+          <div class="pay-method">
+            <p class="pay-method-title">✅ Pass Culture</p>
+
+            <p>
+              Tu as <strong>17 ou 18 ans</strong> et tu habites en <strong>Province Sud</strong> ?
+              Tu peux bénéficier du <strong>Pass Culture</strong> pour payer ton adhésion.
+            </p>
+            </br>
+            <p>
+              Le montant accordé dépend de ton âge au moment de l’inscription :
+            </p>
+
+            <ul>
+              <li><strong>À 17 ans</strong> : 5 965 F CFP</li>
+              <li><strong>À 18 ans</strong> : 17 900 F CFP</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="margin-top: 15px;">
+          On t'attend avec le sourire et la bonne vibe <span class="emoji">👋</span>
+          Hâte de te voir parmi nous !
+        </p>
+      </div>
+
+      <div>
+        <button class="btn-connexion btn-connexion-primary"
+          onclick="window.location.href='/index.html'">Accueil</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="#" class="footer-link">Politique de confidentialité</a>
+      <span class="footer-separator">|</span>
+      <a href="#" class="footer-link">Mentions légales</a>
+    </footer>
+  </div>
+</body>
+
+</html>

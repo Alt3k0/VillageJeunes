@@ -337,6 +337,14 @@ body {
     transform: translateY(0);
 }
 
+.btn-next:disabled,
+.btn-previous:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    pointer-events: none;
+}
+
 .btn-submit {
     flex: 1;
     padding: 16px 20px;

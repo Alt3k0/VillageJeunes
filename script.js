@@ -199,6 +199,117 @@ function getPreviousRealStep(currentStep) {
     return currentStep - 1;
 }
 
+// Noms des étapes pour les messages d'erreur
+var stepTitles = {
+    1: 'Informations personnelles',
+    2: 'Coordonnées',
+    3: 'Comment j\'ai connu le Vill\'Âge',
+    4: 'Ce que je fais dans la vie',
+    5: 'Mobilité et Permis',
+    6: 'Droit à l\'image',
+    7: 'Le fonctionnement d\'Ici',
+    8: 'Moins de 18 ans (responsable légal)'
+};
+
+// Retourne la liste des champs manquants pour une étape (libellés affichés à l'utilisateur)
+function getStepMissingFields(step) {
+    var val = function (sel) { return (typeof getFormValue === 'function' ? getFormValue(sel) : (document.querySelector(sel) && document.querySelector(sel).value) || '').trim(); };
+    var el = function (id) { return document.getElementById(id); };
+    var missing = [];
+
+    switch (step) {
+        case 1:
+            if (document.querySelectorAll('[name="genre"]:checked').length < 1) missing.push('Genre');
+            if (!val('[name="nom"]')) missing.push('Nom');
+            if (!val('[name="prenom"]')) missing.push('Prénom');
+            if (document.querySelectorAll('[name="preferenceNom"]:checked').length < 1) missing.push('Préférence (prénom ou surnom)');
+            if (!(el('jourNaissance') && el('jourNaissance').value)) missing.push('Jour de naissance');
+            if (!(el('moisNaissance') && el('moisNaissance').value)) missing.push('Mois de naissance');
+            if (!(el('anneeNaissance') && el('anneeNaissance').value)) missing.push('Année de naissance');
+            break;
+        case 2:
+            if (!val('#province-select')) missing.push('Province');
+            else {
+                var communeSelect = el('commune-select');
+                var commune = communeSelect && communeSelect.style.display !== 'none' ? (communeSelect.value || '').trim() : '';
+                var villeInput = el('ville-village-tribu-input');
+                var ville = villeInput && villeInput.style.display !== 'none' ? (villeInput.value || '').trim() : '';
+                if (!commune && !ville) missing.push('Commune ou Ville/Village/Tribu');
+            }
+            if (!val('[name="email"]')) missing.push('Email');
+            if (!val('[name="telephone"]')) missing.push('Téléphone');
+            break;
+        case 3:
+            if (document.querySelectorAll('[name="decouverte"]:checked').length < 1) missing.push('Au moins une option (comment j\'ai connu le Vill\'Âge)');
+            break;
+        case 4:
+            if (document.querySelectorAll('[name="activite"]:checked').length < 1) missing.push('Au moins une activité');
+            else {
+                var etudiantCheck = document.getElementById('etudiant-check');
+                if (etudiantCheck && etudiantCheck.checked) {
+                    var typeEtab = val('[name="typeEtablissement"]');
+                    if (!typeEtab) missing.push('Type d\'établissement');
+                    else if (typeEtab === 'EtudesSup') {
+                        if (!val('[name="etudesSup"]')) missing.push('Établissement (études sup)');
+                    } else {
+                        var etabSelect = el('etablissement-select');
+                        if (!etabSelect || !(etabSelect.value || '').trim()) missing.push('Établissement');
+                    }
+                }
+                var payeeCheck = document.getElementById('payee-check');
+                if (payeeCheck && payeeCheck.checked && document.querySelectorAll('[name="typeActivitePayee"]:checked').length < 1) missing.push('Type d\'activité payée');
+            }
+            break;
+        case 5:
+            if (document.querySelectorAll('[name="mobilite"]:checked').length < 1) missing.push('Mobilité');
+            if (document.querySelectorAll('[name="permis"]:checked').length < 1) missing.push('Permis');
+            break;
+        case 6:
+            if (!document.querySelector('[name="droitImage"]:checked')) missing.push('Choix (droit à l\'image)');
+            break;
+        case 7:
+            if (!(el('reglement-accepte') && el('reglement-accepte').value === 'true')) missing.push('Règlement intérieur (lire et approuver)');
+            if (!document.querySelector('[name="donneesPersonnelles"]:checked')) missing.push('Acceptation utilisation des données personnelles');
+            if (!document.querySelector('[name="medecin"]:checked')) missing.push('Engagement avis médecin');
+            if (!document.querySelector('[name="autorisationUrgence"]:checked')) missing.push('Autorisation urgence / soins');
+            break;
+        case 8:
+            if (!document.querySelector('[name="parentReglement"]:checked')) missing.push('Règlement intérieur (parent)');
+            if (!document.querySelector('[name="parentInfosExactes"]:checked')) missing.push('Exactitude des infos (parent)');
+            if (!document.querySelector('[name="parentAutorisationSante"]:checked')) missing.push('Autorisation santé (parent)');
+            if (!val('[name="parentNom"]')) missing.push('Nom du responsable');
+            if (!val('[name="parentTelephone"]')) missing.push('Téléphone du responsable');
+            if (!val('[name="parentEmail"]')) missing.push('Email du responsable');
+            break;
+    }
+    return missing;
+}
+
+// Valide toutes les étapes actuellement visibles ; retourne { valid: boolean, errors: [{ step, title, missing }] }
+function getVisibleStepsValidation() {
+    var errors = [];
+    for (var s = 1; s <= totalSteps; s++) {
+        var stepEl = document.getElementById('step' + s);
+        if (!stepEl || !stepEl.classList.contains('active')) continue;
+        if (s === 8 && !isUnder18()) continue;
+        var missing = getStepMissingFields(s);
+        if (missing.length > 0) {
+            errors.push({ step: s, title: stepTitles[s] || ('Étape ' + s), missing: missing });
+        }
+    }
+    return { valid: errors.length === 0, errors: errors };
+}
+
+// Affiche le message listant les sections et champs manquants, puis retourne false pour bloquer l'avancement
+function showValidationErrors(validation) {
+    var msg = 'Toutes les sections visibles doivent être remplies.\n\nVeuillez compléter :\n\n';
+    validation.errors.forEach(function (e) {
+        msg += '• ' + e.title + ' : ' + e.missing.join(', ') + '\n';
+    });
+    alert(msg);
+    return false;
+}
+
 function showStep(step) {
     // Masquer toutes les étapes
     for (let i = 1; i <= totalSteps; i++) {
@@ -260,6 +371,11 @@ function showStep(step) {
 }
 
 function nextStep() {
+    var validation = getVisibleStepsValidation();
+    if (!validation.valid) {
+        showValidationErrors(validation);
+        return;
+    }
     const nextStepNum = getNextRealStep(currentStep);
     
     if (nextStepNum !== null) {
@@ -330,7 +446,12 @@ function submitForm() {
 
     let formData;
     try {
-        // Lecture et validation sécurisées des champs (type, longueur, format)
+        if (typeof getTotalFormTextLength === 'function' && typeof VALIDATION !== 'undefined' && VALIDATION.MAX_TOTAL_FORM_CHARS) {
+            const totalChars = getTotalFormTextLength('.page-inscription .form-container');
+            if (totalChars > VALIDATION.MAX_TOTAL_FORM_CHARS) {
+                throw new Error('Le formulaire contient trop de données (limite ' + VALIDATION.MAX_TOTAL_FORM_CHARS + ' caractères au total). Réduisez le texte dans certains champs.');
+            }
+        }
         const genreEls = document.querySelectorAll('[name="genre"]:checked');
         const preferenceNomEls = document.querySelectorAll('[name="preferenceNom"]:checked');
         const decouverteEls = document.querySelectorAll('[name="decouverte"]:checked');
@@ -348,55 +469,58 @@ function submitForm() {
         const jourNaissance = getFormValue('#jourNaissance') || document.getElementById('jourNaissance')?.value || '';
         const moisNaissance = getFormValue('#moisNaissance') || document.getElementById('moisNaissance')?.value || '';
         const anneeNaissance = getFormValue('#anneeNaissance') || document.getElementById('anneeNaissance')?.value || '';
-        const nom = validateString(getFormValue('[name="nom"]'), 'Nom', VALIDATION.MAX_LENGTH_SHORT, true);
-        const prenom = validateString(getFormValue('[name="prenom"]'), 'Prénom', VALIDATION.MAX_LENGTH_SHORT, true);
-        const surnom = validateOptionalString(getFormValue('[name="surnom"]'));
+        const nom = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="nom"]'), 'Nom', VALIDATION.MAX_LENGTH_SHORT, true) : validateString(getFormValue('[name="nom"]'), 'Nom', VALIDATION.MAX_LENGTH_SHORT, true);
+        const prenom = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="prenom"]'), 'Prénom', VALIDATION.MAX_LENGTH_SHORT, true) : validateString(getFormValue('[name="prenom"]'), 'Prénom', VALIDATION.MAX_LENGTH_SHORT, true);
+        const surnom = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="surnom"]'), 'Surnom', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="surnom"]'));
         const preferenceNom = validateStringArray(preferenceNomEls, 'Préférence nom');
 
-        const ville = validateOptionalString(getFormValue('[name="ville"]'));
-        const quartier = validateOptionalString(getFormValue('[name="quartier"]'));
+        const ville = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="ville"]'), 'Ville', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="ville"]'));
+        const quartier = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="quartier"]'), 'Quartier', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="quartier"]'));
         const email = validateEmail(getFormValue('[name="email"]'), true);
-        const telephone = validateOptionalString(getFormValue('[name="telephone"]'));
+        const telephone = typeof validateTelephone === 'function' ? validateTelephone(getFormValue('[name="telephone"]'), 'Téléphone', false) : validateOptionalString(getFormValue('[name="telephone"]'));
         const whatsapp = document.querySelector('[name="whatsapp"]')?.checked === true;
 
         const decouverte = validateStringArray(decouverteEls, 'Découverte');
         const activite = validateStringArray(activiteEls, 'Activité');
-        const nomEtablissement = validateOptionalString(getFormValue('[name="nomEtablissement"]'));
+        const nomEtablissement = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="nomEtablissement"]'), 'Établissement', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="nomEtablissement"]'));
         const clicMouv = document.querySelector('[name="clicMouv"]')?.checked === true;
-        const secteurRecherche = validateOptionalString(getFormValue('[name="secteurRecherche"]'));
+        const secteurRecherche = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="secteurRecherche"]'), 'Secteur recherche', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="secteurRecherche"]'));
         const typeActivitePayee = validateStringArray(typeActivitePayeeEls, 'Type activité payée');
-        const secteurActivite = validateOptionalString(getFormValue('[name="secteurActivite"]'));
-        const nomAsso = validateOptionalString(getFormValue('[name="nomAsso"]'));
-        const sujetAsso = validateOptionalString(getFormValue('[name="sujetAsso"]'));
-        const autreActivite = validateOptionalString(getFormValue('[name="autreActivite"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const secteurActivite = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="secteurActivite"]'), 'Secteur activité', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="secteurActivite"]'));
+        const nomAsso = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="nomAsso"]'), 'Nom asso', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="nomAsso"]'));
+        const sujetAsso = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="sujetAsso"]'), 'Sujet asso', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="sujetAsso"]'));
+        const autreActivite = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="autreActivite"]'), 'Autre activité', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="autreActivite"]'), VALIDATION.MAX_LENGTH_TEXT);
 
         const mobilite = validateStringArray(mobiliteEls, 'Mobilité');
         const permis = validateStringArray(permisEls, 'Permis');
         const objectif = validateStringArray(objectifEls, 'Objectif');
-        const objectifAutre = validateOptionalString(getFormValue('[name="objectifAutre"]'));
+        const objectifAutre = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="objectifAutre"]'), 'Objectif autre', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="objectifAutre"]'));
         const amener = validateStringArray(amenerEls, 'Amener');
-        const aideEspace = validateOptionalString(getFormValue('[name="aideEspace"]'), VALIDATION.MAX_LENGTH_TEXT);
-        const reseauParticulier = validateOptionalString(getFormValue('[name="reseauParticulier"]'));
-        const autreIdee = validateOptionalString(getFormValue('[name="autreIdee"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const aideEspace = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="aideEspace"]'), 'Aide espace', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="aideEspace"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const reseauParticulier = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="reseauParticulier"]'), 'Réseau', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="reseauParticulier"]'));
+        const autreIdee = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="autreIdee"]'), 'Autre idée', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="autreIdee"]'), VALIDATION.MAX_LENGTH_TEXT);
 
         const typeProjet = validateStringArray(typeProjetEls, 'Type de projet');
-        const typeProjetAutre = validateOptionalString(getFormValue('[name="typeProjetAutre"]'));
+        const typeProjetAutre = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="typeProjetAutre"]'), 'Type projet autre', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="typeProjetAutre"]'));
         const benevolat = validateStringArray(benevolatEls, 'Bénévolat');
-        const saisFaire = validateOptionalString(getFormValue('[name="saisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
-        const aimeraisFaire = validateOptionalString(getFormValue('[name="aimeraisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
-        const peuxTransmettre = validateOptionalString(getFormValue('[name="peuxTransmettre"]'), VALIDATION.MAX_LENGTH_TEXT);
-        const aimeraisApprendre = validateOptionalString(getFormValue('[name="aimeraisApprendre"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const saisFaire = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="saisFaire"]'), 'Savoir-faire', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="saisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const aimeraisFaire = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="aimeraisFaire"]'), 'Aimerais faire', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="aimeraisFaire"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const peuxTransmettre = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="peuxTransmettre"]'), 'Peux transmettre', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="peuxTransmettre"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const aimeraisApprendre = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="aimeraisApprendre"]'), 'Aimerais apprendre', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="aimeraisApprendre"]'), VALIDATION.MAX_LENGTH_TEXT);
 
-        const problemeSante = validateOptionalString(getFormValue('[name="problemeSante"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const problemeSante = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="problemeSante"]'), 'Problème santé', VALIDATION.MAX_LENGTH_TEXT, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="problemeSante"]'), VALIDATION.MAX_LENGTH_TEXT);
         const dateSignature = validateDateString(getFormValue('[name="dateSignature"]'), 'Date de signature');
         const signature = validateSignature(getFormValue('[name="signature"]'), true);
+        if (typeof validateSafeText === 'function' && signature) validateSafeText(signature, 'Signature', VALIDATION.MAX_LENGTH_SIGNATURE, false);
 
-        const parentNom = validateOptionalString(getFormValue('[name="parentNom"]'));
-        const parentTelephone = validateOptionalString(getFormValue('[name="parentTelephone"]'));
-        const parentEmail = validateOptionalString(getFormValue('[name="parentEmail"]'));
-        const parentAdresse = validateOptionalString(getFormValue('[name="parentAdresse"]'), VALIDATION.MAX_LENGTH_TEXT);
+        const parentNom = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="parentNom"]'), 'Nom responsable', VALIDATION.MAX_LENGTH_SHORT, false) : validateOptionalString(getFormValue('[name="parentNom"]'));
+        const parentTelephone = typeof validateTelephone === 'function' ? validateTelephone(getFormValue('[name="parentTelephone"]'), 'Téléphone responsable', false) : validateOptionalString(getFormValue('[name="parentTelephone"]'));
+        const parentEmailRaw = getFormValue('[name="parentEmail"]');
+        const parentEmail = parentEmailRaw ? (typeof validateEmail === 'function' ? validateEmail(parentEmailRaw, false) : parentEmailRaw) : '';
+        const parentAdresse = typeof validateSafeText === 'function' ? validateSafeText(getFormValue('[name="parentAdresse"]'), 'Adresse responsable', VALIDATION.MAX_LENGTH_ADDRESS, false, { allowMultiline: true }) : validateOptionalString(getFormValue('[name="parentAdresse"]'), VALIDATION.MAX_LENGTH_TEXT);
         const parentDate = validateDateString(getFormValue('[name="parentDate"]'), 'Date représentant légal');
         const parentSignature = validateSignature(getFormValue('[name="parentSignature"]'));
+        if (parentSignature && typeof validateSafeText === 'function') validateSafeText(parentSignature, 'Signature parent', VALIDATION.MAX_LENGTH_SIGNATURE, false);
 
         formData = {
             genre,
@@ -635,13 +759,14 @@ document.addEventListener('DOMContentLoaded', function() {
     setupConditionalFields();
     initializeDateSelector();
 
-    // Compteurs de caractères (prévenir la troncature) et messages d'aide
-    if (typeof attachCharCounter === 'function') {
-        document.querySelectorAll('[data-max-length]').forEach(function (el) {
-            var max = parseInt(el.getAttribute('data-max-length'), 10);
-            if (!isNaN(max)) attachCharCounter(el, max);
-        });
-    }
+    // Limite de caractères (maxlength) et compteurs (prévention surcharge / injection)
+    document.querySelectorAll('.page-inscription [data-max-length]').forEach(function (el) {
+        var max = parseInt(el.getAttribute('data-max-length'), 10);
+        if (!isNaN(max) && max > 0) {
+            el.setAttribute('maxlength', max);
+            if (typeof attachCharCounter === 'function') attachCharCounter(el, max);
+        }
+    });
     if (typeof setInputHint === 'function') {
         setInputHint('[name="telephone"]', 'Chiffres et espaces uniquement.');
         setInputHint('[name="parentTelephone"]', 'Chiffres et espaces uniquement.');
